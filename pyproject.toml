@@ -20,6 +20,7 @@ dependencies = [
     "pytest>=9.0.2",
     "qdrant-client>=1.17.0",
     "redis>=7.2.0",
+    "reportlab>=4.4.10",
     "rich>=14.3.3",
     "sentence-transformers>=5.2.3",
     "sqlmodel>=0.0.35",

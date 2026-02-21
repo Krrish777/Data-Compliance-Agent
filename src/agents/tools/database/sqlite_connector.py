@@ -56,6 +56,19 @@ class SQLiteConnector(BaseDatabaseConnector):
                     primary_key = pk_columns[0]
                 elif len(pk_columns) > 1:
                     primary_key = tuple(pk_columns)
+                else:
+                    # No declared PK — fall back to SQLite's built-in rowid.
+                    # Every non-WITHOUT-ROWID table has an implicit rowid that
+                    # is stable and suitable for keyset pagination.
+                    primary_key = "rowid"
+                    columns.append({
+                        'column_name': 'rowid',
+                        'data_type': 'INTEGER',
+                        'not_null': True,
+                        'default_value': None,
+                        'primary_key': True,
+                    })
+                    log.debug(f"Table '{table}' has no declared PK — using rowid")
 
                 count_query = text(f"SELECT COUNT(*) FROM \"{table}\"")
                 count_result = session.exec(count_query).fetchone()[0]  # type: ignore

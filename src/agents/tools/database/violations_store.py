@@ -160,6 +160,155 @@ def log_violation(
     return violation_id
 
 
+def update_violation_status(
+    session: Session,
+    violation_ids: List[int],
+    status: str,          # 'confirmed' | 'false_positive' | 'pending'
+    reviewer_notes: str = "",
+) -> int:
+    """
+    Bulk-update review_status for a list of violation IDs.
+
+    Returns:
+        Number of rows updated.
+    """
+    if not violation_ids:
+        return 0
+    reviewed_ts = datetime.now(timezone.utc)
+    ids_csv = ",".join(str(i) for i in violation_ids)
+    sql = text(f"""
+        UPDATE violations_log
+           SET review_status = :status,
+               reviewer_notes = :notes,
+               reviewed_at = :reviewed_at
+         WHERE id IN ({ids_csv})
+    """)
+    session.exec(sql, params={  # type: ignore
+        "status": status,
+        "notes": reviewer_notes,
+        "reviewed_at": reviewed_ts,
+    })
+    session.commit()
+    log.debug(f"update_violation_status: {len(violation_ids)} rows → '{status}'")
+    return len(violation_ids)
+
+
+def create_explanations_table(session: Session) -> None:
+    """Create rule_explanations table for Stage 5 LLM-generated explanations."""
+    sql = text("""
+        CREATE TABLE IF NOT EXISTS rule_explanations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            scan_id TEXT NOT NULL,
+            rule_id TEXT NOT NULL,
+            violation_count INTEGER DEFAULT 0,
+            severity TEXT DEFAULT 'MEDIUM',
+            explanation TEXT,
+            policy_clause TEXT,
+            remediation_steps TEXT,
+            risk_description TEXT,
+            generated_at TEXT NOT NULL,
+            UNIQUE(scan_id, rule_id)
+        )
+    """)
+    session.exec(sql)  # type: ignore
+    session.commit()
+    log.info("Created rule_explanations table")
+
+
+def store_rule_explanation(
+    session: Session,
+    scan_id: str,
+    rule_id: str,
+    violation_count: int,
+    severity: str,
+    explanation: str,
+    policy_clause: str,
+    remediation_steps: List[str],
+    risk_description: str,
+) -> None:
+    """Upsert an LLM-generated explanation for a rule into rule_explanations."""
+    remediation_json = json.dumps(remediation_steps)
+    now = datetime.now(timezone.utc).isoformat()
+    sql = text("""
+        INSERT INTO rule_explanations
+            (scan_id, rule_id, violation_count, severity, explanation,
+             policy_clause, remediation_steps, risk_description, generated_at)
+        VALUES
+            (:scan_id, :rule_id, :violation_count, :severity, :explanation,
+             :policy_clause, :remediation_steps, :risk_description, :generated_at)
+        ON CONFLICT(scan_id, rule_id) DO UPDATE SET
+            violation_count  = excluded.violation_count,
+            severity         = excluded.severity,
+            explanation      = excluded.explanation,
+            policy_clause    = excluded.policy_clause,
+            remediation_steps= excluded.remediation_steps,
+            risk_description = excluded.risk_description,
+            generated_at     = excluded.generated_at
+    """)
+    session.exec(sql, params={  # type: ignore
+        "scan_id": scan_id,
+        "rule_id": rule_id,
+        "violation_count": violation_count,
+        "severity": severity,
+        "explanation": explanation,
+        "policy_clause": policy_clause,
+        "remediation_steps": remediation_json,
+        "risk_description": risk_description,
+        "generated_at": now,
+    })
+    session.commit()
+
+
+def get_rule_explanations(session: Session, scan_id: str) -> List[Dict[str, Any]]:
+    """Fetch all LLM-generated explanations for a scan."""
+    sql = text("""
+        SELECT * FROM rule_explanations
+        WHERE scan_id = :scan_id
+        ORDER BY severity DESC, violation_count DESC
+    """)
+    result = session.exec(sql, params={"scan_id": scan_id})  # type: ignore
+    rows = result.fetchall()
+    if not rows:
+        return []
+    keys = list(result.keys()) if hasattr(result, "keys") else [
+        "id", "scan_id", "rule_id", "violation_count", "severity",
+        "explanation", "policy_clause", "remediation_steps",
+        "risk_description", "generated_at",
+    ]
+    return [dict(zip(keys, row)) for row in rows]
+
+
+def get_violations_sample_for_validation(
+    session: Session,
+    scan_id: str,
+    rule_id: str,
+    confidence_ceiling: float = 0.85,
+    limit: int = 20,
+) -> List[Dict[str, Any]]:
+    """
+    Return a sample of violations for a given rule that are candidates for
+    LLM false-positive validation (lower-confidence, still pending review).
+    """
+    sql = text("""
+        SELECT id, rule_id, rule_text, table_name,
+               record_primary_key, violating_data, confidence
+          FROM violations_log
+         WHERE scan_id     = :scan_id
+           AND rule_id     = :rule_id
+           AND confidence  < :ceiling
+           AND review_status = 'pending'
+         ORDER BY confidence ASC
+         LIMIT :limit
+    """)
+    result = session.exec(sql, params={  # type: ignore
+        "scan_id": scan_id,
+        "rule_id": rule_id,
+        "ceiling": confidence_ceiling,
+        "limit": limit,
+    })
+    return _rows_to_dicts(result)
+
+
 def _rows_to_dicts(result) -> List[Dict[str, Any]]:
     """Convert SQLAlchemy Result rows to list of dicts."""
     rows = result.fetchall()

@@ -41,6 +41,12 @@ def execute_scan_query(
             db_type=db_type,
         )
 
+        # build_keyset_query returns None query when the operator is unsupported.
+        # Rather than scanning all rows as violations, skip this table+rule pair.
+        if query is None:
+            msg = f"No SQL condition could be built for rule '{rule.rule_id}' (unsupported operator '{rule.operator}')"
+            log.warning(msg)
+            return ([], None, msg)
         if db_type == "postgresql":
             try:
                 session.exec(text(f"SET statement_timeout = {query_timeout_seconds * 1000}")) # type: ignore

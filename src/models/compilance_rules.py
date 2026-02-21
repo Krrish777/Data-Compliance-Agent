@@ -60,3 +60,32 @@ class RuleExtractionOutput(BaseModel):
     extracted_rules: List[ComplianceRuleModel] = Field(default_factory=list, description="List of extracted compliance rules")
     entities: Dict[str, List[str]] = Field(default_factory=dict, description="Extracted entities by type")
     key_definitions: List[KeyDefinitionModel] = Field(default_factory=list, description="Key terms and definitions")
+
+    @field_validator("entities", mode="before")
+    @classmethod
+    def coerce_entities(cls, v):
+        """LLMs sometimes return [] or Dict[str, str] for entities."""
+        if not v or isinstance(v, list):
+            return {}
+        if isinstance(v, dict):
+            # Flatten any str values to single-item lists
+            return {
+                k: ([vv] if isinstance(vv, str) else list(vv))
+                for k, vv in v.items()
+            }
+        return {}
+
+    @field_validator("key_definitions", mode="before")
+    @classmethod
+    def coerce_key_definitions(cls, v):
+        """LLMs sometimes return a dict instead of a list."""
+        if isinstance(v, dict):
+            return []
+        return v or []
+
+    @field_validator("document_type", mode="before")
+    @classmethod
+    def coerce_document_type(cls, v):
+        if not v or not isinstance(v, str):
+            return "informational"
+        return v

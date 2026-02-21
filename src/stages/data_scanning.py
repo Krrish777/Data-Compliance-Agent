@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from src.agents.tools.database.complex_executor import scan_complex_rule
 from src.agents.tools.database.postgres_connector import PostgresConnector
 from src.agents.tools.database.query_executor import execute_scan_query
 from src.agents.tools.database.sqlite_connector import SQLiteConnector
@@ -13,6 +14,9 @@ from src.agents.tools.database.violations_store import (
     create_violations_table,
     log_violation,
 )
+
+# Rule complexities handled by Python-side evaluation rather than SQL.
+_COMPLEX_RULE_TYPES = {"between", "regex", "cross_field", "date_math"}
 from src.models.structured_rule import StructuredRule
 from src.stages.rule_structuring import rule_from_dict
 from src.utils.logger import setup_logger
@@ -122,17 +126,36 @@ def data_scanning_stage(state: Dict[str, Any]) -> Dict[str, Any]:
                     scan_summary["tables_skipped"] += 1
                     continue
 
-                count = scan_table_batched(
-                    session=target_conn.session,
-                    violations_session=violations_conn.session,
-                    rule=rule,
-                    table=table,
-                    pk_column=pk_column,
-                    scan_id=scan_id,
-                    db_type=db_type,
-                    batch_size=batch_size,
-                    max_batches=max_batches_per_table,
-                )
+                rule_complexity = getattr(rule, "rule_complexity", "simple")
+
+                if rule_complexity in _COMPLEX_RULE_TYPES:
+                    log.info(
+                        f"Using complex executor for rule '{rule.rule_id}' "
+                        f"[{rule_complexity}] on '{table}'"
+                    )
+                    count = scan_complex_rule(
+                        session=target_conn.session,
+                        violations_session=violations_conn.session,
+                        rule=rule,
+                        table=table,
+                        pk_column=pk_column,
+                        scan_id=scan_id,
+                        db_type=db_type,
+                        batch_size=batch_size,
+                        max_batches=max_batches_per_table,
+                    )
+                else:
+                    count = scan_table_batched(
+                        session=target_conn.session,
+                        violations_session=violations_conn.session,
+                        rule=rule,
+                        table=table,
+                        pk_column=pk_column,
+                        scan_id=scan_id,
+                        db_type=db_type,
+                        batch_size=batch_size,
+                        max_batches=max_batches_per_table,
+                    )
                 rule_violations += count
                 scan_summary["total_violations"] += count
                 scan_summary["tables_scanned"] += 1
