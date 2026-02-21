@@ -377,3 +377,8 @@ def build_graph(
     graph = workflow.compile(checkpointer=checkpointer)
     log.info("build_graph: compliance pipeline compiled successfully")
     return graph
+
+
+# Module-level compiled graph instance required by LangGraph dev server / Studio.
+# langgraph.json points to this file with variable name "agent".
+agent = build_graph()

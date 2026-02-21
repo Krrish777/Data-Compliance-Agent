@@ -275,7 +275,19 @@ def get_rule_explanations(session: Session, scan_id: str) -> List[Dict[str, Any]
         "explanation", "policy_clause", "remediation_steps",
         "risk_description", "generated_at",
     ]
-    return [dict(zip(keys, row)) for row in rows]
+    records = [dict(zip(keys, row)) for row in rows]
+    # remediation_steps is stored as a JSON string — parse it back to a list
+    import json as _json
+    for rec in records:
+        raw = rec.get("remediation_steps", "[]")
+        if isinstance(raw, str):
+            try:
+                rec["remediation_steps"] = _json.loads(raw)
+            except Exception:
+                rec["remediation_steps"] = []
+        elif not isinstance(raw, list):
+            rec["remediation_steps"] = []
+    return records
 
 
 def get_violations_sample_for_validation(

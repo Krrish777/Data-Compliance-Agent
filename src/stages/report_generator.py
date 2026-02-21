@@ -25,6 +25,23 @@ from src.utils.logger import setup_logger
 
 log = setup_logger(__name__)
 
+
+def _ensure_list(val: Any) -> List[str]:
+    """Guarantee remediation_steps is always a plain list of strings."""
+    if isinstance(val, list):
+        return val
+    if isinstance(val, str):
+        import json as _json
+        try:
+            parsed = _json.loads(val)
+            if isinstance(parsed, list):
+                return [str(s) for s in parsed]
+        except Exception:
+            pass
+        # Fallback: treat the whole string as one step if non-empty
+        return [val] if val.strip() else []
+    return []
+
 # ---------------------------------------------------------------------------
 # Colour & grade helpers
 # ---------------------------------------------------------------------------
@@ -307,7 +324,7 @@ def build_scan_report_pdf(
         sev    = entry.get("severity", "")
         expl   = entry.get("explanation", "")
         clause = entry.get("policy_clause", "")
-        steps  = entry.get("remediation_steps") or []
+        steps  = _ensure_list(entry.get("remediation_steps"))
         risk   = entry.get("risk_description", "")
         rtext  = entry.get("rule_text", "")
 
@@ -447,7 +464,7 @@ def build_scan_report_html(
         sev    = entry.get("severity", "")
         expl   = esc(entry.get("explanation", ""))
         clause = esc(entry.get("policy_clause", ""))
-        steps  = entry.get("remediation_steps") or []
+        steps  = _ensure_list(entry.get("remediation_steps"))
         risk   = esc(entry.get("risk_description", ""))
         rtext  = esc(entry.get("rule_text", ""))
         sc = _sev_color(sev)
