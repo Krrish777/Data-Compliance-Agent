@@ -285,28 +285,96 @@ def rule_structuring_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
 def human_review_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Stub: auto-approve all low-confidence rules.
+    Human-in-the-loop review of low-confidence rules.
 
-    In production this will use ``interrupt()`` to pause execution and
-    wait for a human to approve / edit / reject rules. For now it merges
-    low_confidence_rules into structured_rules so the pipeline completes.
+    Uses ``interrupt()`` to pause the graph and present rules to a human
+    reviewer.  The reviewer can approve, edit, or drop each rule.
+
+    When running non-interactively (e.g. ``run_hi_small.py``), the caller
+    can pass ``review_decision`` pre-populated in state to skip the
+    interrupt — this keeps backward compatibility with the batch runner.
+
+    Resume payload schema::
+
+        {
+            "approved":  [rule_id, ...],
+            "edited":    [{rule_id, changes: {...}}, ...],
+            "dropped":   [rule_id, ...]
+        }
     """
+    from langgraph.types import interrupt
+
     structured = list(state.get("structured_rules", []))
     low_confidence = state.get("low_confidence_rules", [])
 
-    # Auto-approve everything
-    structured.extend(low_confidence)
+    if not low_confidence:
+        log.info("human_review_node: no low-confidence rules — nothing to review")
+        return {
+            "structured_rules": structured,
+            "review_decision": {"approved": [], "edited": [], "dropped": []},
+            "current_stage": "review_complete",
+        }
+
+    # Check if a review decision was already provided (batch / test mode)
+    existing_decision = state.get("review_decision")
+    if existing_decision and existing_decision.get("approved") is not None:
+        log.info("human_review_node: pre-populated review_decision found — skipping interrupt")
+        review = existing_decision
+    else:
+        # ── Pause for human review ──────────────────────────────────────
+        review_payload = {
+            "message": (
+                f"{len(low_confidence)} low-confidence rules need review. "
+                "Approve, edit, or drop each rule."
+            ),
+            "rules": [
+                {
+                    "rule_id": r.rule_id,
+                    "rule_text": r.rule_text,
+                    "target_column": r.target_column,
+                    "operator": r.operator,
+                    "value": r.value,
+                    "confidence": r.confidence,
+                    "rule_type": r.rule_type,
+                }
+                for r in low_confidence
+            ],
+        }
+        review = interrupt(review_payload)
+
+    # ── Process the review decision ─────────────────────────────────────
+    approved_ids = set(review.get("approved", []))
+    dropped_ids = set(review.get("dropped", []))
+    edited_map: Dict[str, Dict] = {
+        e["rule_id"]: e.get("changes", {})
+        for e in review.get("edited", [])
+        if isinstance(e, dict) and "rule_id" in e
+    }
+
+    for rule in low_confidence:
+        if rule.rule_id in dropped_ids:
+            continue
+        if rule.rule_id in edited_map:
+            changes = edited_map[rule.rule_id]
+            for attr, new_val in changes.items():
+                if hasattr(rule, attr):
+                    setattr(rule, attr, new_val)
+            structured.append(rule)
+        elif rule.rule_id in approved_ids or not (approved_ids or edited_map or dropped_ids):
+            # If no explicit decision provided, auto-approve (backward compat)
+            structured.append(rule)
+
     log.info(
-        f"human_review_node (stub): auto-approved {len(low_confidence)} "
-        f"low-confidence rules"
+        f"human_review_node: approved={len(approved_ids)}, "
+        f"edited={len(edited_map)}, dropped={len(dropped_ids)}"
     )
 
     return {
         "structured_rules": structured,
         "review_decision": {
-            "approved": [r.rule_id for r in low_confidence],
-            "edited": [],
-            "dropped": [],
+            "approved": list(approved_ids),
+            "edited": list(edited_map.keys()),
+            "dropped": list(dropped_ids),
         },
         "current_stage": "review_complete",
     }
