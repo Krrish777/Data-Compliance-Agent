@@ -68,6 +68,9 @@ class ComplianceScannerState(TypedDict, total=False):
     # ── Stage 5b: violation_reporting (ME) ──────────────────────────────────
     violation_report: Dict[str, Any]
 
+    # ── Stage 6: report_generation ──────────────────────────────────────────
+    report_paths: Dict[str, str]      # {"pdf": "...", "html": "..."}
+
     # ── Cross-cutting ────────────────────────────────────────────────────────
     current_stage: str
     # Errors accumulate across nodes; Annotated+add means each node appends.

@@ -58,6 +58,7 @@ from langgraph.graph import END, START, StateGraph
 
 from src.agents.nodes.data_scanning import data_scanning_node
 from src.agents.nodes.explanation_generator import explanation_generator_node
+from src.agents.nodes.report_generation import report_generation_node
 from src.agents.nodes.rule_extraction import rule_extraction_node
 from src.agents.nodes.schema_discovery import schema_discovery_node
 from src.agents.nodes.violation_reporting import violation_reporting_node
@@ -419,6 +420,7 @@ def build_graph(
     workflow.add_node("violation_validator", violation_validator_node) # type: ignore
     workflow.add_node("explanation_generator", explanation_generator_node) # type: ignore
     workflow.add_node("violation_reporting", violation_reporting_node) # type: ignore
+    workflow.add_node("report_generation", report_generation_node)  # type: ignore
 
     # ── Add edges ────────────────────────────────────────────────────────
     workflow.add_edge(START, "rule_extraction")
@@ -439,7 +441,8 @@ def build_graph(
     workflow.add_edge("data_scanning", "violation_validator")
     workflow.add_edge("violation_validator", "explanation_generator")
     workflow.add_edge("explanation_generator", "violation_reporting")
-    workflow.add_edge("violation_reporting", END)
+    workflow.add_edge("violation_reporting", "report_generation")
+    workflow.add_edge("report_generation", END)
 
     # ── Compile ──────────────────────────────────────────────────────────
     graph = workflow.compile(checkpointer=checkpointer)

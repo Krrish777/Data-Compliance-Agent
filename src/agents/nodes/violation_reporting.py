@@ -136,7 +136,19 @@ def violation_reporting_node(state: Dict[str, Any]) -> Dict[str, Any]:
         needs_review_slim = [_slim(v) for v in needs_review]
 
         # -- Compliance score (6A) ------------------------------------------------
-        total_rules_checked = len(structured_rules) if structured_rules else len(by_rule)
+        # Determine the total number of rules that were actually checked.
+        # Priority:
+        #   1. len(structured_rules) — full list from state (includes passing)
+        #   2. state["scan_summary"]["rules_processed"] — from data_scanning stage
+        #   3. len(by_rule) — fallback (only rules WITH violations, least accurate)
+        scan_summary_state = state.get("scan_summary", {}) or {}
+        if structured_rules:
+            total_rules_checked = len(structured_rules)
+        elif scan_summary_state.get("rules_processed"):
+            total_rules_checked = int(scan_summary_state["rules_processed"])
+        else:
+            total_rules_checked = len(by_rule)
+
         rules_failing  = len([rid for rid, entry in by_rule.items() if entry["count"] > 0])
         rules_passing  = max(0, total_rules_checked - rules_failing)
         if total_rules_checked > 0:
