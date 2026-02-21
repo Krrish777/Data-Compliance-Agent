@@ -1,9 +1,10 @@
 import numpy as np
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from fastembed import TextEmbedding
 from src.docs_processing.docs_processor import DocumentChunk
 from src.utils.logger import setup_logger
+from src.utils.document_cache import CacheManager
 
 log = setup_logger(__name__)
 
@@ -31,11 +32,23 @@ class EmbeddedChunk:
         }
         
 class EmbeddingGenerator:
-    def __init__(self, model_name: str = 'BAAI/bge-small-en-v1.5'):
+    def __init__(
+        self, 
+        model_name: str = 'BAAI/bge-small-en-v1.5',
+        cache_manager: Optional[CacheManager] = None,
+        use_cache: bool = True
+    ):
         self.model_name = model_name
         self.model = None
         self.embedding_dim = 0
+        self.cache_manager = cache_manager
+        self.use_cache = use_cache and cache_manager is not None
         self._initialize_model()
+        
+        if self.use_cache:
+            log.info("EmbeddingGenerator: Cache ENABLED")
+        else:
+            log.info("EmbeddingGenerator: Cache DISABLED")
         
     def _initialize_model(self):
         try:
@@ -51,30 +64,71 @@ class EmbeddingGenerator:
             raise
     
     def generate_embedding(self, chunks: List[DocumentChunk]) -> List[EmbeddedChunk]:
-        if not chunks:
-            log.warning("No document chunks provided for embedding generation.")
-            return []
-        
-        if self.model is None:
-            log.error("Embedding model is not initialized")
-            raise
-        
-        log.info(f"Generating embeddings for {len(chunks)} document chunks")
-        
         try:
-            texts = [chunk.content for chunk in chunks]
-            embeddings = list(self.model.embed(texts))
+            log.info(f"Generating embeddings for {len(chunks)} chunks")
             
+            # Check cache for existing embeddings
+            cached_embeddings = {}
+            chunks_to_embed = []
+            chunk_indices_to_embed = []
+            
+            if self.use_cache and self.cache_manager:
+                contents = [chunk.content for chunk in chunks]
+                cached_embeddings = self.cache_manager.get_embeddings_batch(
+                    contents=contents,
+                    model_name=self.model_name
+                )
+                
+                # Identify which chunks need embedding
+                for idx, chunk in enumerate(chunks):
+                    if idx not in cached_embeddings:
+                        chunks_to_embed.append(chunk)
+                        chunk_indices_to_embed.append(idx)
+                
+                if cached_embeddings:
+                    log.info(f"📦 Found {len(cached_embeddings)}/{len(chunks)} cached embeddings")
+            else:
+                chunks_to_embed = chunks
+                chunk_indices_to_embed = list(range(len(chunks)))
+            
+            # Generate embeddings for uncached chunks
+            new_embeddings = {}
+            if chunks_to_embed:
+                log.info(f"Generating {len(chunks_to_embed)} new embeddings")
+                if self.model is None:
+                    log.error("Embedding model is not initialized")
+                    raise
+                texts = [chunk.content for chunk in chunks_to_embed]
+                embeddings_list = list(self.model.embed(texts))
+                
+                # Store new embeddings
+                for idx, chunk, embedding in zip(chunk_indices_to_embed, chunks_to_embed, embeddings_list):
+                    embedding_array = np.array(embedding, dtype=np.float32)
+                    new_embeddings[idx] = embedding_array
+                    
+                    # Cache the new embedding
+                    if self.use_cache and self.cache_manager:
+                        self.cache_manager.set_embedding(
+                            content=chunk.content,
+                            embedding=embedding_array,
+                            model_name=self.model_name
+                        )
+            
+            # Combine cached and new embeddings
+            all_embeddings = {**cached_embeddings, **new_embeddings}
+            
+            # Create EmbeddedChunk objects in original order
             embedded_chunks = []
-            for chunk, embedding in zip(chunks, embeddings):
+            for idx, chunk in enumerate(chunks):
                 embedded_chunk = EmbeddedChunk(
                     chunk=chunk,
-                    embedding=np.array(embedding, dtype=np.float32),
+                    embedding=all_embeddings[idx],
                     embedding_model=self.model_name
                 )
                 embedded_chunks.append(embedded_chunk)
                 
-            log.info(f"Successfully generated embeddings for {len(embedded_chunks)} chunks")
+            log.info(f"Successfully generated embeddings for {len(embedded_chunks)} chunks "
+                    f"({len(cached_embeddings)} cached, {len(new_embeddings)} new)")
             return embedded_chunks
         
         except Exception as e:
@@ -89,15 +143,35 @@ class EmbeddingGenerator:
                 raise
             return np.zeros(self.embedding_dim, dtype=np.float32)
         
-        log.info(f"Generating embedding for query: '{query}'")
+        # Try cache first
+        if self.use_cache and self.cache_manager:
+            cached_embedding = self.cache_manager.get_embedding(
+                content=query,
+                model_name=self.model_name
+            )
+            if cached_embedding is not None:
+                log.info("Query embedding loaded from cache")
+                return cached_embedding
+        
+        log.info(f"Generating embedding for query: '{query[:50]}...'")
         
         try:
             if self.model is None:
                 log.error("Embedding model is not initialized")
                 raise
             embedding = list(self.model.embed([query]))[0]
+            embedding_array = np.array(embedding, dtype=np.float32)
+            
+            # Cache the query embedding
+            if self.use_cache and self.cache_manager:
+                self.cache_manager.set_embedding(
+                    content=query,
+                    embedding=embedding_array,
+                    model_name=self.model_name
+                )
+            
             log.info("Successfully generated query embedding")
-            return np.array(embedding, dtype=np.float32)
+            return embedding_array
         
         except Exception as e:
             log.error(f"Error during query embedding generation: {e}")

@@ -80,6 +80,22 @@ class LocalVectorDB:
         if not embedded_chunks:
             return []
         try:
+            # Check for existing chunks to avoid duplicates
+            chunk_ids = [chunk.chunk.chunk_id for chunk in embedded_chunks]
+            existing_ids = self.check_existing_chunks(chunk_ids)
+            
+            if existing_ids:
+                log.info(f"📦 Skipping {len(existing_ids)} existing chunks in vector DB")
+                # Filter out existing chunks
+                embedded_chunks = [
+                    chunk for chunk in embedded_chunks 
+                    if chunk.chunk.chunk_id not in existing_ids
+                ]
+                
+                if not embedded_chunks:
+                    log.info("All chunks already exist in vector DB, skipping insert")
+                    return list(existing_ids)
+            
             points = []
             inserted_ids = []
             
@@ -124,12 +140,12 @@ class LocalVectorDB:
                 ))
                 inserted_ids.append(p_id)
             
-            self.client.upsert( # type: ignore
-                collection_name=self.collection_name,
-                points=points
-            )
-            
-            log.info(f"Inserted {len(inserted_ids)} embeddings into database")
+            if points:
+                self.client.upsert( # type: ignore
+                    collection_name=self.collection_name,
+                    points=points
+                )
+                log.info(f"✅ Inserted {len(inserted_ids)} new embeddings into vector DB")
             
             return inserted_ids
             
@@ -239,6 +255,45 @@ class LocalVectorDB:
         except Exception as e:
             log.error(f"Error retrieving chunk by ID {chunk_id}: {str(e)}")
             return None
+    
+    def check_existing_chunks(self, chunk_ids: List[str]) -> set:
+        """
+        Check which chunk IDs already exist in the vector DB
+        Returns set of existing chunk_id strings (not UUIDs)
+        """
+        try:
+            if not self.collection_exists:
+                return set()
+            
+            # Convert chunk_ids to UUIDs for lookup
+            uuid_to_chunk_id = {
+                str(uuid.uuid5(uuid.NAMESPACE_DNS, str(cid))): cid 
+                for cid in chunk_ids
+            }
+            
+            # Retrieve existing points
+            results = self.client.retrieve( # type: ignore
+                collection_name=self.collection_name,
+                ids=list(uuid_to_chunk_id.keys()),
+                with_payload=True
+            )
+            
+            # Extract original chunk_ids from results
+            existing = set()
+            if results:
+                for point in results:
+                    # Get original chunk_id from payload or map back from UUID
+                    chunk_id = point.payload.get('chunk_id') # type: ignore
+                    if chunk_id:
+                        existing.add(chunk_id)
+                    elif str(point.id) in uuid_to_chunk_id:
+                        existing.add(uuid_to_chunk_id[str(point.id)])
+            
+            return existing
+            
+        except Exception as e:
+            log.error(f"Error checking existing chunks: {str(e)}")
+            return set()
     
     def close(self):
         try:
