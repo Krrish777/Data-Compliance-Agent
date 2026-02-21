@@ -11,8 +11,10 @@ class BaseDatabaseConnector(ABC):
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
         self.engine = None
-        self.model = SentenceTransformer('all-MiniLM-L6-v2')
         self.session: Optional[Session] = None
+        # Lazy-loaded — only initialised when identify_sensitive_columns() is called
+        self._pii_model = None
+        self._category_embeddings: Optional[dict] = None
         self.categories = {
             'email': 'email address contact mail electronic mail',
             'phone': 'phone number telephone mobile cell contact number',
@@ -24,10 +26,20 @@ class BaseDatabaseConnector(ABC):
             'health': 'medical record health data diagnosis patient',
             'financial': 'salary income revenue bank account balance'
         }
-        self.category_embeddings = {
-            cat: self.model.encode(desc)
-            for cat, desc in self.categories.items()
-        }
+
+    def _get_pii_model(self):
+        """Lazy-load the sentence transformer model on first use."""
+        if self._pii_model is None:
+            self._pii_model = SentenceTransformer('all-MiniLM-L6-v2')
+            self._category_embeddings = {
+                cat: self._pii_model.encode(desc)
+                for cat, desc in self.categories.items()
+            }
+        return self._pii_model
+
+    def _get_connect_args(self) -> dict:
+        """Return database-specific connect_args. Override in subclasses."""
+        return {}
         
     def connect(self):
         """Create a database engine and session"""
@@ -35,7 +47,7 @@ class BaseDatabaseConnector(ABC):
             self.engine = create_engine(
                 self.connection_string,
                 echo=False,
-                connect_args={"timeout": 30}
+                connect_args=self._get_connect_args()
             )
             self.session = Session(self.engine)
             log.info(f"Connected to database: {self.connection_string}")
@@ -51,17 +63,18 @@ class BaseDatabaseConnector(ABC):
     
     def identify_sensitive_columns(self, schema: Dict) -> List[Dict[str, Any]]:
         """Identify potentially sensitive columns based on naming conventions"""
+        model = self._get_pii_model()
         sensitive_columns = []
         
         for table, info in schema.items():
             for col in info['columns']:
                 col_name = col['column_name'].lower()
-                col_embedding = self.model.encode(col_name.replace('_', ' '))
+                col_embedding = model.encode(col_name.replace('_', ' '))
                 
                 best_match = None
                 best_score = 0.0
                 
-                for category, cat_embedding in self.category_embeddings.items():
+                for category, cat_embedding in self._category_embeddings.items():
                     similarity = np.dot(col_embedding, cat_embedding) / (
                         np.linalg.norm(col_embedding) * np.linalg.norm(cat_embedding)
                         )

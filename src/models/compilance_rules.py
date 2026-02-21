@@ -31,15 +31,21 @@ class ComplianceRuleModel(BaseModel):
     scope: Optional[str] = None
     penalty: Optional[str] = None
     timeframe: Optional[str] = None
-    timeframe_days: Optional[int] = None
+    # timeframe_days removed — Groq rejects "" for integer fields at the API
+    # level before Pydantic can coerce it. Parse from `timeframe` if needed.
     confidence: float
     source_reference: Optional[str] = None
     logic: Optional[RuleLogic] = None
-    
-    @field_validator('penalty', 'timeframe', 'source_reference', mode='before')
+
+    @field_validator(
+        'penalty', 'timeframe', 'source_reference',
+        'scope', 'condition', 'action',
+        mode='before',
+    )
     @classmethod
     def convert_unknown_to_none(cls, v):
-        if v in ['unknown', 'null', '']:
+        """Coerce placeholder strings the LLM sends to None."""
+        if v in ('unknown', 'null', 'none', 'n/a', ''):
             return None
         return v
 

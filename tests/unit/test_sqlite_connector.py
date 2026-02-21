@@ -366,6 +366,29 @@ class TestSQLiteConnector:
         print(f"✅ Error handling works correctly")
         print(f"{'='*60}\n")
 
+    def test_09_primary_key_detection(self, populated_db):
+        """Test table-level primary key detection for keyset pagination"""
+        print(f"\n{'='*60}")
+        print(f"🧪 TEST 9: Primary Key Detection")
+        print(f"{'='*60}")
+
+        connector = SQLiteConnector(populated_db)
+        connector.connect()
+
+        schema = connector.discover_schema()
+
+        for table_name in ['user', 'product', 'customer']:
+            assert table_name in schema, f"Table '{table_name}' not found"
+            pk = schema[table_name].get('primary_key')
+            assert pk == 'id', f"Table '{table_name}' should have PK 'id', got {pk}"
+            assert 'row_count' in schema[table_name], f"Table '{table_name}' should have row_count"
+
+        print(f"✅ All tables have primary_key='id'")
+        print(f"✅ row_count present for keyset pagination")
+        print(f"{'='*60}\n")
+
+        connector.close()
+
 
 if __name__ == "__main__":
     print("\n" + "="*60)

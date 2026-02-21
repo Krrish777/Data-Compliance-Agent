@@ -1,0 +1,245 @@
+"""
+Violations log storage for compliance scanning.
+
+Stores discovered violations in a dedicated table instead of LangGraph state,
+keeping state small and enabling efficient querying for reporting.
+"""
+import json
+from datetime import datetime, timezone
+from typing import Any, Dict, List
+
+from sqlmodel import Session, text
+
+from src.utils.logger import setup_logger
+
+log = setup_logger(__name__)
+
+
+def create_violations_table(session: Session, db_type: str) -> None:
+    """
+    Create the violations_log table if it does not exist.
+
+    Args:
+        session: Active database session
+        db_type: Either 'sqlite' or 'postgresql'
+    """
+    if db_type == "postgresql":
+        create_sql = text("""
+            CREATE TABLE IF NOT EXISTS violations_log (
+                id SERIAL PRIMARY KEY,
+                scan_id TEXT NOT NULL,
+                scan_timestamp TIMESTAMP NOT NULL,
+                rule_id TEXT NOT NULL,
+                rule_text TEXT,
+                rule_source TEXT,
+                table_name TEXT NOT NULL,
+                record_primary_key TEXT NOT NULL,
+                violating_data JSONB,
+                confidence REAL NOT NULL,
+                violation_type TEXT,
+                detected_at TIMESTAMP NOT NULL DEFAULT NOW(),
+                review_status TEXT DEFAULT 'pending',
+                reviewed_by TEXT,
+                reviewed_at TIMESTAMP,
+                reviewer_notes TEXT
+            )
+        """)
+        indexes = [
+            "CREATE INDEX IF NOT EXISTS idx_violations_scan_id ON violations_log(scan_id)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_rule_id ON violations_log(rule_id)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_table ON violations_log(table_name)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_confidence ON violations_log(confidence)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_status ON violations_log(review_status)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_detected_at ON violations_log(detected_at)",
+        ]
+    elif db_type == "sqlite":
+        create_sql = text("""
+            CREATE TABLE IF NOT EXISTS violations_log (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                scan_id TEXT NOT NULL,
+                scan_timestamp TEXT NOT NULL,
+                rule_id TEXT NOT NULL,
+                rule_text TEXT,
+                rule_source TEXT,
+                table_name TEXT NOT NULL,
+                record_primary_key TEXT NOT NULL,
+                violating_data TEXT,
+                confidence REAL NOT NULL,
+                violation_type TEXT,
+                detected_at TEXT NOT NULL DEFAULT (datetime('now')),
+                review_status TEXT DEFAULT 'pending',
+                reviewed_by TEXT,
+                reviewed_at TEXT,
+                reviewer_notes TEXT
+            )
+        """)
+        indexes = [
+            "CREATE INDEX IF NOT EXISTS idx_violations_scan_id ON violations_log(scan_id)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_rule_id ON violations_log(rule_id)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_table ON violations_log(table_name)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_confidence ON violations_log(confidence)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_status ON violations_log(review_status)",
+            "CREATE INDEX IF NOT EXISTS idx_violations_detected_at ON violations_log(detected_at)",
+        ]
+    else:
+        raise ValueError(f"Unsupported database type: {db_type}")
+
+    session.exec(create_sql) # type: ignore
+    log.info(f"Created violations_log table for {db_type}")
+
+    for index_sql in indexes:
+        try:
+            session.exec(text(index_sql)) # type: ignore
+        except Exception as e:
+            log.debug(f"Index may already exist: {e}")
+
+    session.commit()
+    log.info(f"Created {len(indexes)} indexes on violations_log")
+
+
+def log_violation(
+    session: Session,
+    scan_id: str,
+    rule_id: str,
+    rule_text: str,
+    rule_source: str,
+    table_name: str,
+    record_pk: str,
+    violating_record: Dict[str, Any],
+    confidence: float,
+    violation_type: str,
+    db_type: str,
+) -> int:
+    """
+    Insert a violation record into the violations_log table.
+
+    Returns:
+        The ID of the inserted violation record
+    """
+    record_json = json.dumps(violating_record, default=str)
+    scan_ts = datetime.now(timezone.utc)
+    detected_ts = datetime.now(timezone.utc)
+
+    insert_sql = text("""
+        INSERT INTO violations_log (
+            scan_id, scan_timestamp, rule_id, rule_text, rule_source,
+            table_name, record_primary_key, violating_data,
+            confidence, violation_type, detected_at
+        ) VALUES (
+            :scan_id, :scan_timestamp, :rule_id, :rule_text, :rule_source,
+            :table_name, :record_pk, :violating_data,
+            :confidence, :violation_type, :detected_at
+        )
+    """)
+
+    params = {
+        "scan_id": scan_id,
+        "scan_timestamp": scan_ts,
+        "rule_id": rule_id,
+        "rule_text": rule_text,
+        "rule_source": rule_source,
+        "table_name": table_name,
+        "record_pk": str(record_pk),
+        "violating_data": record_json,
+        "confidence": confidence,
+        "violation_type": violation_type,
+        "detected_at": detected_ts,
+    }
+
+    session.exec(insert_sql, params=params) # type: ignore
+    session.commit()
+
+    if db_type == "postgresql":
+        result = session.exec(text("SELECT lastval()")).fetchone() # type: ignore
+        violation_id = result[0] if result else 0
+    else:
+        result = session.exec(text("SELECT last_insert_rowid()")).fetchone() # type: ignore
+        violation_id = result[0] if result else 0
+
+    log.debug(f"Logged violation {violation_id} for rule '{rule_id}' in table '{table_name}'")
+    return violation_id
+
+
+def _rows_to_dicts(result) -> List[Dict[str, Any]]:
+    """Convert SQLAlchemy Result rows to list of dicts."""
+    rows = result.fetchall()
+    if not rows:
+        return []
+    keys = list(result.keys()) if hasattr(result, "keys") else []
+    if not keys and rows:
+        keys = [f"column_{i}" for i in range(len(rows[0]))]
+    return [dict(zip(keys, row)) for row in rows]
+
+
+def get_violations_by_scan(session: Session, scan_id: str) -> List[Dict[str, Any]]:
+    """Get all violations for a specific scan."""
+    query = text("""
+        SELECT * FROM violations_log
+        WHERE scan_id = :scan_id
+        ORDER BY confidence DESC, detected_at ASC
+    """)
+    result = session.exec(query, params={"scan_id": scan_id}) # type: ignore
+    return _rows_to_dicts(result)
+
+
+def get_violations_by_table(
+    session: Session, scan_id: str, table_name: str
+) -> List[Dict[str, Any]]:
+    """Get all violations for a specific table in a scan."""
+    query = text("""
+        SELECT * FROM violations_log
+        WHERE scan_id = :scan_id AND table_name = :table_name
+        ORDER BY confidence DESC
+    """)
+    result = session.exec(query, params={"scan_id": scan_id, "table_name": table_name}) # type: ignore
+    return _rows_to_dicts(result)
+
+
+def get_low_confidence_violations(
+    session: Session, scan_id: str, threshold: float = 0.7
+) -> List[Dict[str, Any]]:
+    """Get violations that need human review."""
+    query = text("""
+        SELECT * FROM violations_log
+        WHERE scan_id = :scan_id
+        AND confidence < :threshold
+        AND review_status = 'pending'
+        ORDER BY confidence ASC
+    """)
+    result = session.exec(query, params={"scan_id": scan_id, "threshold": threshold}) # type: ignore
+    return _rows_to_dicts(result)
+
+
+def get_scan_summary(session: Session, scan_id: str) -> Dict[str, Any]:
+    """Get summary statistics for a scan."""
+    query = text("""
+        SELECT
+            COUNT(*) as total_violations,
+            COUNT(DISTINCT table_name) as tables_with_violations,
+            COUNT(DISTINCT rule_id) as rules_violated,
+            AVG(confidence) as avg_confidence,
+            MIN(detected_at) as scan_start,
+            MAX(detected_at) as scan_end
+        FROM violations_log
+        WHERE scan_id = :scan_id
+    """)
+    result = session.exec(query, params={"scan_id": scan_id}).fetchone() # type: ignore
+
+    if not result:
+        return {
+            "total_violations": 0,
+            "tables_with_violations": 0,
+            "rules_violated": 0,
+            "avg_confidence": 0.0,
+            "scan_start": None,
+            "scan_end": None,
+        }
+
+    return {
+        "total_violations": result[0] or 0,
+        "tables_with_violations": result[1] or 0,
+        "rules_violated": result[2] or 0,
+        "avg_confidence": float(result[3]) if result[3] is not None else 0.0,
+        "scan_start": result[4],
+        "scan_end": result[5],
+    }
