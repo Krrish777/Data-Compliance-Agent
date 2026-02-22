@@ -58,6 +58,7 @@ from langgraph.graph import END, START, StateGraph
 
 from src.agents.nodes.data_scanning import data_scanning_node
 from src.agents.nodes.explanation_generator import explanation_generator_node
+from src.agents.nodes.report_generation import report_generation_node
 from src.agents.nodes.rule_extraction import rule_extraction_node
 from src.agents.nodes.schema_discovery import schema_discovery_node
 from src.agents.nodes.violation_reporting import violation_reporting_node
@@ -285,28 +286,96 @@ def rule_structuring_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
 def human_review_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Stub: auto-approve all low-confidence rules.
+    Human-in-the-loop review of low-confidence rules.
 
-    In production this will use ``interrupt()`` to pause execution and
-    wait for a human to approve / edit / reject rules. For now it merges
-    low_confidence_rules into structured_rules so the pipeline completes.
+    Uses ``interrupt()`` to pause the graph and present rules to a human
+    reviewer.  The reviewer can approve, edit, or drop each rule.
+
+    When running non-interactively (e.g. ``run_hi_small.py``), the caller
+    can pass ``review_decision`` pre-populated in state to skip the
+    interrupt — this keeps backward compatibility with the batch runner.
+
+    Resume payload schema::
+
+        {
+            "approved":  [rule_id, ...],
+            "edited":    [{rule_id, changes: {...}}, ...],
+            "dropped":   [rule_id, ...]
+        }
     """
+    from langgraph.types import interrupt
+
     structured = list(state.get("structured_rules", []))
     low_confidence = state.get("low_confidence_rules", [])
 
-    # Auto-approve everything
-    structured.extend(low_confidence)
+    if not low_confidence:
+        log.info("human_review_node: no low-confidence rules — nothing to review")
+        return {
+            "structured_rules": structured,
+            "review_decision": {"approved": [], "edited": [], "dropped": []},
+            "current_stage": "review_complete",
+        }
+
+    # Check if a review decision was already provided (batch / test mode)
+    existing_decision = state.get("review_decision")
+    if existing_decision and existing_decision.get("approved") is not None:
+        log.info("human_review_node: pre-populated review_decision found — skipping interrupt")
+        review = existing_decision
+    else:
+        # ── Pause for human review ──────────────────────────────────────
+        review_payload = {
+            "message": (
+                f"{len(low_confidence)} low-confidence rules need review. "
+                "Approve, edit, or drop each rule."
+            ),
+            "rules": [
+                {
+                    "rule_id": r.rule_id,
+                    "rule_text": r.rule_text,
+                    "target_column": r.target_column,
+                    "operator": r.operator,
+                    "value": r.value,
+                    "confidence": r.confidence,
+                    "rule_type": r.rule_type,
+                }
+                for r in low_confidence
+            ],
+        }
+        review = interrupt(review_payload)
+
+    # ── Process the review decision ─────────────────────────────────────
+    approved_ids = set(review.get("approved", []))
+    dropped_ids = set(review.get("dropped", []))
+    edited_map: Dict[str, Dict] = {
+        e["rule_id"]: e.get("changes", {})
+        for e in review.get("edited", [])
+        if isinstance(e, dict) and "rule_id" in e
+    }
+
+    for rule in low_confidence:
+        if rule.rule_id in dropped_ids:
+            continue
+        if rule.rule_id in edited_map:
+            changes = edited_map[rule.rule_id]
+            for attr, new_val in changes.items():
+                if hasattr(rule, attr):
+                    setattr(rule, attr, new_val)
+            structured.append(rule)
+        elif rule.rule_id in approved_ids or not (approved_ids or edited_map or dropped_ids):
+            # If no explicit decision provided, auto-approve (backward compat)
+            structured.append(rule)
+
     log.info(
-        f"human_review_node (stub): auto-approved {len(low_confidence)} "
-        f"low-confidence rules"
+        f"human_review_node: approved={len(approved_ids)}, "
+        f"edited={len(edited_map)}, dropped={len(dropped_ids)}"
     )
 
     return {
         "structured_rules": structured,
         "review_decision": {
-            "approved": [r.rule_id for r in low_confidence],
-            "edited": [],
-            "dropped": [],
+            "approved": list(approved_ids),
+            "edited": list(edited_map.keys()),
+            "dropped": list(dropped_ids),
         },
         "current_stage": "review_complete",
     }
@@ -351,6 +420,7 @@ def build_graph(
     workflow.add_node("violation_validator", violation_validator_node) # type: ignore
     workflow.add_node("explanation_generator", explanation_generator_node) # type: ignore
     workflow.add_node("violation_reporting", violation_reporting_node) # type: ignore
+    workflow.add_node("report_generation", report_generation_node)  # type: ignore
 
     # ── Add edges ────────────────────────────────────────────────────────
     workflow.add_edge(START, "rule_extraction")
@@ -371,7 +441,8 @@ def build_graph(
     workflow.add_edge("data_scanning", "violation_validator")
     workflow.add_edge("violation_validator", "explanation_generator")
     workflow.add_edge("explanation_generator", "violation_reporting")
-    workflow.add_edge("violation_reporting", END)
+    workflow.add_edge("violation_reporting", "report_generation")
+    workflow.add_edge("report_generation", END)
 
     # ── Compile ──────────────────────────────────────────────────────────
     graph = workflow.compile(checkpointer=checkpointer)

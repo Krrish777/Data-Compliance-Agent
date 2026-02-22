@@ -29,7 +29,22 @@ log = setup_logger(__name__)
 def _ensure_list(val: Any) -> List[str]:
     """Guarantee remediation_steps is always a plain list of strings."""
     if isinstance(val, list):
-        return val
+        # Detect list-of-single-characters (a string erroneously converted
+        # to list via list(string) at some point). Rejoin and re-parse.
+        if val and all(isinstance(s, str) and len(s) <= 1 for s in val):
+            joined = "".join(val).strip()
+            if joined:
+                import json as _json
+                try:
+                    parsed = _json.loads(joined)
+                    if isinstance(parsed, list):
+                        return [str(s) for s in parsed]
+                except Exception:
+                    pass
+                # Not valid JSON — return the rejoined string as a single step
+                return [joined]
+            return []
+        return [str(s) for s in val]
     if isinstance(val, str):
         import json as _json
         try:
