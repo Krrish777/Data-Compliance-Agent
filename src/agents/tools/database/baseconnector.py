@@ -1,3 +1,4 @@
+import re
 from abc import ABC, abstractmethod
 from typing import List, Optional, Dict, Any
 from sqlmodel import Session, create_engine
@@ -50,7 +51,8 @@ class BaseDatabaseConnector(ABC):
                 connect_args=self._get_connect_args()
             )
             self.session = Session(self.engine)
-            log.info(f"Connected to database: {self.connection_string}")
+            _safe_conn = re.sub(r":[^:@/]+@", ":***@", self.connection_string)
+            log.info(f"Connected to database: {_safe_conn}")
         except Exception as e:
             log.error(f"Failed to connect to database: {e}")
             raise
