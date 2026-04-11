@@ -24,7 +24,9 @@ class SQLiteConnector(BaseDatabaseConnector):
             return cached
         if not self.session:
             log.error("Database session is not established. Call connect() first.")
-            raise
+            raise RuntimeError(
+                "SQLiteConnector.session is not established — call connect() first."
+            )
         # Discover schema using SQLModel
         with self.session as session:
             table_query = text("SELECT name FROM sqlite_master WHERE type='table';")
