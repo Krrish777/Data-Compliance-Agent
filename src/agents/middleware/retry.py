@@ -77,7 +77,7 @@ def retry_with_backoff(
                             f"(waiting {delay:.1f}s)"
                         )
                         time.sleep(delay)
-                        delay *= (1 + backoff_factor)
+                        delay *= backoff_factor
                     else:
                         log.error(
                             f"All {max_retries} retries exhausted for "
