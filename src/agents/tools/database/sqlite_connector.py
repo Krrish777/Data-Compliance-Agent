@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from sqlmodel import text
+from sqlmodel import Session, text
 from src.agents.tools.database.baseconnector import BaseDatabaseConnector
 from src.utils.cache import SchemaCache
 from src.utils.logger import setup_logger
@@ -28,7 +28,7 @@ class SQLiteConnector(BaseDatabaseConnector):
                 "SQLiteConnector.session is not established — call connect() first."
             )
         # Discover schema using SQLModel
-        with self.session as session:
+        with Session(self.engine) as session:
             table_query = text("SELECT name FROM sqlite_master WHERE type='table';")
             tables = [row[0] for row in session.exec(table_query).fetchall()]  # type: ignore
 
