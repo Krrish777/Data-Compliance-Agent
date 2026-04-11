@@ -17,6 +17,9 @@ from src.utils.document_cache import CacheManager
 
 log = setup_logger(__name__)
 
+MAX_PAGES = 200
+MAX_FILE_MB = 50
+
 @dataclass
 class DocumentChunk:
     """Represents a processed document chunk with metadata"""
@@ -146,48 +149,60 @@ class DocumentProcessor:
         
         
     def _process_pdf(self, file_path: Path) -> List[DocumentChunk]:
+        # Guard: reject files that exceed the size limit
+        size_mb = file_path.stat().st_size / 1024 / 1024
+        if size_mb > MAX_FILE_MB:
+            raise ValueError(
+                f"PDF too large: {size_mb:.1f} MB (limit {MAX_FILE_MB} MB)"
+            )
+
         chunks = []
         try:
-            doc = pymupdf.open(file_path)
-            total_pages = len(doc)
-            log.info(f"Total pages in document: {total_pages}")
-            
-            for page_num in range(total_pages):
-                page = doc.load_page(page_num)
-                text = page.get_text()
-                log.info(f"Extracted text from page {page_num + 1}")
-                
-                # Ensure text is a string
-                if not isinstance(text, str):
-                    text = str(text)
-                
-                if not text.strip():
-                    log.warning(f"No text found on page {page_num + 1}")
-                    continue
-                
-                page_metadata = {
-                    'total_pages': total_pages,
-                    'page_width': page.rect.width,
-                    'page_height': page.rect.height,
-                    'extracted_at': datetime.now().isoformat()
-                }
-                page_chunks = self._chunk_text(
-                    text,
-                    file_path.name,
-                    page_num=page_num+1,
-                    additional_metadata=page_metadata
-                )
-                chunks.extend(page_chunks)
-                
-            doc.close()
+            with pymupdf.open(file_path) as doc:
+                total_pages = len(doc)
+                log.info(f"Total pages in document: {total_pages}")
+
+                if total_pages > MAX_PAGES:
+                    log.warning(
+                        f"Truncating PDF to {MAX_PAGES} pages (was {total_pages})"
+                    )
+                    total_pages = MAX_PAGES
+
+                for page_num in range(total_pages):
+                    page = doc.load_page(page_num)
+                    text = page.get_text()
+                    log.info(f"Extracted text from page {page_num + 1}")
+
+                    # Ensure text is a string
+                    if not isinstance(text, str):
+                        text = str(text)
+
+                    if not text.strip():
+                        log.warning(f"No text found on page {page_num + 1}")
+                        continue
+
+                    page_metadata = {
+                        'total_pages': total_pages,
+                        'page_width': page.rect.width,
+                        'page_height': page.rect.height,
+                        'extracted_at': datetime.now().isoformat()
+                    }
+                    page_chunks = self._chunk_text(
+                        text,
+                        file_path.name,
+                        page_num=page_num+1,
+                        additional_metadata=page_metadata
+                    )
+                    chunks.extend(page_chunks)
+
             log.info(f"Finished processing PDF: {len(chunks)} chunks from {total_pages} pages")
-            
+
         except Exception as e:
             log.error(f"Error processing PDF {file_path}: {e}")
             raise
-        
+
         log.info(f"Chunk details: {[chunk.get_citation_info() for chunk in chunks]}")
-        
+
         return chunks
     
     # Chunking unit

@@ -333,7 +333,7 @@ def scan_complex_rule(
                     violating_record=row,
                     confidence=rule.confidence,
                     violation_type=rule.rule_type,
-                    db_type="sqlite",
+                    db_type=db_type,
                 )
                 total_violations += 1
 
