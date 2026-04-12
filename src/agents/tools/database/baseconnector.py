@@ -51,7 +51,7 @@ class BaseDatabaseConnector(ABC):
                 connect_args=self._get_connect_args()
             )
             self.session = Session(self.engine)
-            _safe_conn = re.sub(r":[^:@/]+@", ":***@", self.connection_string)
+            _safe_conn = re.sub(r":[^:@]+@", ":***@", self.connection_string)
             log.info(f"Connected to database: {_safe_conn}")
         except Exception as e:
             log.error(f"Failed to connect to database: {e}")
