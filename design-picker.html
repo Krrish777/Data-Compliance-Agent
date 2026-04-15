@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Compliance Agent — Design Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Crimson+Pro:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Theme A: Teal Trust */
+    --a-primary: #0D9488;
+    --a-primary-light: #14B8A6;
+    --a-primary-dark: #0F766E;
+    --a-bg: #FAFAF5;
+    --a-bg-card: #FFFFFF;
+    --a-accent: #F59E0B;
+    --a-accent-light: #FCD34D;
+    --a-text: #1E293B;
+    --a-text-muted: #64748B;
+    --a-border: #E2E8F0;
+    --a-hero-gradient: linear-gradient(135deg, #FAFAF5 0%, #F0FDFA 50%, #FEFCE8 100%);
+    --a-heading-font: 'Fraunces', serif;
+    --a-body-font: 'DM Sans', sans-serif;
+
+    /* Theme B: Indigo Edge */
+    --b-primary: #4F46E5;
+    --b-primary-light: #6366F1;
+    --b-primary-dark: #4338CA;
+    --b-bg: #FFFFFF;
+    --b-bg-card: #F8FAFC;
+    --b-accent: #10B981;
+    --b-accent-light: #34D399;
+    --b-text: #111827;
+    --b-text-muted: #6B7280;
+    --b-border: #E5E7EB;
+    --b-hero-gradient: linear-gradient(160deg, #FFFFFF 0%, #EEF2FF 40%, #F0FDF4 100%);
+    --b-heading-font: 'Syne', sans-serif;
+    --b-body-font: 'Plus Jakarta Sans', sans-serif;
+
+    /* Theme C: Warm Slate */
+    --c-primary: #3B82F6;
+    --c-primary-light: #60A5FA;
+    --c-primary-dark: #2563EB;
+    --c-bg: #F8FAFC;
+    --c-bg-card: #FFFFFF;
+    --c-accent: #F97316;
+    --c-accent-light: #FB923C;
+    --c-text: #0F172A;
+    --c-text-muted: #64748B;
+    --c-border: #E2E8F0;
+    --c-hero-gradient: linear-gradient(145deg, #F8FAFC 0%, #EFF6FF 50%, #FFF7ED 100%);
+    --c-heading-font: 'Outfit', sans-serif;
+    --c-body-font: 'Outfit', sans-serif;
+  }
+
+  body {
+    font-family: system-ui, sans-serif;
+    background: #F1F5F9;
+    min-height: 100vh;
+  }
+
+  /* ===== PICKER BAR ===== */
+  .picker-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .picker-bar .label {
+    color: #94A3B8;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .picker-bar .tabs {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+  }
+  .picker-bar .tab {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: #CBD5E1;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .picker-bar .tab:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.25);
+  }
+  .picker-bar .tab.active {
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .picker-bar .tab.active[data-theme="a"] {
+    background: #0D9488;
+    border-color: #0D9488;
+  }
+  .picker-bar .tab.active[data-theme="b"] {
+    background: #4F46E5;
+    border-color: #4F46E5;
+  }
+  .picker-bar .tab.active[data-theme="c"] {
+    background: #3B82F6;
+    border-color: #3B82F6;
+  }
+  .swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    flex-shrink: 0;
+  }
+
+  /* ===== PAGE CONTAINER ===== */
+  .page-container {
+    margin-top: 60px;
+  }
+
+  .design-page {
+    display: none;
+    animation: fadeIn 0.4s ease;
+  }
+  .design-page.active {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== SHARED LAYOUT ===== */
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo svg { flex-shrink: 0; }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 48px 80px;
+  }
+
+  .features {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 48px 80px;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .feature-card {
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .feature-card:hover {
+    transform: translateY(-2px);
+  }
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  .feature-card h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+  }
+  .feature-card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .how-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 48px 80px;
+  }
+  .steps {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 40px;
+  }
+  .step {
+    flex: 1;
+    text-align: center;
+    padding: 32px 20px;
+    border-radius: 16px;
+    position: relative;
+  }
+  .step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    margin: 0 auto 16px;
+  }
+  .step-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    padding-top: 40px;
+    flex-shrink: 0;
+    width: 40px;
+  }
+  .step h4 { margin-bottom: 8px; font-size: 16px; }
+  .step p { font-size: 13px; line-height: 1.5; }
+
+  .tech-bar {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 48px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+  }
+  .tech-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .tech-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  .cta-btn.secondary {
+    border: 1.5px solid;
+  }
+
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  /* ===== DESIGN A: TEAL TRUST ===== */
+  .design-a {
+    background: var(--a-bg);
+    font-family: var(--a-body-font);
+    color: var(--a-text);
+  }
+  .design-a .nav-logo span { font-family: var(--a-heading-font); font-weight: 600; font-size: 18px; color: var(--a-text); }
+  .design-a .nav-links a { color: var(--a-text-muted); }
+  .design-a .nav-links a:hover { color: var(--a-primary); }
+
+  .design-a .hero { background: var(--a-hero-gradient); border-radius: 24px; margin-top: 16px; padding-top: 80px; text-align: center; }
+  .design-a .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(13,148,136,0.08);
+    border: 1px solid rgba(13,148,136,0.2);
+    border-radius: 100px;
+    padding: 6px 16px 6px 8px;
+    font-size: 13px;
+    color: var(--a-primary-dark);
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  .design-a .hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--a-primary); }
+  .design-a .hero h1 {
+    font-family: var(--a-heading-font);
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--a-text);
+    margin-bottom: 20px;
+    font-style: normal;
+  }
+  .design-a .hero h1 em {
+    color: var(--a-primary);
+    font-style: italic;
+    font-weight: 700;
+  }
+  .design-a .hero-sub {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--a-text-muted);
+    max-width: 560px;
+    margin: 0 auto 36px;
+  }
+  .design-a .cta-btn.primary {
+    background: var(--a-primary);
+    color: white;
+  }
+  .design-a .cta-btn.primary:hover { background: var(--a-primary-dark); }
+  .design-a .cta-btn.secondary {
+    background: transparent;
+    color: var(--a-text);
+    border-color: var(--a-border);
+  }
+  .design-a .cta-btn.secondary:hover { border-color: var(--a-primary); color: var(--a-primary); }
+
+  .design-a .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--a-border);
+  }
+  .design-a .stat { text-align: center; }
+  .design-a .stat-num { font-family: var(--a-heading-font); font-size: 32px; font-weight: 800; color: var(--a-primary); }
+  .design-a .stat-label { font-size: 13px; color: var(--a-text-muted); margin-top: 4px; }
+
+  .design-a .section-label { color: var(--a-primary); }
+  .design-a .section-title { font-family: var(--a-heading-font); color: var(--a-text); }
+  .design-a .feature-card { background: var(--a-bg-card); border-color: var(--a-border); }
+  .design-a .feature-card:hover { box-shadow: 0 8px 32px rgba(13,148,136,0.08); }
+  .design-a .feature-icon { background: rgba(13,148,136,0.08); }
+  .design-a .feature-card h3 { font-family: var(--a-heading-font); color: var(--a-text); }
+  .design-a .feature-card p { color: var(--a-text-muted); }
+
+  .design-a .step { background: var(--a-bg-card); border: 1px solid var(--a-border); }
+  .design-a .step-num { background: var(--a-primary); color: white; }
+  .design-a .step h4 { font-family: var(--a-heading-font); }
+  .design-a .step p { color: var(--a-text-muted); }
+  .design-a .step-arrow { color: var(--a-primary); }
+  .design-a .tech-item { color: var(--a-text-muted); }
+  .design-a .tech-dot { background: var(--a-accent); }
+
+  /* ===== DESIGN B: INDIGO EDGE ===== */
+  .design-b {
+    background: var(--b-bg);
+    font-family: var(--b-body-font);
+    color: var(--b-text);
+  }
+  .design-b .nav-logo span { font-family: var(--b-heading-font); font-weight: 700; font-size: 18px; color: var(--b-text); letter-spacing: -0.02em; }
+  .design-b .nav-links a { color: var(--b-text-muted); }
+  .design-b .nav-links a:hover { color: var(--b-primary); }
+
+  .design-b .hero { background: var(--b-hero-gradient); padding-top: 80px; position: relative; }
+  .design-b .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    width: 600px; height: 600px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(79,70,229,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .design-b .hero-overline {
+    font-family: var(--b-heading-font);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--b-primary);
+    margin-bottom: 20px;
+  }
+  .design-b .hero h1 {
+    font-family: var(--b-heading-font);
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--b-text);
+    margin-bottom: 24px;
+    max-width: 700px;
+  }
+  .design-b .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--b-primary), var(--b-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .design-b .hero-sub {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--b-text-muted);
+    max-width: 520px;
+    margin-bottom: 40px;
+  }
+  .design-b .hero-right {
+    position: absolute;
+    right: 48px;
+    top: 120px;
+    width: 340px;
+    background: #0F172A;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'DM Sans', monospace;
+    font-size: 13px;
+    color: #94A3B8;
+    line-height: 1.8;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+  }
+  .design-b .hero-right .line-green { color: var(--b-accent); }
+  .design-b .hero-right .line-indigo { color: var(--b-primary-light); }
+  .design-b .hero-right .line-amber { color: #FBBF24; }
+  .design-b .hero-right .terminal-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .design-b .hero-right .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .design-b .cta-btn.primary { background: var(--b-primary); color: white; }
+  .design-b .cta-btn.primary:hover { background: var(--b-primary-dark); box-shadow: 0 4px 16px rgba(79,70,229,0.3); }
+  .design-b .cta-btn.secondary { background: transparent; color: var(--b-text); border-color: var(--b-border); }
+  .design-b .cta-btn.secondary:hover { border-color: var(--b-primary); color: var(--b-primary); }
+
+  .design-b .section-label { color: var(--b-primary); font-family: var(--b-heading-font); }
+  .design-b .section-title { font-family: var(--b-heading-font); letter-spacing: -0.02em; }
+  .design-b .feature-card { background: var(--b-bg-card); border-color: var(--b-border); }
+  .design-b .feature-card:hover { box-shadow: 0 8px 32px rgba(79,70,229,0.06); }
+  .design-b .feature-icon { background: rgba(79,70,229,0.06); }
+  .design-b .feature-card h3 { font-family: var(--b-heading-font); font-weight: 700; }
+  .design-b .feature-card p { color: var(--b-text-muted); }
+
+  .design-b .step { background: var(--b-bg-card); border: 1px solid var(--b-border); }
+  .design-b .step-num { background: var(--b-primary); color: white; font-family: var(--b-heading-font); }
+  .design-b .step h4 { font-family: var(--b-heading-font); font-weight: 700; }
+  .design-b .step p { color: var(--b-text-muted); }
+  .design-b .step-arrow { color: var(--b-primary); }
+  .design-b .tech-item { color: var(--b-text-muted); }
+  .design-b .tech-dot { background: var(--b-accent); }
+
+  /* ===== DESIGN C: WARM SLATE ===== */
+  .design-c {
+    background: var(--c-bg);
+    font-family: var(--c-body-font);
+    color: var(--c-text);
+  }
+  .design-c .nav-logo span { font-family: var(--c-heading-font); font-weight: 700; font-size: 18px; }
+  .design-c .nav-links a { color: var(--c-text-muted); }
+  .design-c .nav-links a:hover { color: var(--c-primary); }
+
+  .design-c .hero {
+    background: var(--c-hero-gradient);
+    border-radius: 32px;
+    margin-top: 16px;
+    padding: 80px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .design-c .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .design-c .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .design-c .hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: white;
+    border: 1px solid var(--c-border);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-text-muted);
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .design-c .hero-pill .emoji { font-size: 14px; }
+  .design-c .hero h1 {
+    font-family: var(--c-heading-font);
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .design-c .hero h1 .blue { color: var(--c-primary); }
+  .design-c .hero h1 .orange { color: var(--c-accent); }
+  .design-c .hero-sub {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--c-text-muted);
+    max-width: 540px;
+    margin: 0 auto 36px;
+    font-weight: 400;
+  }
+  .design-c .cta-btn.primary {
+    background: var(--c-primary);
+    color: white;
+    border-radius: 14px;
+    padding: 16px 32px;
+  }
+  .design-c .cta-btn.primary:hover { background: var(--c-primary-dark); box-shadow: 0 4px 20px rgba(59,130,246,0.25); }
+  .design-c .cta-btn.secondary {
+    background: white;
+    color: var(--c-text);
+    border-color: var(--c-border);
+    border-radius: 14px;
+    padding: 16px 32px;
+  }
+  .design-c .cta-btn.secondary:hover { border-color: var(--c-primary); color: var(--c-primary); }
+
+  .design-c .hero-metrics {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 48px;
+  }
+  .design-c .metric {
+    background: white;
+    border: 1px solid var(--c-border);
+    border-radius: 16px;
+    padding: 20px 28px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .design-c .metric-num { font-size: 28px; font-weight: 800; color: var(--c-primary); }
+  .design-c .metric-label { font-size: 12px; color: var(--c-text-muted); margin-top: 4px; font-weight: 500; }
+
+  .design-c .section-label { color: var(--c-accent); }
+  .design-c .section-title { font-family: var(--c-heading-font); }
+  .design-c .feature-card { background: white; border-color: var(--c-border); border-radius: 20px; }
+  .design-c .feature-card:hover { box-shadow: 0 8px 32px rgba(59,130,246,0.06); }
+  .design-c .feature-icon { background: rgba(59,130,246,0.06); border-radius: 14px; }
+  .design-c .feature-card h3 { font-family: var(--c-heading-font); font-weight: 700; }
+  .design-c .feature-card p { color: var(--c-text-muted); }
+
+  .design-c .step { background: white; border: 1px solid var(--c-border); border-radius: 20px; }
+  .design-c .step-num { background: var(--c-primary); color: white; }
+  .design-c .step h4 { font-family: var(--c-heading-font); font-weight: 700; }
+  .design-c .step p { color: var(--c-text-muted); }
+  .design-c .step-arrow { color: var(--c-accent); }
+  .design-c .tech-item { color: var(--c-text-muted); }
+  .design-c .tech-dot { background: var(--c-accent); }
+
+  /* ===== FOOTER ===== */
+  .page-footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 14px;
+    border-top: 1px solid;
+  }
+  .design-a .page-footer { color: var(--a-text-muted); border-color: var(--a-border); }
+  .design-b .page-footer { color: var(--b-text-muted); border-color: var(--b-border); }
+  .design-c .page-footer { color: var(--c-text-muted); border-color: var(--c-border); }
+</style>
+</head>
+<body>
+
+<!-- ===== PICKER BAR ===== -->
+<div class="picker-bar">
+  <span class="label">Pick a design:</span>
+  <div class="tabs">
+    <button class="tab active" data-theme="a" onclick="switchTheme('a')">
+      <span class="swatch" style="background:#0D9488"></span>
+      A — Teal Trust
+    </button>
+    <button class="tab" data-theme="b" onclick="switchTheme('b')">
+      <span class="swatch" style="background:#4F46E5"></span>
+      B — Indigo Edge
+    </button>
+    <button class="tab" data-theme="c" onclick="switchTheme('c')">
+      <span class="swatch" style="background:#3B82F6"></span>
+      C — Warm Slate
+    </button>
+  </div>
+</div>
+
+<!-- ===== DESIGN A: TEAL TRUST ===== -->
+<div class="page-container">
+<div class="design-page design-a active" id="design-a">
+  <nav class="nav">
+    <a class="nav-logo" href="#">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="8" fill="#0D9488"/><path d="M8 14l4 4 8-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>ComplianceAgent</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Features</a></li>
+      <li><a href="#">How It Works</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><a href="#" class="cta-btn primary" style="padding:8px 18px;font-size:13px;">Get Started</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-badge"><span class="dot"></span> Open Source Compliance Tool</div>
+    <h1>From Policy PDF<br>to <em>Audit Report</em></h1>
+    <p class="hero-sub">Upload a regulatory document, connect your database, and get a complete compliance report — in minutes, not weeks. Powered by LangGraph and Groq.</p>
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <a href="#" class="cta-btn primary">Get Started</a>
+      <a href="#" class="cta-btn secondary">View on GitHub <span style="font-size:12px;">&#8599;</span></a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Graph Modes</div></div>
+      <div class="stat"><div class="stat-num">9+</div><div class="stat-label">Pipeline Nodes</div></div>
+      <div class="stat"><div class="stat-num">PDF</div><div class="stat-label">+ HTML Reports</div></div>
+      <div class="stat"><div class="stat-num">HITL</div><div class="stat-label">Human Review</div></div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <div class="section-label">How It Works</div>
+    <div class="section-title">Three steps to compliance clarity</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h4>Upload Policy PDF</h4><p>Drop your regulatory document. AI extracts compliance rules with confidence scoring.</p></div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step"><div class="step-num">2</div><h4>Connect Your Database</h4><p>Point to SQLite or Postgres. The agent discovers your schema and identifies PII columns.</p></div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step"><div class="step-num">3</div><h4>Review Your Report</h4><p>Get a detailed audit with violations, explanations, and remediation steps in PDF or HTML.</p></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-label">Key Features</div>
+    <div class="section-title">Built for real compliance workflows</div>
+    <div class="features-grid" style="margin-top:32px;">
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F916;</div>
+        <h3>Multi-Graph Pipeline</h3>
+        <p>Scanner, Interceptor, and Unified Router — three composable LangGraph workflows for different compliance modes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F6E1;</div>
+        <h3>Real-Time Interceptor</h3>
+        <p>APPROVE or BLOCK SQL queries before execution with policy-grounded verdicts and audit trails.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F9D1;&#x200D;&#x2696;&#xFE0F;</div>
+        <h3>Human-in-the-Loop</h3>
+        <p>Low-confidence rules trigger a structured review gate. Nothing is auto-approved without human oversight.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="tech-bar">
+    <div class="tech-item"><span class="tech-dot"></span> LangGraph</div>
+    <div class="tech-item"><span class="tech-dot"></span> Groq (Llama 3.3)</div>
+    <div class="tech-item"><span class="tech-dot"></span> Qdrant</div>
+    <div class="tech-item"><span class="tech-dot"></span> SQLite / Postgres</div>
+    <div class="tech-item"><span class="tech-dot"></span> Python 3.13</div>
+  </div>
+
+  <footer class="page-footer">
+    Data Compliance Agent &mdash; Open Source &mdash; Built with LangGraph + Groq
+  </footer>
+</div>
+
+<!-- ===== DESIGN B: INDIGO EDGE ===== -->
+<div class="design-page design-b" id="design-b">
+  <nav class="nav">
+    <a class="nav-logo" href="#">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="6" fill="#4F46E5"/><path d="M8 14l4 4 8-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>ComplianceAgent</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Features</a></li>
+      <li><a href="#">Architecture</a></li>
+      <li><a href="#">GitHub</a></li>
+      <li><a href="#" class="cta-btn primary" style="padding:8px 18px;font-size:13px;">Launch App</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero" style="display:flex;align-items:flex-start;gap:60px;position:relative;">
+    <div style="flex:1;max-width:580px;">
+      <div class="hero-overline">Open Source Compliance</div>
+      <h1>Your Database, <span class="highlight">Audited by AI</span></h1>
+      <p class="hero-sub">An intelligent agent that reads compliance policies, scans your data, and tells you exactly what's wrong — and why.</p>
+      <div style="display:flex;gap:12px;">
+        <a href="#" class="cta-btn primary">Get Started</a>
+        <a href="#" class="cta-btn secondary">GitHub <span style="font-size:12px;">&#8599;</span></a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="terminal-bar">
+        <span class="terminal-dot" style="background:#FF5F56;"></span>
+        <span class="terminal-dot" style="background:#FFBD2E;"></span>
+        <span class="terminal-dot" style="background:#27C93F;"></span>
+      </div>
+      <div><span class="line-green">$</span> python run_hi_small.py</div>
+      <div><span class="line-indigo">[1/9]</span> Extracting rules from PDF...</div>
+      <div><span class="line-indigo">[2/9]</span> Discovering schema: 5 tables</div>
+      <div><span class="line-indigo">[3/9]</span> Structuring 12 rules</div>
+      <div><span class="line-amber">[4/9]</span> HITL review: 2 low-confidence</div>
+      <div><span class="line-indigo">[5/9]</span> Scanning 500k rows...</div>
+      <div><span class="line-green">[9/9]</span> Report generated &#x2713;</div>
+      <div style="margin-top:8px;"><span class="line-green">&#x2713;</span> 23 violations found in 4 tables</div>
+      <div><span class="line-green">&#x2713;</span> PDF report: data/report.pdf</div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <div class="section-label">Pipeline</div>
+    <div class="section-title">Upload. Scan. Report.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h4>Ingest Policy</h4><p>PDF is chunked, embedded, and rules are extracted with confidence scores via Groq Llama 3.3-70B.</p></div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step"><div class="step-num">2</div><h4>Scan Database</h4><p>Keyset-paginated scans across SQLite or Postgres. PII detected via semantic similarity.</p></div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step"><div class="step-num">3</div><h4>Generate Report</h4><p>LLM-validated violations with explanations, severity grades, and remediation steps.</p></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-label">Capabilities</div>
+    <div class="section-title">Everything you need for automated compliance</div>
+    <div class="features-grid" style="margin-top:32px;">
+      <div class="feature-card">
+        <div class="feature-icon">&#x26A1;</div>
+        <h3>Dual-Model Strategy</h3>
+        <p>70B for rule extraction and explanations. 8B for fast binary classification. Cost-optimized by default.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F50D;</div>
+        <h3>SQL Interceptor</h3>
+        <p>Real-time APPROVE/BLOCK verdicts on queries before they touch your data. Policy-grounded with audit trails.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F4CA;</div>
+        <h3>Rich Audit Reports</h3>
+        <p>PDF and HTML reports with violation details, compliance scores, and per-rule explanations.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="tech-bar">
+    <div class="tech-item"><span class="tech-dot"></span> LangGraph</div>
+    <div class="tech-item"><span class="tech-dot"></span> Groq</div>
+    <div class="tech-item"><span class="tech-dot"></span> Qdrant</div>
+    <div class="tech-item"><span class="tech-dot"></span> SQLite / Postgres</div>
+    <div class="tech-item"><span class="tech-dot"></span> Python 3.13</div>
+  </div>
+
+  <footer class="page-footer">Data Compliance Agent &mdash; Open Source</footer>
+</div>
+
+<!-- ===== DESIGN C: WARM SLATE ===== -->
+<div class="design-page design-c" id="design-c">
+  <nav class="nav">
+    <a class="nav-logo" href="#">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="10" fill="#3B82F6"/><path d="M8 14l4 4 8-8" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>ComplianceAgent</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Features</a></li>
+      <li><a href="#">How It Works</a></li>
+      <li><a href="#">GitHub</a></li>
+      <li><a href="#" class="cta-btn primary" style="padding:10px 20px;font-size:13px;border-radius:10px;">Try Demo</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-pill">
+      <span class="emoji">&#x2728;</span> Open Source &middot; Built with LangGraph
+    </div>
+    <h1>Scan your databases for<br><span class="blue">compliance violations</span><br><span class="orange">automatically</span></h1>
+    <p class="hero-sub">Upload a compliance PDF, connect your database, and get a detailed audit report with violations, explanations, and remediation steps.</p>
+    <div style="display:flex;gap:12px;justify-content:center;position:relative;z-index:1;">
+      <a href="#" class="cta-btn primary">Get Started Free</a>
+      <a href="#" class="cta-btn secondary">View Source <span style="font-size:12px;">&#8599;</span></a>
+    </div>
+    <div class="hero-metrics">
+      <div class="metric"><div class="metric-num">3</div><div class="metric-label">Graph Modes</div></div>
+      <div class="metric"><div class="metric-num">9+</div><div class="metric-label">Pipeline Nodes</div></div>
+      <div class="metric"><div class="metric-num">&lt;2m</div><div class="metric-label">Scan Time</div></div>
+      <div class="metric"><div class="metric-num">2</div><div class="metric-label">Report Formats</div></div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <div class="section-label">How It Works</div>
+    <div class="section-title">From policy to report in three steps</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h4>Upload Policy</h4><p>Drop your regulatory PDF. The AI reads it and extracts structured compliance rules.</p></div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step"><div class="step-num">2</div><h4>Connect Database</h4><p>Link to SQLite or Postgres. Schema is auto-discovered, PII columns identified.</p></div>
+      <div class="step-arrow">&rarr;</div>
+      <div class="step"><div class="step-num">3</div><h4>Get Your Report</h4><p>A full audit report with violations, severity scores, and fix suggestions. PDF or HTML.</p></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="section-label">Features</div>
+    <div class="section-title">What makes it different</div>
+    <div class="features-grid" style="margin-top:32px;">
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F9E0;</div>
+        <h3>AI Rule Extraction</h3>
+        <p>Groq Llama 3.3-70B reads your policy document and structures compliance rules with confidence scoring.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F6E1;&#xFE0F;</div>
+        <h3>Query Interceptor</h3>
+        <p>Real-time SQL monitoring. APPROVE or BLOCK queries before execution with policy-grounded reasoning.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F91D;</div>
+        <h3>Human Review Loop</h3>
+        <p>Uncertain rules go to a human reviewer. Nothing gets auto-approved — the HITL gate is intentional.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="tech-bar">
+    <div class="tech-item"><span class="tech-dot"></span> LangGraph</div>
+    <div class="tech-item"><span class="tech-dot"></span> Groq (Llama 3.3)</div>
+    <div class="tech-item"><span class="tech-dot"></span> Qdrant</div>
+    <div class="tech-item"><span class="tech-dot"></span> SQLite / Postgres</div>
+    <div class="tech-item"><span class="tech-dot"></span> Python 3.13</div>
+  </div>
+
+  <footer class="page-footer">Data Compliance Agent &mdash; Open Source &mdash; MIT License</footer>
+</div>
+</div>
+
+<script>
+function switchTheme(theme) {
+  document.querySelectorAll('.design-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('design-' + theme).classList.add('active');
+  document.querySelector('.tab[data-theme="' + theme + '"]').classList.add('active');
+}
+</script>
+</body>
+</html>

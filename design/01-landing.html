@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Édiproof — The ledger of verified learning</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="page">
+
+  <!-- ================================================================
+       MASTHEAD
+       ================================================================ -->
+  <header class="masthead">
+    <div class="masthead-row">
+      <div>
+        <div class="masthead-brand">
+          <span class="masthead-wordmark">ÉDI<span class="accent">proof</span></span>
+          <span class="masthead-issue">Vol. I · № 142 · SEPOLIA · MMXXVI</span>
+        </div>
+        <div class="masthead-tagline">&mdash; the ledger of verified learning, impressed in ink that cannot be unwritten &mdash;</div>
+      </div>
+      <nav class="masthead-nav">
+        <a href="01-landing.html" class="active">Home</a>
+        <a href="02-issue.html">Issue</a>
+        <a href="03-verify.html">Verify</a>
+        <a href="04-my-certificates.html">My Leaves</a>
+        <button class="wallet-chip">
+          <span class="dot"></span>
+          0xAbC&hellip;7890
+          <span class="chain">Sepolia</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================================================================
+       HERO
+       ================================================================ -->
+  <section class="section" style="padding-top: var(--space-20); border-bottom: none;">
+    <div class="grid-2" style="gap: var(--space-16); align-items: start;">
+
+      <div class="stagger">
+        <p class="label">№ I. &nbsp; Foundational Premise</p>
+        <h1 class="display-xl ink-reveal" style="margin: var(--space-4) 0 var(--space-6) 0;">
+          Diplomas<br>
+          cast in <em class="italic text-oxblood">cryptography</em>,<br>
+          held for <em class="italic">good</em>.
+        </h1>
+        <p class="display-md" style="font-weight: 300; line-height: 1.3; color: var(--ink-faded); max-width: 44ch; margin-bottom: var(--space-8);">
+          Every certificate issued on Édiproof is a soulbound token &mdash; non-transferable, hash-sealed,
+          and permanently attested on-chain. No photocopy, no forgery, no doubt.
+        </p>
+
+        <div style="display: flex; gap: var(--space-4); margin-top: var(--space-8);">
+          <a href="02-issue.html" class="btn btn-oxblood btn-lg">Issue a Certificate &rarr;</a>
+          <a href="03-verify.html" class="btn btn-ghost btn-lg">Verify existing</a>
+        </div>
+
+        <div class="mt-16" style="display: flex; gap: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--brass);">
+          <div>
+            <div class="label">Contract</div>
+            <div class="mono mt-4">0xEdi&hellip;8B4a</div>
+          </div>
+          <div>
+            <div class="label">Standard</div>
+            <div class="mono mt-4">ERC-721 · SBT</div>
+          </div>
+          <div>
+            <div class="label">Chain</div>
+            <div class="mono mt-4">Sepolia Testnet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero side: decorative seal + manuscript note -->
+      <div style="position: relative; padding-top: var(--space-12);">
+        <div style="display: flex; justify-content: center; margin-bottom: var(--space-10);">
+          <div class="seal seal-animate" style="width: 220px; height: 220px;">
+            <div class="seal-title">Sigillum Academicum</div>
+            <div class="seal-main" style="font-size: 2rem;">Édiproof</div>
+            <div class="seal-sub">MMXXVI · VERITAS</div>
+          </div>
+        </div>
+
+        <div class="leaf" style="padding: var(--space-8); transform: rotate(1deg);">
+          <div class="label" style="margin-bottom: var(--space-3);">From the Editors &mdash; Annotation</div>
+          <p class="display-sm italic" style="line-height: 1.3; color: var(--ink-faded); font-weight: 400;">
+            &ldquo;The forgery of a diploma has always been a problem of paper. We have
+            made paper obsolete and replaced it with a hash.&rdquo;
+          </p>
+          <div class="mono mt-6" style="color: var(--brass); font-size: 0.7rem;">&mdash; Preface, Vol. I</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================
+       STATS ROW
+       ================================================================ -->
+  <section class="section" style="padding-top: var(--space-8); padding-bottom: var(--space-16);">
+    <div class="label text-center mb-6">&mdash; The Register at a Glance &mdash;</div>
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-label">Certificates Impressed</div>
+        <div class="stat-value">142</div>
+        <div class="stat-foot">+12 this fortnight</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Approved Institutions</div>
+        <div class="stat-value">8</div>
+        <div class="stat-foot">MIT · IIT · Stanford · &hellip;</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Public Verifications</div>
+        <div class="stat-value">1,207</div>
+        <div class="stat-foot">no wallet required</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Forgeries Rebuffed</div>
+        <div class="stat-value">3</div>
+        <div class="stat-foot">one letter altered, one hash broken</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       HOW IT WORKS — three folios
+       ================================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">II.</div>
+      <div>
+        <h2 class="section-title">How a certificate is <em>impressed</em>.</h2>
+        <p class="section-subtitle">A three-act rite: an institution attests, the chain witnesses, a student holds. Each act is recorded in ink that cannot be rewritten.</p>
+      </div>
+    </div>
+
+    <div class="grid-3 stagger">
+
+      <article class="leaf">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Act the First</div>
+        <h3 class="display-sm mt-4" style="line-height: 1.1;">The Institution <em class="italic text-oxblood">attests</em>.</h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); line-height: 1.6;">
+          A pre-approved institution opens the ledger, fills in the student's name,
+          course, and institution, and uploads the PDF. A single signature of
+          MetaMask impresses the certificate upon the chain.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">
+          issueCertificate(student, &hellip;)
+        </div>
+      </article>
+
+      <article class="leaf">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Act the Second</div>
+        <h3 class="display-sm mt-4" style="line-height: 1.1;">The Chain <em class="italic text-oxblood">witnesses</em>.</h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); line-height: 1.6;">
+          A cryptographic hash is cast from four fields &mdash; name, course, institution,
+          IPFS link &mdash; and stored beside the token id. Any tampering, however small,
+          produces a different hash. The forgery is instantly legible.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">
+          keccak256(abi.encodePacked(&hellip;))
+        </div>
+      </article>
+
+      <article class="leaf">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Act the Third</div>
+        <h3 class="display-sm mt-4" style="line-height: 1.1;">The Student <em class="italic text-oxblood">holds</em>.</h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); line-height: 1.6;">
+          The certificate is minted as a soulbound token to the student's wallet.
+          It cannot be sold, traded, or transferred. It is theirs, alone, for as
+          long as the chain endures.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">
+          _update(&hellip;) reverts on transfer
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="fleuron">&sect; &nbsp; &bull; &nbsp; &sect;</div>
+
+  <!-- ================================================================
+       RECENT IMPRESSIONS — ledger table
+       ================================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">III.</div>
+      <div>
+        <h2 class="section-title">Recent <em>impressions</em> upon the register.</h2>
+        <p class="section-subtitle">A chronological excerpt of the last entries in the ledger. Every row is a transaction on Sepolia.</p>
+      </div>
+    </div>
+
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th style="width: 80px;">№</th>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Institution</th>
+          <th>Impressed</th>
+          <th class="text-right">Tx</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">0142</td>
+          <td>Aarav Sharma</td>
+          <td>B.Tech Computer Science</td>
+          <td>Massachusetts Institute of Technology</td>
+          <td class="italic text-faded">2m ago</td>
+          <td class="text-right mono text-brass">0x3f1b&hellip;</td>
+        </tr>
+        <tr>
+          <td class="num">0141</td>
+          <td>Priya Patel</td>
+          <td>M.Sc. Data Science</td>
+          <td>Stanford University</td>
+          <td class="italic text-faded">8m ago</td>
+          <td class="text-right mono text-brass">0xae02&hellip;</td>
+        </tr>
+        <tr>
+          <td class="num">0140</td>
+          <td>Rahul Verma</td>
+          <td>B.E. Electronics Engineering</td>
+          <td>Indian Institute of Technology, Delhi</td>
+          <td class="italic text-faded">14m ago</td>
+          <td class="text-right mono text-brass">0x91c4&hellip;</td>
+        </tr>
+        <tr>
+          <td class="num">0139</td>
+          <td>Ananya Iyer</td>
+          <td>Ph.D. Theoretical Physics</td>
+          <td>California Institute of Technology</td>
+          <td class="italic text-faded">1h ago</td>
+          <td class="text-right mono text-brass">0x7b88&hellip;</td>
+        </tr>
+        <tr>
+          <td class="num">0138</td>
+          <td>Kabir Singh</td>
+          <td>M.A. History of Art</td>
+          <td>Jawaharlal Nehru University</td>
+          <td class="italic text-faded">2h ago</td>
+          <td class="text-right mono text-brass">0x4d7e&hellip;</td>
+        </tr>
+        <tr>
+          <td class="num">0137</td>
+          <td>Meera Krishnan</td>
+          <td>B.Sc. Biotechnology</td>
+          <td>Indian Institute of Science</td>
+          <td class="italic text-faded">3h ago</td>
+          <td class="text-right mono text-brass">0xc29a&hellip;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="text-center mt-8">
+      <a href="03-verify.html" class="btn btn-ghost">Open the full register &rarr;</a>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       EDITOR'S NOTE — drop cap manifesto
+       ================================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">IV.</div>
+      <div>
+        <h2 class="section-title">On the question, <em>&ldquo;why a chain?&rdquo;</em></h2>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap: var(--space-16); align-items: start;">
+      <div class="drop-cap" style="font-size: var(--fs-md); line-height: 1.8;">
+        For as long as there have been diplomas, there have been counterfeits.
+        Every solution the world has offered &mdash; watermarks, embossed seals,
+        holographic foil, the notarised stamp &mdash; has been defeated in turn by
+        cheaper printers. The trouble, quite simply, is that paper is a medium
+        one can copy. <em>A hash is not.</em>
+        <br><br>
+        Édiproof does not ask you to trust the institution, nor the registrar,
+        nor the paper in your hand. It asks you only to trust mathematics: if
+        the four fields you enter produce the same 32-byte fingerprint that sits
+        upon the chain, the certificate is authentic. If they do not, it is not.
+        There is no middle ground, and no authority to bribe.
+      </div>
+
+      <aside class="marginalia">
+        <strong>Editor's margin</strong>
+        We considered, briefly, storing the certificate PDF itself on the
+        blockchain. But the chain is a poor library &mdash; it is expensive and
+        ill-suited to carrying anything heavier than a number. So we store the
+        PDF on IPFS, and the hash of everything on-chain. The two together
+        constitute the full proof.
+        <br><br>
+        <em>&mdash; The Editors</em>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ACTIVITY STRIP (running ticker)
+       ================================================================ -->
+  <div class="activity-strip">
+    <div class="activity-strip-label">Live from the chain</div>
+    <div class="activity-strip-track">
+      <span><em>MIT</em> impressed cert <code>№ 0142</code> · 2m ago</span>
+      <span><em>Stanford</em> impressed cert <code>№ 0141</code> · 8m ago</span>
+      <span><em>IIT Delhi</em> impressed cert <code>№ 0140</code> · 14m ago</span>
+      <span><em>Caltech</em> impressed cert <code>№ 0139</code> · 1h ago</span>
+      <span><em>JNU</em> impressed cert <code>№ 0138</code> · 2h ago</span>
+      <span><em>IISc</em> impressed cert <code>№ 0137</code> · 3h ago</span>
+      <span><em>MIT</em> impressed cert <code>№ 0142</code> · 2m ago</span>
+      <span><em>Stanford</em> impressed cert <code>№ 0141</code> · 8m ago</span>
+      <span><em>IIT Delhi</em> impressed cert <code>№ 0140</code> · 14m ago</span>
+      <span><em>Caltech</em> impressed cert <code>№ 0139</code> · 1h ago</span>
+      <span><em>JNU</em> impressed cert <code>№ 0138</code> · 2h ago</span>
+      <span><em>IISc</em> impressed cert <code>№ 0137</code> · 3h ago</span>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       COLOPHON
+       ================================================================ -->
+  <footer class="colophon">
+    <div class="colophon-main">
+      <div class="mark">Est. MMXXVI &mdash; On Sepolia</div>
+      <h4>Édiproof</h4>
+      <p>Set in Newsreader and IBM Plex Serif. Impressed upon Sepolia testnet. The contract is the source of truth; the backend a mere convenience.</p>
+    </div>
+    <div>
+      <h4>The Rite</h4>
+      <ul>
+        <li><a href="02-issue.html">Issue a certificate</a></li>
+        <li><a href="03-verify.html">Verify authenticity</a></li>
+        <li><a href="04-my-certificates.html">Inspect one's holdings</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Chain</h4>
+      <ul>
+        <li><a href="#">Contract on Etherscan</a></li>
+        <li><a href="#">Source on GitHub</a></li>
+        <li><a href="#">Open the API</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Workshop</h4>
+      <ul>
+        <li><a href="index.html">Design system</a></li>
+        <li><a href="#">Colophon &amp; credits</a></li>
+        <li><a href="#">A note on soulbinding</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

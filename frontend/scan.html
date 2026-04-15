@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AuditLens — Audit Session ALS-2026-0411</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ================================================================
+       AUDIT SESSION — "The Docket & Proceedings"
+       A formal two-panel workstation. NOT a chat UI.
+       ================================================================ */
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: var(--cream);
+      background-image:
+        radial-gradient(ellipse at 15% 20%, rgba(17, 94, 89, 0.04), transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(185, 28, 28, 0.03), transparent 55%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.06 0 0 0 0 0.05 0 0 0 0 0.04 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-attachment: fixed;
+    }
+
+    .session-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 var(--sp-6);
+    }
+
+    /* ---- Masthead ------------------------------------------------- */
+
+    .session-masthead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-4) 0;
+      border-bottom: 2px solid var(--ink);
+      flex-shrink: 0;
+    }
+    .session-masthead .brand {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-3);
+    }
+    .session-masthead .brand-wordmark {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: 0.06em;
+      text-decoration: none;
+    }
+    .session-masthead .brand-wordmark span {
+      color: var(--teal-deep);
+      font-style: italic;
+      font-weight: 400;
+    }
+    .session-case-id {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+      padding-left: var(--sp-3);
+      border-left: 1px solid var(--ink-muted);
+    }
+    .session-nav {
+      display: flex;
+      gap: var(--sp-6);
+      align-items: center;
+    }
+    .session-nav a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+      font-size: var(--fs-xs);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding-bottom: 3px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .session-nav a:hover {
+      border-bottom-color: var(--teal-deep);
+      color: var(--teal-deep);
+    }
+    .session-nav a.active {
+      border-bottom-color: var(--teal-deep);
+      color: var(--teal-deep);
+    }
+
+    /* ---- Two-panel layout ----------------------------------------- */
+
+    .session-body {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 0;
+      flex: 1;
+      min-height: 0;
+      margin-top: var(--sp-4);
+    }
+
+    /* ================================================================
+       THE DOCKET — Left panel
+       ================================================================ */
+
+    .docket {
+      background:
+        linear-gradient(180deg, #F5F0E4 0%, #EDE7D5 100%);
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.05 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E"),
+        linear-gradient(180deg, #F5F0E4 0%, #EDE7D5 100%);
+      border: 1px solid var(--border-dark);
+      border-top: 3px solid var(--ink);
+      overflow-y: auto;
+      padding: var(--sp-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-6);
+    }
+
+    .docket-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-2xl);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: var(--sp-1);
+    }
+    .docket-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--teal-deep);
+    }
+    .docket-case-num {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ---- Docket sections ------------------------------------------ */
+
+    .docket-section {
+      border: 1px solid var(--border-dark);
+      background: rgba(255, 255, 255, 0.55);
+      position: relative;
+    }
+
+    .docket-section-head {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-2);
+      padding: var(--sp-3) var(--sp-4);
+      border-bottom: 1px solid var(--border);
+      background: rgba(245, 240, 228, 0.6);
+    }
+    .docket-section-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: var(--fs-lg);
+      color: var(--teal-deep);
+    }
+    .docket-section-label {
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--ink-muted);
+    }
+
+    .docket-section-body {
+      padding: var(--sp-4);
+    }
+
+    /* ---- Evidence card (PDF) -------------------------------------- */
+
+    .evidence-card {
+      border: 1px solid var(--border-dark);
+      background: var(--card-white);
+      padding: var(--sp-4) var(--sp-5);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Folded corner */
+    .evidence-card::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 36px; height: 36px;
+      background: linear-gradient(225deg, var(--cream-deep) 50%, var(--card-white) 50%);
+      border-bottom: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+
+    .evidence-icon {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-3);
+    }
+    .evidence-icon svg {
+      flex-shrink: 0;
+    }
+    .evidence-filename {
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .evidence-meta {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--ink-muted);
+      margin-top: var(--sp-1);
+      line-height: 1.6;
+    }
+
+    /* The "RECEIVED" physical stamp */
+    .received-stamp {
+      position: absolute;
+      top: 16px;
+      right: 46px;
+      transform: rotate(-12deg);
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent-green);
+      border: 2px solid var(--accent-green);
+      padding: 2px 8px;
+      opacity: 0.75;
+      line-height: 1.4;
+    }
+
+    /* ---- Subject record (database) -------------------------------- */
+
+    .subject-record {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+    .subject-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: var(--sp-2);
+      border-bottom: 1px dotted var(--border-dark);
+    }
+    .subject-key {
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink-muted);
+    }
+    .subject-val {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink);
+    }
+    .subject-val-connected {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-1);
+    }
+    .dot-green {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
+      display: inline-block;
+    }
+
+    /* ---- Order (action) ------------------------------------------- */
+
+    .begin-audit-btn {
+      display: block;
+      width: 100%;
+      padding: var(--sp-4) var(--sp-6);
+      font-family: var(--font-body);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: var(--teal-deep);
+      color: white;
+      border: 1px solid var(--teal-deep);
+      cursor: pointer;
+      transition: background 0.2s ease;
+      text-align: center;
+    }
+    .begin-audit-btn:hover {
+      background: #0C4F4A;
+    }
+    .order-summary {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--fs-sm);
+      color: var(--ink-muted);
+      text-align: center;
+      margin-top: var(--sp-3);
+      line-height: 1.5;
+    }
+
+    /* ---- Docket footer -------------------------------------------- */
+
+    .docket-colophon {
+      margin-top: auto;
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--border-dark);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--ink-faint);
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    /* ================================================================
+       THE PROCEEDINGS — Right panel
+       ================================================================ */
+
+    .proceedings {
+      background: var(--card-white);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-top: 3px solid var(--teal-deep);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .proceedings-header {
+      padding: var(--sp-5) var(--sp-8);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .proceedings-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      line-height: 1.15;
+    }
+    .proceedings-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--teal-deep);
+    }
+    .proceedings-subtitle {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+      margin-top: var(--sp-1);
+      letter-spacing: 0.04em;
+    }
+
+    .proceedings-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--sp-8);
+      padding-bottom: var(--sp-16);
+    }
+
+    /* ---- Proceeding entries --------------------------------------- */
+
+    .entry {
+      margin-bottom: var(--sp-10);
+    }
+
+    .entry-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-5);
+    }
+    .entry-numeral {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: var(--fs-2xl);
+      color: var(--teal-deep);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .entry-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--ink-faint), transparent);
+    }
+
+    .entry-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: var(--sp-4);
+    }
+    .entry-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .entry-time {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-faint);
+    }
+
+    .entry-body {
+      font-family: var(--font-body);
+      font-size: var(--fs-sm);
+      color: var(--ink-secondary);
+      line-height: 1.75;
+      max-width: 680px;
+    }
+    .entry-body code {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      background: var(--cream);
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* ---- Confidence bar chart ------------------------------------- */
+
+    .conf-chart {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
+      margin: var(--sp-4) 0;
+      max-width: 420px;
+    }
+    .conf-row {
+      display: grid;
+      grid-template-columns: 100px 1fr 60px;
+      align-items: center;
+      gap: var(--sp-3);
+    }
+    .conf-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-secondary);
+      text-align: right;
+    }
+    .conf-track {
+      height: 14px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .conf-fill {
+      height: 100%;
+      transition: width 0.6s ease;
+    }
+    .conf-fill-good { background: var(--teal-deep); }
+    .conf-fill-warn { background: var(--accent-amber); }
+    .conf-count {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+    }
+
+    /* ---- Inline ledger table -------------------------------------- */
+
+    .entry-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--fs-xs);
+      margin: var(--sp-4) 0;
+      max-width: 540px;
+    }
+    .entry-table thead th {
+      text-align: left;
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      padding: var(--sp-2) var(--sp-3);
+      border-bottom: 2px solid var(--ink);
+    }
+    .entry-table tbody td {
+      padding: var(--sp-2) var(--sp-3);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+    }
+    .entry-table .text-right {
+      text-align: right;
+    }
+
+    /* ---- Status badge --------------------------------------------- */
+
+    .entry-status {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      margin-top: var(--sp-4);
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .entry-status-complete {
+      color: var(--accent-green);
+    }
+    .entry-status-active {
+      color: var(--accent-amber);
+    }
+    .entry-status-review {
+      color: var(--teal-deep);
+    }
+
+    /* ---- HITL rule cards ------------------------------------------ */
+
+    .hitl-card {
+      border: 1px solid var(--border-dark);
+      background: var(--cream);
+      padding: var(--sp-4) var(--sp-5);
+      margin: var(--sp-3) 0;
+      position: relative;
+      max-width: 540px;
+    }
+    .hitl-card-head {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      font-weight: 500;
+      color: var(--teal-deep);
+      margin-bottom: var(--sp-2);
+      letter-spacing: 0.04em;
+    }
+    .hitl-card-text {
+      font-family: var(--font-display);
+      font-size: var(--fs-base);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.5;
+      font-style: italic;
+    }
+    .hitl-card-meta {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+      margin-top: var(--sp-3);
+    }
+
+    /* Physical stamps for HITL decisions */
+    .hitl-stamp {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-family: var(--font-display);
+      font-size: 0.6875rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      line-height: 1.4;
+      opacity: 0.8;
+    }
+    .hitl-stamp-approved {
+      color: var(--accent-green);
+      border: 2px solid var(--accent-green);
+      transform: rotate(-6deg);
+    }
+    .hitl-stamp-edited {
+      color: var(--accent-amber);
+      border: 2px solid var(--accent-amber);
+      transform: rotate(-10deg);
+    }
+    .hitl-stamp-dropped {
+      color: var(--accent-red);
+      border: 2px solid var(--accent-red);
+      transform: rotate(4deg);
+    }
+
+    /* ---- Scanning progress ---------------------------------------- */
+
+    .scan-progress {
+      margin: var(--sp-4) 0;
+      max-width: 540px;
+    }
+    .scan-progress-bar {
+      height: 6px;
+      background: var(--cream-deep);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: var(--sp-2);
+    }
+    .scan-progress-fill {
+      height: 100%;
+      background: var(--teal-deep);
+      width: 100%;
+      transition: width 0.4s ease;
+    }
+    .scan-progress-text {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+    }
+
+    /* ---- Violation severity grid ---------------------------------- */
+
+    .violation-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: var(--sp-4) 0;
+      max-width: 480px;
+    }
+    .violation-cell {
+      background: var(--card-white);
+      padding: var(--sp-3) var(--sp-4);
+      text-align: center;
+    }
+    .violation-cell-val {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .violation-cell-val.critical { color: var(--accent-red); }
+    .violation-cell-val.high     { color: var(--accent-amber); }
+    .violation-cell-val.medium   { color: var(--ink-secondary); }
+    .violation-cell-val.low      { color: var(--ink-muted); }
+    .violation-cell-label {
+      font-size: 0.5625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-top: var(--sp-1);
+    }
+
+    /* ================================================================
+       THE VERDICT — Final section
+       ================================================================ */
+
+    .verdict-section {
+      text-align: center;
+      padding: var(--sp-12) 0 var(--sp-8);
+    }
+
+    .verdict-fleuron {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      color: var(--ink-faint);
+      letter-spacing: 0.6em;
+      margin-bottom: var(--sp-8);
+    }
+
+    .verdict-box {
+      border: 2px solid var(--ink);
+      max-width: 460px;
+      margin: 0 auto;
+      padding: var(--sp-8) var(--sp-6);
+      position: relative;
+      background: var(--card-white);
+    }
+    .verdict-box::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid var(--border);
+      pointer-events: none;
+    }
+
+    .verdict-label {
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--ink-muted);
+      margin-bottom: var(--sp-6);
+    }
+
+    /* Shield inside verdict */
+    .verdict-shield {
+      width: 100px;
+      height: 112px;
+      background: var(--teal-deep);
+      border-radius: 8px 8px 50px 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      position: relative;
+      margin: 0 auto var(--sp-5);
+      box-shadow: 0 6px 24px rgba(17, 94, 89, 0.2);
+    }
+    .verdict-shield::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 5px 5px 44px 44px;
+    }
+    .verdict-shield-score {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .verdict-shield-sub {
+      font-family: var(--font-mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.65;
+      margin-top: 2px;
+    }
+
+    .verdict-stats {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-secondary);
+      line-height: 2;
+      margin: var(--sp-4) 0;
+    }
+
+    .verdict-assessment {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+    .verdict-assessment em {
+      font-style: italic;
+      color: var(--accent-amber);
+    }
+
+    .verdict-rule {
+      width: 200px;
+      height: 1px;
+      background: var(--ink-faint);
+      margin: var(--sp-5) auto;
+    }
+
+    .verdict-link {
+      font-family: var(--font-body);
+      font-size: var(--fs-sm);
+      font-weight: 600;
+      color: var(--teal-deep);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .verdict-link:hover {
+      color: #0C4F4A;
+    }
+
+    .verdict-fleuron-end {
+      font-family: var(--font-display);
+      font-size: var(--fs-base);
+      color: var(--ink-faint);
+      letter-spacing: 0.8em;
+      margin-top: var(--sp-8);
+    }
+
+    /* ---- Scrollbar styling ---------------------------------------- */
+    .proceedings-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .proceedings-scroll::-webkit-scrollbar-track {
+      background: var(--cream);
+    }
+    .proceedings-scroll::-webkit-scrollbar-thumb {
+      background: var(--border-dark);
+      border-radius: 4px;
+    }
+    .proceedings-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--ink-faint);
+    }
+
+    .docket::-webkit-scrollbar {
+      width: 6px;
+    }
+    .docket::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .docket::-webkit-scrollbar-thumb {
+      background: var(--border-dark);
+      border-radius: 3px;
+    }
+
+    /* ---- Responsive ----------------------------------------------- */
+    @media (max-width: 1100px) {
+      .session-body {
+        grid-template-columns: 300px 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="session-shell">
+
+  <!-- ================================================================
+       MASTHEAD
+       ================================================================ -->
+  <header class="session-masthead">
+    <div class="brand">
+      <a href="index.html" class="brand-wordmark">AUDIT<span>Lens</span></a>
+      <span class="session-case-id">CASE ALS-2026-0411</span>
+    </div>
+    <nav class="session-nav">
+      <a href="index.html">Home</a>
+      <a href="scan.html" class="active">Audit</a>
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <!-- ================================================================
+       TWO-PANEL BODY
+       ================================================================ -->
+  <div class="session-body">
+
+    <!-- =============================================================
+         THE DOCKET — Left panel
+         ============================================================= -->
+    <aside class="docket">
+
+      <div>
+        <div class="docket-title">Case <em>Docket</em></div>
+        <div class="docket-case-num">ALS-2026-0411 &middot; Filed 11 Apr 2026, 14:32 IST</div>
+      </div>
+
+      <!-- Section I: Evidence Filed -->
+      <div class="docket-section">
+        <div class="docket-section-head">
+          <span class="docket-section-num">I.</span>
+          <span class="docket-section-label">Evidence Filed</span>
+        </div>
+        <div class="docket-section-body">
+          <div class="evidence-card">
+            <span class="received-stamp">Received</span>
+            <div class="evidence-icon">
+              <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.5" y="0.5" width="23" height="27" rx="1.5" fill="#FEF2F2" stroke="#B91C1C"/>
+                <text x="12" y="16" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="7" font-weight="600" fill="#B91C1C">PDF</text>
+              </svg>
+              <div>
+                <div class="evidence-filename">AML_Compliance_Policy.pdf</div>
+                <div class="evidence-meta">14 pages &middot; 2.3 MB</div>
+              </div>
+            </div>
+            <div class="evidence-meta">
+              Indexed: 14 chunks via BAAI/bge-small-en-v1.5<br>
+              Filed: 11 Apr 2026, 14:32:07 IST
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section II: Subject Under Examination -->
+      <div class="docket-section">
+        <div class="docket-section-head">
+          <span class="docket-section-num">II.</span>
+          <span class="docket-section-label">Subject Under Examination</span>
+        </div>
+        <div class="docket-section-body">
+          <div class="subject-record">
+            <div class="subject-row">
+              <span class="subject-key">Subject</span>
+              <span class="subject-val">HI-Small_Trans.db</span>
+            </div>
+            <div class="subject-row">
+              <span class="subject-key">Engine</span>
+              <span class="subject-val">SQLite 3.45</span>
+            </div>
+            <div class="subject-row">
+              <span class="subject-key">Tables</span>
+              <span class="subject-val">1</span>
+            </div>
+            <div class="subject-row">
+              <span class="subject-key">Columns</span>
+              <span class="subject-val">12</span>
+            </div>
+            <div class="subject-row">
+              <span class="subject-key">Rows</span>
+              <span class="subject-val">534,993</span>
+            </div>
+            <div class="subject-row">
+              <span class="subject-key">Status</span>
+              <span class="subject-val subject-val-connected">
+                <span class="dot-green"></span>
+                Connected
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section III: Order -->
+      <div class="docket-section">
+        <div class="docket-section-head">
+          <span class="docket-section-num">III.</span>
+          <span class="docket-section-label">Order</span>
+        </div>
+        <div class="docket-section-body">
+          <button class="begin-audit-btn">Begin Audit</button>
+          <div class="order-summary">
+            14 rules will be examined across 1 table<br>
+            534,993 rows subject to inspection
+          </div>
+        </div>
+      </div>
+
+      <div class="docket-colophon">
+        AuditLens v0.3.0 &middot; LangGraph Pipeline<br>
+        Groq llama-3.3-70b &middot; llama-3.1-8b<br>
+        Thread: als_2026_0411_001
+      </div>
+
+    </aside>
+
+    <!-- =============================================================
+         THE PROCEEDINGS — Right panel
+         ============================================================= -->
+    <main class="proceedings">
+
+      <div class="proceedings-header">
+        <div class="proceedings-title">Proceedings of Audit <em>ALS-2026-0411</em></div>
+        <div class="proceedings-subtitle">Commenced 11 Apr 2026, 14:32 IST &middot; Pipeline: rule_extraction &rarr; schema_discovery &rarr; data_scanning &rarr; validation &rarr; report</div>
+      </div>
+
+      <div class="proceedings-scroll">
+
+        <!-- ========================================================
+             ENTRY I — Rule Extraction
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">I.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Rule Extraction</span>
+            <span class="entry-time">00:00 &ndash; 00:14</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              The regulatory document <code>AML_Compliance_Policy.pdf</code>
+              was processed in 14 chunks. Model <code>llama-3.3-70b-versatile</code>
+              extracted 14 structured compliance rules with column-mapping and
+              operator classification.
+            </p>
+
+            <div class="conf-chart">
+              <div class="conf-row">
+                <span class="conf-label">conf &ge; 0.8</span>
+                <div class="conf-track">
+                  <div class="conf-fill conf-fill-good" style="width: 86%;"></div>
+                </div>
+                <span class="conf-count">12 rules</span>
+              </div>
+              <div class="conf-row">
+                <span class="conf-label">conf &lt; 0.7</span>
+                <div class="conf-track">
+                  <div class="conf-fill conf-fill-warn" style="width: 14%;"></div>
+                </div>
+                <span class="conf-count">2 rules</span>
+              </div>
+            </div>
+
+            <div class="entry-status entry-status-complete">&#10003; Complete</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             ENTRY II — Schema Discovery
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">II.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Schema Discovery</span>
+            <span class="entry-time">00:14 &ndash; 00:16</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              Target: <code>sqlite:///data/HI-Small_Trans.db</code><br>
+              Tables discovered: 1. PII columns identified via semantic similarity
+              (<code>all-MiniLM-L6-v2</code>).
+            </p>
+
+            <table class="entry-table">
+              <thead>
+                <tr>
+                  <th>Table</th>
+                  <th class="text-right">Columns</th>
+                  <th class="text-right">Rows</th>
+                  <th class="text-right">PII Cols</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>HI-Small_Trans</td>
+                  <td class="text-right">12</td>
+                  <td class="text-right">534,993</td>
+                  <td class="text-right" style="color: var(--accent-amber);">3</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="entry-status entry-status-complete">&#10003; Complete</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             ENTRY III — Human-in-the-Loop Review
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">III.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Human-in-the-Loop Review</span>
+            <span class="entry-time">00:16 &ndash; 00:42</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              2 rules fell below the confidence threshold of 0.7 and were
+              submitted for manual review. The review decision is recorded
+              below.
+            </p>
+
+            <!-- Rule R-07 -->
+            <div class="hitl-card">
+              <span class="hitl-stamp hitl-stamp-approved">Approved</span>
+              <div class="hitl-card-head">Rule R-07</div>
+              <div class="hitl-card-text">
+                Cash transactions exceeding $10,000 must be reported
+                within 24 hours of occurrence.
+              </div>
+              <div class="hitl-card-meta">
+                Confidence: 0.62 &middot; Column: <code>Amount</code> &middot; Operator: GREATER_THAN
+              </div>
+            </div>
+
+            <!-- Rule R-11 -->
+            <div class="hitl-card">
+              <span class="hitl-stamp hitl-stamp-edited">Edited</span>
+              <div class="hitl-card-head">Rule R-11</div>
+              <div class="hitl-card-text">
+                Structuring/smurfing detection: flag sequences of
+                transactions just below the reporting threshold
+                within a 48-hour window.
+              </div>
+              <div class="hitl-card-meta">
+                Confidence: 0.58 &middot; Column: <code>Amount</code> &middot; Operator: BETWEEN
+              </div>
+            </div>
+
+            <div class="entry-status entry-status-review">&#10003; Reviewed</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             ENTRY IV — Data Scanning
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">IV.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Data Scanning</span>
+            <span class="entry-time">00:42 &ndash; 01:38</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              534,993 rows examined via keyset pagination (batch size: 5,000).
+              14 rules applied across all rows. Complex rules (BETWEEN, regex,
+              cross-field) evaluated in <code>complex_executor.py</code>;
+              simple predicates via direct SQL WHERE.
+            </p>
+
+            <div class="scan-progress">
+              <div class="scan-progress-bar">
+                <div class="scan-progress-fill" style="width: 100%;"></div>
+              </div>
+              <div class="scan-progress-text">
+                534,993 / 534,993 rows &middot; 107 batches &middot; 56s elapsed
+              </div>
+            </div>
+
+            <p style="margin-top: var(--sp-3);">
+              23 potential violations detected. Written to
+              <code>violations.db</code> (external store, not LangGraph state).
+            </p>
+
+            <div class="entry-status entry-status-complete">&#10003; Complete</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             ENTRY V — Violation Validation
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">V.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Violation Validation</span>
+            <span class="entry-time">01:38 &ndash; 01:52</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              Each candidate violation re-evaluated by
+              <code>llama-3.1-8b-instant</code> for binary classification
+              (true positive / false positive). Fast model chosen for
+              throughput on 23 candidates.
+            </p>
+
+            <div class="violation-summary">
+              <div class="violation-cell">
+                <div class="violation-cell-val critical">4</div>
+                <div class="violation-cell-label">Critical</div>
+              </div>
+              <div class="violation-cell">
+                <div class="violation-cell-val high">7</div>
+                <div class="violation-cell-label">High</div>
+              </div>
+              <div class="violation-cell">
+                <div class="violation-cell-val medium">9</div>
+                <div class="violation-cell-label">Medium</div>
+              </div>
+              <div class="violation-cell">
+                <div class="violation-cell-val low">3</div>
+                <div class="violation-cell-label">Low</div>
+              </div>
+            </div>
+
+            <p style="margin-top: var(--sp-2);">
+              0 false positives removed. 23 violations confirmed.
+            </p>
+
+            <div class="entry-status entry-status-complete">&#10003; Complete</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             ENTRY VI — Explanation Generation
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">VI.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Explanation Generation</span>
+            <span class="entry-time">01:52 &ndash; 02:24</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              Natural-language explanations generated for each of the 23
+              confirmed violations using <code>llama-3.3-70b-versatile</code>.
+              Each explanation cites the regulatory clause, the violating
+              data value, and a recommended remediation step.
+            </p>
+
+            <table class="entry-table">
+              <thead>
+                <tr>
+                  <th>Rule</th>
+                  <th>Violations</th>
+                  <th>Severity</th>
+                  <th class="text-right">Avg Conf</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>R-03</td>
+                  <td>7</td>
+                  <td style="color: var(--accent-red); font-weight: 600;">Critical</td>
+                  <td class="text-right">0.94</td>
+                </tr>
+                <tr>
+                  <td>R-07</td>
+                  <td>5</td>
+                  <td style="color: var(--accent-amber); font-weight: 600;">High</td>
+                  <td class="text-right">0.88</td>
+                </tr>
+                <tr>
+                  <td>R-11</td>
+                  <td>4</td>
+                  <td style="color: var(--accent-amber); font-weight: 600;">High</td>
+                  <td class="text-right">0.82</td>
+                </tr>
+                <tr>
+                  <td>R-02</td>
+                  <td>4</td>
+                  <td>Medium</td>
+                  <td class="text-right">0.76</td>
+                </tr>
+                <tr>
+                  <td>R-09</td>
+                  <td>3</td>
+                  <td style="color: var(--ink-muted);">Low</td>
+                  <td class="text-right">0.71</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="entry-status entry-status-complete">&#10003; Complete</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             ENTRY VII — Report Generation
+             ======================================================== -->
+        <div class="entry">
+          <div class="entry-divider">
+            <span class="entry-numeral">VII.</span>
+            <span class="entry-rule"></span>
+          </div>
+          <div class="entry-head">
+            <span class="entry-title">Report Generation</span>
+            <span class="entry-time">02:24 &ndash; 02:31</span>
+          </div>
+          <div class="entry-body">
+            <p>
+              Formal audit report compiled. Outputs written to:
+            </p>
+            <ul style="list-style: none; margin: var(--sp-3) 0; display: flex; flex-direction: column; gap: var(--sp-2);">
+              <li><code>reports/ALS-2026-0411.pdf</code> &mdash; Full narrative report (12 pages)</li>
+              <li><code>reports/ALS-2026-0411.html</code> &mdash; Interactive HTML version</li>
+              <li><code>violations.db</code> &mdash; Structured violation records (23 rows)</li>
+            </ul>
+
+            <div class="entry-status entry-status-complete">&#10003; Complete</div>
+          </div>
+        </div>
+
+        <!-- ========================================================
+             VERDICT
+             ======================================================== -->
+        <div class="verdict-section">
+          <div class="verdict-fleuron">&sect; &middot; VERDICT &middot; &sect;</div>
+
+          <div class="verdict-box">
+            <div class="verdict-label">Audit Complete</div>
+
+            <div class="verdict-shield">
+              <div class="verdict-shield-score">87%</div>
+              <div class="verdict-shield-sub">Compliance</div>
+            </div>
+
+            <div class="verdict-stats">
+              23 violations &middot; 4 rules flagged<br>
+              14 rules examined &middot; 1 table &middot; 534,993 rows
+            </div>
+
+            <div class="verdict-assessment">
+              Acceptable <em>with Concerns</em>
+            </div>
+
+            <div class="verdict-rule"></div>
+
+            <a href="dashboard.html" class="verdict-link">
+              View Full Report &rarr;
+            </a>
+          </div>
+
+          <div class="verdict-fleuron-end">&sect; &middot; &middot; &middot; &middot; &middot; &sect;</div>
+        </div>
+
+      </div><!-- /.proceedings-scroll -->
+
+    </main>
+
+  </div><!-- /.session-body -->
+
+</div><!-- /.session-shell -->
+</body>
+</html>
