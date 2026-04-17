@@ -17,5 +17,4 @@ qdrant_db/
 .pytest_cache/
 temp/
 .langgraph_api/
-agent-chat-ui/
 langgraph.json
