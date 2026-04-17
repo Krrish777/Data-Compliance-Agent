@@ -97,7 +97,9 @@ class EmbeddingGenerator:
                 log.info(f"Generating {len(chunks_to_embed)} new embeddings")
                 if self.model is None:
                     log.error("Embedding model is not initialized")
-                    raise
+                    raise RuntimeError(
+                        "Embedding model not initialized — check model download logs."
+                    )
                 texts = [chunk.content for chunk in chunks_to_embed]
                 embeddings_list = list(self.model.embed(texts))
                 
@@ -140,7 +142,9 @@ class EmbeddingGenerator:
             log.warning("Empty query provided for embedding generation.")
             if self.embedding_dim is None:
                 log.error("Embedding dimension is not initialized")
-                raise
+                raise RuntimeError(
+                    "Embedding model not initialized — embedding_dim is unknown."
+                )
             return np.zeros(self.embedding_dim, dtype=np.float32)
         
         # Try cache first
@@ -158,7 +162,9 @@ class EmbeddingGenerator:
         try:
             if self.model is None:
                 log.error("Embedding model is not initialized")
-                raise
+                raise RuntimeError(
+                    "Embedding model not initialized — check model download logs."
+                )
             embedding = list(self.model.embed([query]))[0]
             embedding_array = np.array(embedding, dtype=np.float32)
             

@@ -1,0 +1,895 @@
+/* ================================================================
+   AUDITLENS — Brand Design System
+   Variation B: "The Audit Ledger"
+
+   Aesthetic: Scholarly, formal, structured.
+   Three fonts. Fourteen colours. Sharp corners. Brass numerals.
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+
+/* ---- Palette -------------------------------------------------- */
+:root {
+  --teal-deep:    #115E59;
+  --teal-mid:     #0F766E;
+  --teal-light:   #14B8A6;
+  --teal-wash:    #F0FDFA;
+  --teal-subtle:  #CCFBF1;
+
+  --cream:        #F5F3EF;
+  --cream-deep:   #EBE7E0;
+  --card-white:   #FFFFFF;
+
+  --ink:          #1A1A1A;
+  --ink-secondary:#4A4A4A;
+  --ink-muted:    #7A7A7A;
+  --ink-faint:    #B0B0B0;
+
+  --border:       #E8E5E0;
+  --border-dark:  #D4D0C8;
+
+  --accent-amber: #D97706;
+  --accent-red:   #B91C1C;
+  --accent-green: #15803D;
+
+  /* ---- Typography -------------------------------------------- */
+  --font-display: 'Crimson Pro', 'Georgia', serif;
+  --font-body:    'IBM Plex Sans', 'Helvetica Neue', sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+
+  /* ---- Scale -------------------------------------------------- */
+  --fs-xs:   0.6875rem;   /* 11px */
+  --fs-sm:   0.8125rem;   /* 13px */
+  --fs-base: 1rem;        /* 16px */
+  --fs-md:   1.0625rem;   /* 17px */
+  --fs-lg:   1.25rem;     /* 20px */
+  --fs-xl:   1.75rem;     /* 28px */
+  --fs-2xl:  2rem;        /* 32px */
+  --fs-3xl:  3.125rem;    /* 50px */
+
+  /* ---- Spacing ------------------------------------------------ */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-20: 5rem;
+  --sp-24: 6rem;
+
+  --content-w: 1120px;
+}
+
+/* ---- Reset ---------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; color-scheme: light; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--cream);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: var(--teal-deep); color: white; }
+
+a { color: var(--ink); text-decoration-color: var(--ink-faint); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--teal-deep); color: var(--teal-deep); }
+
+img { max-width: 100%; display: block; }
+
+/* ================================================================
+   1. Typography
+   ================================================================ */
+
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, var(--fs-3xl));
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, var(--fs-2xl));
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+.display-md {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 400;
+  line-height: 1.15;
+}
+.display-sm {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.text-teal { color: var(--teal-deep); }
+.text-muted { color: var(--ink-muted); }
+.text-faint { color: var(--ink-faint); }
+.text-amber { color: var(--accent-amber); }
+.text-red { color: var(--accent-red); }
+.text-green { color: var(--accent-green); }
+
+em.teal, .em-teal {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--teal-deep);
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink-muted);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+
+/* ================================================================
+   2. Layout
+   ================================================================ */
+
+.page {
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 0 var(--sp-10);
+}
+
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
+
+.section {
+  padding: var(--sp-16) 0;
+}
+.section + .section {
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Section heads (catalogue style) -------------------------- */
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-10);
+  padding-bottom: var(--sp-3);
+  border-bottom: 1px solid var(--border);
+}
+.section-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: var(--fs-xl);
+  color: var(--teal-deep);
+  min-width: 40px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.section-title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--teal-deep);
+}
+
+/* ---- Centered section head variant ----------------------------- */
+
+.section-head-center {
+  text-align: center;
+  margin-bottom: var(--sp-10);
+}
+.section-head-center .section-label {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--teal-deep);
+  margin-bottom: var(--sp-2);
+}
+.section-head-center .section-title {
+  font-size: var(--fs-2xl);
+}
+
+/* ================================================================
+   3. Navigation (Masthead)
+   ================================================================ */
+
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-5) 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+.brand-wordmark {
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.brand-wordmark span {
+  color: var(--teal-deep);
+  font-style: italic;
+  font-weight: 400;
+}
+.brand-tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding-left: var(--sp-3);
+  border-left: 1px solid var(--ink-muted);
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--sp-6);
+  align-items: center;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--ink-secondary);
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding-bottom: 4px;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.nav-links a:hover {
+  border-bottom-color: var(--teal-deep);
+  color: var(--teal-deep);
+}
+.nav-links a.active {
+  border-bottom-color: var(--teal-deep);
+  color: var(--teal-deep);
+}
+
+/* ================================================================
+   4. Buttons
+   ================================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: var(--sp-3) var(--sp-6);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+.btn-primary {
+  background: var(--teal-deep);
+  color: white;
+  border-color: var(--teal-deep);
+}
+.btn-primary:hover {
+  background: #0C4F4A;
+  color: white;
+}
+.btn-lg {
+  padding: var(--sp-4) var(--sp-8);
+  font-size: 0.875rem;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--border);
+}
+.btn-ghost:hover {
+  border-color: var(--teal-deep);
+  color: var(--teal-deep);
+}
+.btn-danger {
+  background: var(--accent-red);
+  color: white;
+  border-color: var(--accent-red);
+}
+
+/* ================================================================
+   5. Cards
+   ================================================================ */
+
+.card {
+  background: var(--card-white);
+  border: 1px solid var(--border);
+  padding: var(--sp-6);
+  position: relative;
+}
+.card-accent {
+  border-top: 3px solid var(--teal-deep);
+}
+.card-accent-amber {
+  border-top: 3px solid var(--accent-amber);
+}
+.card-accent-red {
+  border-top: 3px solid var(--accent-red);
+}
+.card-accent-green {
+  border-top: 3px solid var(--accent-green);
+}
+
+.card-icon {
+  font-size: 1.25rem;
+  color: var(--teal-deep);
+  margin-bottom: var(--sp-3);
+}
+.card h3, .card-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  margin-bottom: var(--sp-2);
+  color: var(--ink);
+}
+.card p, .card-desc {
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+  line-height: 1.55;
+}
+
+/* ---- Step cards (How it works) --------------------------------- */
+
+.step-card {
+  background: var(--card-white);
+  border: 1px solid var(--border);
+  padding: var(--sp-6);
+  position: relative;
+}
+.step-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--teal-deep);
+}
+.step-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--teal-deep);
+  font-weight: 600;
+  margin-bottom: var(--sp-3);
+}
+.step-card h4 {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 500;
+  margin-bottom: var(--sp-2);
+}
+.step-card p {
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+  line-height: 1.55;
+}
+
+/* ================================================================
+   6. Shield Seal
+   ================================================================ */
+
+.shield {
+  width: 160px;
+  height: 180px;
+  background: var(--teal-deep);
+  border-radius: 10px 10px 80px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(17, 94, 89, 0.2);
+  text-align: center;
+}
+.shield::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px 6px 72px 72px;
+}
+.shield-check {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.shield-title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+.shield-sub {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-top: var(--sp-1);
+}
+
+.shield-sm {
+  width: 36px; height: 40px;
+  border-radius: 4px 4px 18px 18px;
+  font-size: 14px;
+}
+
+/* ================================================================
+   7. KPI Cards (Dashboard)
+   ================================================================ */
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--sp-4);
+}
+.kpi {
+  background: var(--card-white);
+  border: 1px solid var(--border);
+  padding: var(--sp-5) var(--sp-6);
+  position: relative;
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--teal-deep);
+}
+.kpi-value {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--teal-deep);
+  line-height: 1;
+  margin-bottom: var(--sp-1);
+}
+.kpi-value.amber { color: var(--accent-amber); }
+.kpi-value.red { color: var(--accent-red); }
+.kpi-value.green { color: var(--accent-green); }
+
+.kpi-label {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+}
+
+/* ================================================================
+   8. Ledger Table (Dashboard)
+   ================================================================ */
+
+.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.ledger thead th {
+  text-align: left;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger tbody td {
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.ledger tbody tr:hover {
+  background: rgba(17, 94, 89, 0.02);
+}
+.ledger .num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-faint);
+}
+.ledger .mono-cell {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.ledger .severity-critical {
+  color: var(--accent-red);
+  font-weight: 600;
+}
+.ledger .severity-high {
+  color: var(--accent-amber);
+  font-weight: 600;
+}
+.ledger .severity-medium {
+  color: var(--ink-secondary);
+}
+.ledger .severity-low {
+  color: var(--ink-muted);
+}
+
+/* ================================================================
+   9. Pills & Badges
+   ================================================================ */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  background: var(--card-white);
+}
+.pill-teal {
+  color: var(--teal-deep);
+  border-color: var(--teal-subtle);
+  background: var(--teal-wash);
+}
+.pill-red {
+  color: var(--accent-red);
+  border-color: #FECACA;
+  background: #FEF2F2;
+}
+.pill-amber {
+  color: var(--accent-amber);
+  border-color: #FDE68A;
+  background: #FFFBEB;
+}
+.pill-green {
+  color: var(--accent-green);
+  border-color: #BBF7D0;
+  background: #F0FDF4;
+}
+
+/* ================================================================
+   10. Terminal / Code Block
+   ================================================================ */
+
+.terminal {
+  background: #0C1222;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+.terminal-bar {
+  background: #151D2E;
+  padding: 10px 14px;
+  display: flex;
+  gap: 6px;
+}
+.terminal-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.terminal-body {
+  padding: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.9;
+  color: #8B95A5;
+}
+.terminal-body .t-green  { color: #34D399; }
+.terminal-body .t-teal   { color: #2DD4BF; }
+.terminal-body .t-amber  { color: #FBBF24; }
+.terminal-body .t-red    { color: #F87171; }
+.terminal-body .t-muted  { color: #4B5563; }
+
+/* ================================================================
+   11. Chat / Streaming UI
+   ================================================================ */
+
+.chat-sidebar {
+  background: var(--cream);
+  border-right: 1px solid var(--border);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.chat-main {
+  background: var(--card-white);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  padding: var(--sp-4) var(--sp-6);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--sp-6);
+}
+
+.chat-message {
+  margin-bottom: var(--sp-6);
+  max-width: 720px;
+}
+.chat-message-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+.chat-avatar {
+  width: 28px; height: 28px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  color: white;
+}
+.chat-avatar-agent { background: var(--teal-deep); }
+.chat-avatar-user  { background: var(--ink-secondary); }
+.chat-sender {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.chat-time {
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+}
+.chat-body {
+  font-size: var(--fs-sm);
+  line-height: 1.65;
+  color: var(--ink-secondary);
+  padding-left: 36px;
+}
+.chat-body code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  background: var(--cream);
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+}
+
+.chat-stage {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.chat-stage-num {
+  color: var(--teal-deep);
+  font-weight: 500;
+}
+.chat-stage-done {
+  color: var(--accent-green);
+}
+.chat-stage-active {
+  color: var(--accent-amber);
+}
+
+/* ---- Form fields ----------------------------------------------- */
+
+.field {
+  margin-bottom: var(--sp-4);
+}
+.field-label {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-bottom: var(--sp-1);
+}
+.field-input {
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  border: 1px solid var(--border);
+  background: var(--card-white);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field-input:focus {
+  border-color: var(--teal-deep);
+}
+.field-input-mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.field-hint {
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+  margin-top: var(--sp-1);
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+.dropzone {
+  border: 2px dashed var(--border-dark);
+  padding: var(--sp-8) var(--sp-4);
+  text-align: center;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.dropzone:hover {
+  border-color: var(--teal-deep);
+  background: var(--teal-wash);
+}
+.dropzone-label {
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+}
+.dropzone-hint {
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+  margin-top: var(--sp-1);
+}
+
+/* ================================================================
+   12. Bar Charts (CSS only, Dashboard)
+   ================================================================ */
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 50px;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.bar-label {
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--ink-secondary);
+  text-align: right;
+}
+.bar-track {
+  height: 20px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--teal-deep);
+  transition: width 0.6s ease;
+}
+.bar-fill.amber { background: var(--accent-amber); }
+.bar-fill.red { background: var(--accent-red); }
+.bar-fill.green { background: var(--accent-green); }
+.bar-count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+}
+
+/* ================================================================
+   13. Footer (Colophon)
+   ================================================================ */
+
+.colophon {
+  border-top: 2px solid var(--ink);
+  padding: var(--sp-8) 0 var(--sp-12);
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: var(--sp-8);
+}
+.colophon-brand {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  color: var(--ink-muted);
+}
+.colophon-tech {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--ink-faint);
+}
+
+/* ================================================================
+   14. Dividers
+   ================================================================ */
+
+.rule        { border: none; height: 1px; background: var(--ink); }
+.rule-border { border: none; height: 1px; background: var(--border); }
+.rule-teal   { border: none; height: 1px; background: var(--teal-deep); opacity: 0.3; }
+
+.divider-fade {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--ink-faint), transparent);
+}
+
+/* ================================================================
+   15. Utilities
+   ================================================================ */
+
+.mt-1  { margin-top: var(--sp-1); }
+.mt-2  { margin-top: var(--sp-2); }
+.mt-3  { margin-top: var(--sp-3); }
+.mt-4  { margin-top: var(--sp-4); }
+.mt-6  { margin-top: var(--sp-6); }
+.mt-8  { margin-top: var(--sp-8); }
+.mt-10 { margin-top: var(--sp-10); }
+.mt-12 { margin-top: var(--sp-12); }
+.mt-16 { margin-top: var(--sp-16); }
+.mb-4  { margin-bottom: var(--sp-4); }
+.mb-6  { margin-bottom: var(--sp-6); }
+.mb-8  { margin-bottom: var(--sp-8); }
+
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+
+.gap-4  { gap: var(--sp-4); }
+.gap-5  { gap: var(--sp-5); }
+.gap-6  { gap: var(--sp-6); }
+
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+
+/* ---- Status dot ----------------------------------------------- */
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  display: inline-block;
+}
+.status-dot-green { background: var(--accent-green); box-shadow: 0 0 0 2px rgba(21,128,61,0.2); }
+.status-dot-amber { background: var(--accent-amber); box-shadow: 0 0 0 2px rgba(217,119,6,0.2); }
+.status-dot-red   { background: var(--accent-red);   box-shadow: 0 0 0 2px rgba(185,28,28,0.2); }

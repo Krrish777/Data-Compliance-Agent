@@ -175,19 +175,15 @@ def update_violation_status(
     if not violation_ids:
         return 0
     reviewed_ts = datetime.now(timezone.utc)
-    ids_csv = ",".join(str(i) for i in violation_ids)
-    sql = text(f"""
-        UPDATE violations_log
-           SET review_status = :status,
-               reviewer_notes = :notes,
-               reviewed_at = :reviewed_at
-         WHERE id IN ({ids_csv})
-    """)
-    session.exec(sql, params={  # type: ignore
-        "status": status,
-        "notes": reviewer_notes,
-        "reviewed_at": reviewed_ts,
-    })
+    placeholders = ", ".join(f":id_{i}" for i in range(len(violation_ids)))
+    sql = text(
+        "UPDATE violations_log "
+        "SET review_status = :status, reviewer_notes = :notes, reviewed_at = :reviewed_at "
+        f"WHERE id IN ({placeholders})"
+    )
+    params: Dict[str, Any] = {"status": status, "notes": reviewer_notes, "reviewed_at": reviewed_ts}
+    params.update({f"id_{i}": v for i, v in enumerate(violation_ids)})
+    session.exec(sql, params=params)  # type: ignore
     session.commit()
     log.debug(f"update_violation_status: {len(violation_ids)} rows → '{status}'")
     return len(violation_ids)

@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Édiproof — Issue a certificate</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-row">
+      <div>
+        <div class="masthead-brand">
+          <span class="masthead-wordmark">ÉDI<span class="accent">proof</span></span>
+          <span class="masthead-issue">Vol. I · № 142 · SEPOLIA · MMXXVI</span>
+        </div>
+        <div class="masthead-tagline">&mdash; the ledger of verified learning, impressed in ink that cannot be unwritten &mdash;</div>
+      </div>
+      <nav class="masthead-nav">
+        <a href="01-landing.html">Home</a>
+        <a href="02-issue.html" class="active">Issue</a>
+        <a href="03-verify.html">Verify</a>
+        <a href="04-my-certificates.html">My Leaves</a>
+        <button class="wallet-chip">
+          <span class="dot"></span>
+          0xAbC&hellip;7890
+          <span class="chain">Sepolia</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ================================================================
+       PAGE HEAD
+       ================================================================ -->
+  <section class="section" style="padding-top: var(--space-16);">
+    <div class="section-head">
+      <div class="section-numeral">I.</div>
+      <div>
+        <p class="label" style="color: var(--oxblood);">Institutional Rite &nbsp;&bull;&nbsp; Restricted to Approved Issuers</p>
+        <h1 class="section-title mt-4"><em>Impress</em> a new certificate.</h1>
+        <p class="section-subtitle">Your wallet must be listed among the approved institutions. Every field becomes part of the on-chain hash &mdash; choose them with the seriousness of a registrar.</p>
+      </div>
+    </div>
+
+    <!-- Issue / Reissue toggle -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-10); padding-bottom: var(--space-4); border-bottom: 1px solid var(--brass);">
+      <div class="toggle-group">
+        <button class="active">Issue New</button>
+        <button>Reissue Existing</button>
+      </div>
+      <div class="mono" style="font-size: 0.7rem; color: var(--ink-faded);">
+        signing as <span style="color: var(--oxblood);">Massachusetts Institute of Technology</span> · 0xMIT1&hellip;9F3a
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap: var(--space-16); align-items: start;">
+
+      <!-- LEFT: FORM -->
+      <form class="form stagger" onsubmit="return false;">
+
+        <!-- (When Reissue is active, this field appears) -->
+        <div class="field" style="padding: var(--space-4) var(--space-5); background: rgba(138, 109, 59, 0.08); border-left: 3px solid var(--brass); display: none;">
+          <label class="field-label">
+            <span>Old Token №</span>
+            <span class="numeral">(required for reissue)</span>
+          </label>
+          <input class="field-input field-mono" value="0057" placeholder="e.g. 0057" />
+          <div class="field-hint">The previous certificate will be revoked and linked via <code>replacedBy</code>.</div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">
+            <span>Student Wallet Address</span>
+            <span class="numeral">i.</span>
+          </label>
+          <input class="field-input field-mono" value="0x9A3c7E4fB1d28C5a6E0F2b84D7A1C9e8B5f3D6a2" />
+          <div class="field-hint">The certificate will be soulbound to this wallet &mdash; forever.</div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">
+            <span>Student's Full Name</span>
+            <span class="numeral">ii.</span>
+          </label>
+          <input class="field-input" value="Aarav Sharma" placeholder="As it should appear on the diploma" />
+        </div>
+
+        <div class="form-grid-2">
+          <div class="field">
+            <label class="field-label">
+              <span>Course</span>
+              <span class="numeral">iii.</span>
+            </label>
+            <input class="field-input" value="B.Tech Computer Science" />
+          </div>
+          <div class="field">
+            <label class="field-label">
+              <span>Institution</span>
+              <span class="numeral">iv.</span>
+            </label>
+            <input class="field-input" value="Massachusetts Institute of Technology" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">
+            <span>Certificate document</span>
+            <span class="numeral">v. &nbsp; PDF, max 15 MB</span>
+          </label>
+          <div class="file-drop">
+            <span class="file-drop-icon">&#xFE0F;&#x270F;</span>
+            <div><em>drag a PDF here, or click to select</em></div>
+            <div class="mono mt-4" style="font-size: 0.7rem; color: var(--brass);">Aarav_Sharma_BTech_CS.pdf &nbsp;&bull;&nbsp; 1.8 MB &nbsp;&bull;&nbsp; ready to pin</div>
+          </div>
+        </div>
+
+        <div class="rule-brass"></div>
+
+        <!-- Hash preview -->
+        <div class="leaf leaf-flat" style="padding: var(--space-6); background: var(--vellum-1); border: 1px dashed var(--ink);">
+          <div class="label" style="margin-bottom: var(--space-3);">The hash your fields will produce</div>
+          <div class="mono" style="font-size: 0.85rem; color: var(--oxblood); word-break: break-all; line-height: 1.6;">
+            0x4b3c9f82e7a1d58f6b0c4e92a7d1b83f6e5c9a02d47b1e8f3c6a9d02b5e8f1a7c
+          </div>
+          <div class="field-hint mt-4">Computed as <code>keccak256(abi.encodePacked(name, course, institution, ipfsURI))</code>.</div>
+        </div>
+
+        <div style="display: flex; gap: var(--space-4); align-items: center; padding-top: var(--space-4);">
+          <button class="btn btn-oxblood btn-lg" type="submit">Impress upon the chain &rarr;</button>
+          <div class="mono" style="font-size: 0.7rem; color: var(--ink-faded);">~ 0.00021 Sepolia ETH est. gas</div>
+        </div>
+
+      </form>
+
+      <!-- RIGHT: INSTRUCTIONS & MARGINALIA -->
+      <div style="display: flex; flex-direction: column; gap: var(--space-8);">
+
+        <div class="leaf">
+          <div class="leaf-corner"></div>
+          <p class="label" style="margin-bottom: var(--space-3);">Before You Impress</p>
+          <h3 class="display-sm italic" style="font-weight: 400; margin-bottom: var(--space-6); line-height: 1.15;">
+            Four rules for the registrar.
+          </h3>
+
+          <ol style="list-style: none; display: flex; flex-direction: column; gap: var(--space-5); counter-reset: rule;">
+            <li style="display: flex; gap: var(--space-4);">
+              <span class="numeral" style="font-size: 1.5rem; line-height: 1; min-width: 32px;">i.</span>
+              <div>
+                <div style="font-weight: 500; font-size: var(--fs-sm);">Proofread before signing.</div>
+                <div class="mono" style="font-size: 0.72rem; color: var(--ink-faded); margin-top: 2px; font-family: var(--font-display); font-style: italic;">
+                  Typos cannot be edited &mdash; only reissued. A reissue costs gas and leaves a visible scar.
+                </div>
+              </div>
+            </li>
+            <li style="display: flex; gap: var(--space-4);">
+              <span class="numeral" style="font-size: 1.5rem; line-height: 1; min-width: 32px;">ii.</span>
+              <div>
+                <div style="font-weight: 500; font-size: var(--fs-sm);">Use the student's canonical name.</div>
+                <div class="mono" style="font-size: 0.72rem; color: var(--ink-faded); margin-top: 2px; font-family: var(--font-display); font-style: italic;">
+                  The hash is case-sensitive. &ldquo;Aarav Sharma&rdquo; and &ldquo;aarav sharma&rdquo; produce different fingerprints.
+                </div>
+              </div>
+            </li>
+            <li style="display: flex; gap: var(--space-4);">
+              <span class="numeral" style="font-size: 1.5rem; line-height: 1; min-width: 32px;">iii.</span>
+              <div>
+                <div style="font-weight: 500; font-size: var(--fs-sm);">Upload the final PDF.</div>
+                <div class="mono" style="font-size: 0.72rem; color: var(--ink-faded); margin-top: 2px; font-family: var(--font-display); font-style: italic;">
+                  Once pinned to IPFS, its content is immutable. Any later edit would break the link.
+                </div>
+              </div>
+            </li>
+            <li style="display: flex; gap: var(--space-4);">
+              <span class="numeral" style="font-size: 1.5rem; line-height: 1; min-width: 32px;">iv.</span>
+              <div>
+                <div style="font-weight: 500; font-size: var(--fs-sm);">Verify the student's wallet first.</div>
+                <div class="mono" style="font-size: 0.72rem; color: var(--ink-faded); margin-top: 2px; font-family: var(--font-display); font-style: italic;">
+                  Soulbound means soulbound. A misaddressed certificate cannot be recalled &mdash; only reissued to the correct wallet.
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <aside class="marginalia">
+          <strong>Editor's margin</strong>
+          On reissue: if you discover an error after signing, toggle <em>Reissue Existing</em>
+          above and enter the old token №. The old certificate is marked revoked and a
+          pointer (<code class="mono">replacedBy</code>) is written to the new one. The
+          original remains legible on-chain as a record of the correction; nothing is
+          ever truly erased.
+        </aside>
+
+        <div class="leaf leaf-flat" style="padding: var(--space-6); background: var(--vellum-1);">
+          <div class="label" style="margin-bottom: var(--space-3);">Your institution</div>
+          <div class="display-sm" style="font-weight: 400; line-height: 1.2;">Massachusetts<br>Institute of Technology</div>
+          <div class="rule-brass"></div>
+          <dl style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+            <dt class="label">Approved since</dt>
+            <dd class="mono" style="font-size: 0.75rem;">Block 7,214,998</dd>
+            <dt class="label">Certificates issued</dt>
+            <dd class="mono" style="font-size: 0.75rem; color: var(--oxblood);">47</dd>
+            <dt class="label">Last activity</dt>
+            <dd class="mono" style="font-size: 0.75rem;">2 minutes ago</dd>
+          </dl>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY STRIP -->
+  <div class="activity-strip">
+    <div class="activity-strip-label">Live from the chain</div>
+    <div class="activity-strip-track">
+      <span><em>MIT</em> impressed cert <code>№ 0142</code> · 2m ago</span>
+      <span><em>Stanford</em> impressed cert <code>№ 0141</code> · 8m ago</span>
+      <span><em>IIT Delhi</em> impressed cert <code>№ 0140</code> · 14m ago</span>
+      <span><em>Caltech</em> impressed cert <code>№ 0139</code> · 1h ago</span>
+      <span><em>MIT</em> impressed cert <code>№ 0142</code> · 2m ago</span>
+      <span><em>Stanford</em> impressed cert <code>№ 0141</code> · 8m ago</span>
+      <span><em>IIT Delhi</em> impressed cert <code>№ 0140</code> · 14m ago</span>
+      <span><em>Caltech</em> impressed cert <code>№ 0139</code> · 1h ago</span>
+    </div>
+  </div>
+
+  <!-- COLOPHON -->
+  <footer class="colophon">
+    <div class="colophon-main">
+      <div class="mark">Est. MMXXVI &mdash; On Sepolia</div>
+      <h4>Édiproof</h4>
+      <p>Set in Newsreader and IBM Plex Serif. Impressed upon Sepolia testnet. The contract is the source of truth; the backend a mere convenience.</p>
+    </div>
+    <div>
+      <h4>The Rite</h4>
+      <ul>
+        <li><a href="02-issue.html">Issue a certificate</a></li>
+        <li><a href="03-verify.html">Verify authenticity</a></li>
+        <li><a href="04-my-certificates.html">Inspect one's holdings</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Chain</h4>
+      <ul>
+        <li><a href="#">Contract on Etherscan</a></li>
+        <li><a href="#">Source on GitHub</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Workshop</h4>
+      <ul>
+        <li><a href="index.html">Design system</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  // Issue / Reissue toggle
+  document.querySelectorAll('.toggle-group button').forEach((b, i, all) => {
+    b.addEventListener('click', () => {
+      all.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      const reissue = i === 1;
+      const oldTokenField = document.querySelector('.form .field[style*="rgba(138, 109, 59"]');
+      if (oldTokenField) oldTokenField.style.display = reissue ? 'flex' : 'none';
+    });
+  });
+</script>
+</body>
+</html>

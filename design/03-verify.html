@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Édiproof — Verify a certificate</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-row">
+      <div>
+        <div class="masthead-brand">
+          <span class="masthead-wordmark">ÉDI<span class="accent">proof</span></span>
+          <span class="masthead-issue">Vol. I · № 142 · SEPOLIA · MMXXVI</span>
+        </div>
+        <div class="masthead-tagline">&mdash; the ledger of verified learning, impressed in ink that cannot be unwritten &mdash;</div>
+      </div>
+      <nav class="masthead-nav">
+        <a href="01-landing.html">Home</a>
+        <a href="02-issue.html">Issue</a>
+        <a href="03-verify.html" class="active">Verify</a>
+        <a href="04-my-certificates.html">My Leaves</a>
+        <span class="mono" style="font-size: 0.7rem; color: var(--ink-faded); padding-left: var(--space-4); border-left: 1px solid var(--brass);">
+          no wallet required
+        </span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- PAGE HEAD -->
+  <section class="section" style="padding-top: var(--space-16);">
+    <div class="section-head">
+      <div class="section-numeral">I.</div>
+      <div>
+        <p class="label">Public Rite &nbsp;&bull;&nbsp; Open to any person, wallet or no</p>
+        <h1 class="section-title mt-4">Interrogate the <em>ledger</em>.</h1>
+        <p class="section-subtitle">Every verification is a pure read: no wallet, no signature, no gas. The four fields you enter are hashed and compared against the on-chain register. There is no middle ground.</p>
+      </div>
+    </div>
+
+    <!-- Mode tabs -->
+    <div class="tabs mb-8">
+      <button class="active">By Details</button>
+      <button>By Token №</button>
+      <button>By Wallet</button>
+    </div>
+
+    <div class="grid-2" style="gap: var(--space-16); align-items: start;">
+
+      <!-- LEFT: form -->
+      <form class="form stagger" onsubmit="return false;">
+        <div class="label" style="color: var(--oxblood); margin-bottom: var(--space-2);">&mdash; Enter the four fields exactly as written &mdash;</div>
+
+        <div class="field">
+          <label class="field-label"><span>Student's Full Name</span><span class="numeral">i.</span></label>
+          <input class="field-input" value="Aarav Sharma" />
+        </div>
+
+        <div class="field">
+          <label class="field-label"><span>Course</span><span class="numeral">ii.</span></label>
+          <input class="field-input" value="B.Tech Computer Science" />
+        </div>
+
+        <div class="field">
+          <label class="field-label"><span>Institution</span><span class="numeral">iii.</span></label>
+          <input class="field-input" value="Massachusetts Institute of Technology" />
+        </div>
+
+        <div class="field">
+          <label class="field-label"><span>IPFS URI</span><span class="numeral">iv.</span></label>
+          <input class="field-input field-mono" value="ipfs://bafybeigdyrztseedcert1aarav" />
+          <div class="field-hint">Paste the exact ipfs:// link from the original issuance.</div>
+        </div>
+
+        <div class="rule-brass"></div>
+
+        <div style="display: flex; gap: var(--space-4); align-items: center;">
+          <button type="submit" class="btn btn-oxblood btn-lg">Verify &rarr;</button>
+          <div class="mono" style="font-size: 0.7rem; color: var(--ink-faded);">free · read-only · no gas</div>
+        </div>
+
+        <div class="fleuron" style="padding: var(--space-6) 0 0;">&sect; &nbsp; &bull; &nbsp; &sect;</div>
+
+        <!-- Live hash preview -->
+        <div class="leaf leaf-flat" style="background: var(--vellum-1); border: 1px dashed var(--ink); padding: var(--space-5);">
+          <div class="label" style="margin-bottom: var(--space-2);">Fingerprint under inspection</div>
+          <div class="mono" style="font-size: 0.82rem; color: var(--oxblood); word-break: break-all; line-height: 1.55;">
+            0x4b3c9f82e7a1d58f6b0c4e92a7d1b83f6e5c9a02d47b1e8f3c6a9d02b5e8f1a7c
+          </div>
+        </div>
+      </form>
+
+      <!-- RIGHT: result cards -->
+      <div style="display: flex; flex-direction: column; gap: var(--space-12);">
+
+        <!-- PASS RESULT -->
+        <article class="cert" style="position: relative;">
+          <div style="position: absolute; top: -30px; right: -30px; z-index: 2;">
+            <div class="seal seal-animate">
+              <div class="seal-title">Certified by the Chain</div>
+              <div class="seal-main">Authentic</div>
+              <div class="seal-sub">№ 0142 · BLOCK 7214998</div>
+            </div>
+          </div>
+
+          <div class="cert-body">
+            <div class="label mb-4">Result &nbsp;&bull;&nbsp; <span class="text-moss">Verified authentic</span></div>
+            <h3><em>Aarav Sharma</em><br>B.Tech Computer Science</h3>
+            <div class="label mt-4">Massachusetts Institute of Technology</div>
+
+            <dl class="cert-meta">
+              <div>
+                <dt>Certificate №</dt>
+                <dd class="mono">0142</dd>
+              </div>
+              <div>
+                <dt>Impressed</dt>
+                <dd>11 April 2026 &bull; 14:32 UTC</dd>
+              </div>
+              <div>
+                <dt>Status</dt>
+                <dd><span class="pill pill-active">&bull; Active</span></dd>
+              </div>
+              <div>
+                <dt>Issuing Institution</dt>
+                <dd>MIT <span class="pill" style="margin-left: 4px;">Approved ✓</span></dd>
+              </div>
+              <div style="grid-column: 1 / -1;">
+                <dt>Owner Wallet</dt>
+                <dd class="mono">0x9A3c7E4f&hellip;B5f3D6a2 <span style="color: var(--brass); cursor: pointer; font-family: var(--font-body); font-style: italic; font-size: 0.75rem;">&nbsp;copy ↗</span></dd>
+              </div>
+              <div style="grid-column: 1 / -1;">
+                <dt>Fingerprint</dt>
+                <dd class="mono" style="word-break: break-all; font-size: 0.72rem; color: var(--oxblood);">0x4b3c9f82e7a1d58f6b0c4e92a7d1b83f6e5c9a02d47b1e8f3c6a9d02b5e8f1a7c</dd>
+              </div>
+            </dl>
+
+            <div class="cert-links">
+              <a href="#">View PDF on IPFS</a>
+              <a href="#">View on Etherscan</a>
+              <a href="#">Share link</a>
+            </div>
+          </div>
+
+          <div class="cert-side">
+            <div style="width: 100%;">
+              <div class="label text-center mb-4">Scan to verify</div>
+              <div class="cert-qr">
+                <div class="cert-qr-inner"></div>
+              </div>
+            </div>
+            <div class="mono text-center" style="font-size: 0.65rem; color: var(--ink-faded); line-height: 1.5;">
+              edi.verify/0142
+            </div>
+          </div>
+        </article>
+
+        <div class="fleuron">&mdash; yet if a single letter be altered, observe &mdash;</div>
+
+        <!-- FAIL RESULT -->
+        <article class="cert" style="position: relative; background: #f2e3cf;">
+          <div style="position: absolute; top: -30px; right: -30px; z-index: 2;">
+            <div class="seal seal-fail">
+              <div class="seal-title">The hash is broken</div>
+              <div class="seal-main">Rejected</div>
+              <div class="seal-sub">NO MATCH ON CHAIN</div>
+            </div>
+          </div>
+
+          <div class="cert-body">
+            <div class="label mb-4" style="color: var(--error);">Result &nbsp;&bull;&nbsp; no certificate matches your fields</div>
+            <h3><em>Aarav Sharna</em><br>B.Tech Computer Science</h3>
+            <div class="label mt-4" style="color: var(--error);">the surname has been changed by a single letter</div>
+
+            <dl class="cert-meta">
+              <div style="grid-column: 1 / -1;">
+                <dt>Your fingerprint</dt>
+                <dd class="mono" style="word-break: break-all; font-size: 0.72rem; color: var(--error); text-decoration: line-through;">
+                  0x9f22a1e3b7d4c8e05f6a2b83d1e4c7f8a9b02d4e7f1c3a5b8d0e2f4a7c9b1e5d
+                </dd>
+              </div>
+              <div style="grid-column: 1 / -1;">
+                <dt>Expected (if genuine)</dt>
+                <dd class="mono" style="word-break: break-all; font-size: 0.72rem; color: var(--ink-faded);">
+                  0x4b3c9f82e7a1d58f6b0c4e92a7d1b83f6e5c9a02d47b1e8f3c6a9d02b5e8f1a7c
+                </dd>
+              </div>
+            </dl>
+
+            <div class="leaf leaf-flat" style="margin-top: var(--space-6); padding: var(--space-4); background: rgba(160, 55, 46, 0.08); border: 1px dashed var(--error);">
+              <div class="label" style="color: var(--error); margin-bottom: var(--space-2);">The reading</div>
+              <p style="font-size: var(--fs-sm); color: var(--ink); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+                No token on this chain answers to the fingerprint you have submitted.
+                Either the certificate does not exist &mdash; or one of the four fields
+                has been altered from its original form. The mathematics do not forgive.
+              </p>
+            </div>
+          </div>
+
+          <div class="cert-side">
+            <div class="mono text-center italic" style="color: var(--error); padding: var(--space-4);">
+              ✗ FORGERY
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- THE GLOSSARY / FOOTNOTES -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">II.</div>
+      <div>
+        <h2 class="section-title">A glossary for the <em>uninitiated</em>.</h2>
+        <p class="section-subtitle">Five terms you will meet on this page. No jargon uncovered is no jargon useful.</p>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div>
+        <div class="label text-oxblood">Soulbound Token</div>
+        <div class="rule-brass" style="margin: var(--space-3) 0;"></div>
+        <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+          An ERC-721 that cannot be transferred after mint. Permanent residence; no secondary market. A diploma you cannot sell.
+        </p>
+      </div>
+      <div>
+        <div class="label text-oxblood">IPFS</div>
+        <div class="rule-brass" style="margin: var(--space-3) 0;"></div>
+        <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+          The InterPlanetary File System. A decentralised store for the PDF itself, keyed by its own content. Change the file, change the key.
+        </p>
+      </div>
+      <div>
+        <div class="label text-oxblood">keccak256</div>
+        <div class="rule-brass" style="margin: var(--space-3) 0;"></div>
+        <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+          The hash function Ethereum uses. It maps any input &mdash; short or long &mdash; onto 32 bytes. One letter changed, a wholly different fingerprint.
+        </p>
+      </div>
+      <div>
+        <div class="label text-oxblood">Sepolia</div>
+        <div class="rule-brass" style="margin: var(--space-3) 0;"></div>
+        <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+          Ethereum's test network. The same machinery as mainnet, but with money of no value &mdash; the traditional waterway for first voyages.
+        </p>
+      </div>
+      <div>
+        <div class="label text-oxblood">Revocation</div>
+        <div class="rule-brass" style="margin: var(--space-3) 0;"></div>
+        <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+          A certificate, though immutable, may be marked as no longer valid by its original issuer. The record of the revocation is itself permanent.
+        </p>
+      </div>
+      <div>
+        <div class="label text-oxblood">Reissue</div>
+        <div class="rule-brass" style="margin: var(--space-3) 0;"></div>
+        <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.5;">
+          When a typo must be corrected, a new certificate is issued and the old one marked revoked with a pointer to the new. The scar is visible.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACTIVITY STRIP -->
+  <div class="activity-strip">
+    <div class="activity-strip-label">Recent verifications</div>
+    <div class="activity-strip-track">
+      <span>Verified <em>Aarav Sharma</em> <code>№ 0142</code> · MIT · 2m ago</span>
+      <span>Verified <em>Priya Patel</em> <code>№ 0141</code> · Stanford · 8m ago</span>
+      <span>Forgery rejected · <em>Aarav Sharna</em> · hash broken · 14m ago</span>
+      <span>Verified <em>Rahul Verma</em> <code>№ 0140</code> · IIT Delhi · 1h ago</span>
+      <span>Verified <em>Aarav Sharma</em> <code>№ 0142</code> · MIT · 2m ago</span>
+      <span>Verified <em>Priya Patel</em> <code>№ 0141</code> · Stanford · 8m ago</span>
+      <span>Forgery rejected · <em>Aarav Sharna</em> · hash broken · 14m ago</span>
+      <span>Verified <em>Rahul Verma</em> <code>№ 0140</code> · IIT Delhi · 1h ago</span>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="colophon-main">
+      <div class="mark">Est. MMXXVI &mdash; On Sepolia</div>
+      <h4>Édiproof</h4>
+      <p>Set in Newsreader and IBM Plex Serif. Impressed upon Sepolia testnet. The contract is the source of truth; the backend a mere convenience.</p>
+    </div>
+    <div>
+      <h4>The Rite</h4>
+      <ul>
+        <li><a href="02-issue.html">Issue a certificate</a></li>
+        <li><a href="03-verify.html">Verify authenticity</a></li>
+        <li><a href="04-my-certificates.html">Inspect one's holdings</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Chain</h4>
+      <ul>
+        <li><a href="#">Contract on Etherscan</a></li>
+        <li><a href="#">Source on GitHub</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Workshop</h4>
+      <ul>
+        <li><a href="index.html">Design system</a></li>
+      </ul>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tabs button').forEach((b, i, all) => {
+    b.addEventListener('click', () => {
+      all.forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Édiproof — The Design System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-row">
+      <div>
+        <div class="masthead-brand">
+          <span class="masthead-wordmark">ÉDI<span class="accent">proof</span></span>
+          <span class="masthead-issue">The Workshop · Vol. I · MMXXVI</span>
+        </div>
+        <div class="masthead-tagline">&mdash; a pattern library for the ledger of verified learning &mdash;</div>
+      </div>
+      <nav class="masthead-nav">
+        <a href="index.html" class="active">Workshop</a>
+        <a href="01-landing.html">Home</a>
+        <a href="02-issue.html">Issue</a>
+        <a href="03-verify.html">Verify</a>
+        <a href="04-my-certificates.html">My Leaves</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="section" style="padding-top: var(--space-16); border-bottom: none;">
+    <div class="section-head">
+      <div class="section-numeral">&para;</div>
+      <div>
+        <p class="label">A note to the implementer</p>
+        <h1 class="section-title mt-4">The <em>workshop</em>, laid bare.</h1>
+        <p class="section-subtitle">
+          These are the colours, fonts, and components from which every page of Édiproof is composed.
+          All pages share a single stylesheet &mdash; <code class="mono">styles.css</code> &mdash; so any
+          change here propagates everywhere. The aesthetic is resolutely analogue in spirit: ink on
+          vellum, wax seals, brass numerals, and the occasional editorial margin note.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE PAGES -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">I.</div>
+      <div>
+        <h2 class="section-title">The <em>four</em> pages.</h2>
+        <p class="section-subtitle">Each page stands alone and shares the same brand. Click through to read the finished articles.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap: var(--space-10);">
+      <a href="01-landing.html" class="leaf" style="text-decoration: none; color: inherit; display: block;">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Folio I</div>
+        <h3 class="display-md mt-4" style="font-weight: 400;">The <em class="italic text-oxblood">Landing</em></h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.55;">
+          Masthead, hero, stats, the three-act explanation of how a certificate is impressed,
+          a ledger excerpt, a drop-capped manifesto, and the live ticker.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="label">Open folio &rarr;</div>
+      </a>
+
+      <a href="02-issue.html" class="leaf" style="text-decoration: none; color: inherit; display: block;">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Folio II</div>
+        <h3 class="display-md mt-4" style="font-weight: 400;">The <em class="italic text-oxblood">Issuance</em></h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.55;">
+          Institution form: student wallet, four fields, PDF drop-zone, live hash preview,
+          issue/reissue toggle, and a four-rule registrar's checklist.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="label">Open folio &rarr;</div>
+      </a>
+
+      <a href="03-verify.html" class="leaf" style="text-decoration: none; color: inherit; display: block;">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Folio III</div>
+        <h3 class="display-md mt-4" style="font-weight: 400;">The <em class="italic text-oxblood">Verification</em></h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.55;">
+          Public form, three lookup modes, both pass and fail result cards, animated wax seal
+          on success, a rejection stamp on failure, a six-term glossary.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="label">Open folio &rarr;</div>
+      </a>
+
+      <a href="04-my-certificates.html" class="leaf" style="text-decoration: none; color: inherit; display: block;">
+        <div class="leaf-corner"></div>
+        <div class="label text-brass">Folio IV</div>
+        <h3 class="display-md mt-4" style="font-weight: 400;">My <em class="italic text-oxblood">Leaves</em></h3>
+        <p class="mt-4" style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.55;">
+          Student's private folio: four-cert grid with active, superseded (with reissue scar),
+          and a fully revoked card showing the diagonal stamp overlay.
+        </p>
+        <div class="rule-brass"></div>
+        <div class="label">Open folio &rarr;</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- PALETTE -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">II.</div>
+      <div>
+        <h2 class="section-title">The <em>palette</em>.</h2>
+        <p class="section-subtitle">Five colours do the entire job. No gradients, no glow, no accent-of-the-week.</p>
+      </div>
+    </div>
+
+    <div class="grid-4" style="gap: var(--space-4);">
+      <div>
+        <div style="height: 120px; background: var(--vellum-1); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Vellum I &nbsp;—&nbsp; primary paper</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#f4ecd8</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--ink); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Ink &nbsp;—&nbsp; primary text</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#15110d</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--oxblood); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Oxblood &nbsp;—&nbsp; the stamp</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#7a1f2b</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--brass); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Brass &nbsp;—&nbsp; numerals, rules</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#8a6d3b</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--moss); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Moss &nbsp;—&nbsp; active state</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#4a5d3a</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--error); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Error &nbsp;—&nbsp; forgery / revoke</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#a0372e</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--vellum-2); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Vellum II &nbsp;—&nbsp; raised surface</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#ead9b8</div>
+      </div>
+      <div>
+        <div style="height: 120px; background: var(--vellum-3); border: 1px solid var(--ink);"></div>
+        <div class="label mt-4">Vellum III &nbsp;—&nbsp; deepest paper</div>
+        <div class="mono" style="font-size: 0.7rem; color: var(--brass);">#dfc99a</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">III.</div>
+      <div>
+        <h2 class="section-title">The <em>type</em>.</h2>
+        <p class="section-subtitle">Three faces, three jobs. No Inter, no Roboto, no Space Grotesk.</p>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: var(--space-10);">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--brass); padding-bottom: var(--space-2); margin-bottom: var(--space-4);">
+          <span class="label">Newsreader &mdash; display, italic, 200–700</span>
+          <span class="mono" style="font-size: 0.7rem; color: var(--brass);">Google Fonts</span>
+        </div>
+        <div class="display-xl" style="font-weight: 200;">Diplomas <em class="italic">cast</em> in cryptography</div>
+        <div class="display-md mt-4" style="font-weight: 400;">An <em class="italic text-oxblood">impression</em> upon the ledger.</div>
+      </div>
+
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--brass); padding-bottom: var(--space-2); margin-bottom: var(--space-4);">
+          <span class="label">IBM Plex Serif &mdash; body, 300–600</span>
+          <span class="mono" style="font-size: 0.7rem; color: var(--brass);">Google Fonts</span>
+        </div>
+        <p style="font-size: var(--fs-md); line-height: 1.7; max-width: 66ch;">
+          Every certificate issued on Édiproof is a soulbound token &mdash; non-transferable,
+          hash-sealed, and permanently attested on-chain. No photocopy, no forgery, no doubt.
+          This body face reads well at small sizes and pairs cleanly with the Newsreader
+          italics used in all headings.
+        </p>
+      </div>
+
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--brass); padding-bottom: var(--space-2); margin-bottom: var(--space-4);">
+          <span class="label">IBM Plex Mono &mdash; hashes, addresses, metadata</span>
+          <span class="mono" style="font-size: 0.7rem; color: var(--brass);">Google Fonts</span>
+        </div>
+        <div class="mono" style="font-size: 1.1rem; color: var(--oxblood); word-break: break-all;">
+          0x4b3c9f82e7a1d58f6b0c4e92a7d1b83f6e5c9a02d47b1e8f3c6a9d02b5e8f1a7c
+        </div>
+        <div class="mono mt-4" style="color: var(--brass);">0x9A3c7E4fB1d28C5a6E0F2b84D7A1C9e8B5f3D6a2</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPONENTS -->
+  <section class="section">
+    <div class="section-head">
+      <div class="section-numeral">IV.</div>
+      <div>
+        <h2 class="section-title">The <em>components</em>.</h2>
+        <p class="section-subtitle">Every building block used by the four pages, displayed without context so you can judge them on their own.</p>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="mb-12">
+      <div class="label mb-4">Buttons</div>
+      <div style="display: flex; gap: var(--space-4); align-items: center; flex-wrap: wrap;">
+        <button class="btn">Primary</button>
+        <button class="btn btn-oxblood">Oxblood</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-oxblood btn-lg">Large &amp; important</button>
+      </div>
+    </div>
+
+    <!-- Toggles -->
+    <div class="mb-12">
+      <div class="label mb-4">Toggle group</div>
+      <div class="toggle-group">
+        <button class="active">Issue New</button>
+        <button>Reissue Existing</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="mb-12">
+      <div class="label mb-4">Tabs</div>
+      <div class="tabs" style="max-width: 500px;">
+        <button class="active">By Details</button>
+        <button>By Token №</button>
+        <button>By Wallet</button>
+      </div>
+    </div>
+
+    <!-- Pills -->
+    <div class="mb-12">
+      <div class="label mb-4">Pills &amp; badges</div>
+      <div style="display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap;">
+        <span class="pill">Neutral</span>
+        <span class="pill pill-active">&bull; Active</span>
+        <span class="pill pill-revoked">Revoked</span>
+        <span class="pill pill-reissued">Superseded</span>
+        <span class="pill pill-ox">Approved</span>
+      </div>
+    </div>
+
+    <!-- Fields -->
+    <div class="mb-12">
+      <div class="label mb-4">Fields</div>
+      <div style="max-width: 520px;">
+        <div class="field">
+          <label class="field-label"><span>Student's Full Name</span><span class="numeral">i.</span></label>
+          <input class="field-input" value="Aarav Sharma" />
+        </div>
+        <div class="field">
+          <label class="field-label"><span>Wallet Address</span><span class="numeral">ii.</span></label>
+          <input class="field-input field-mono" value="0x9A3c7E4fB1d28C5a6E0F2b84D7A1C9e8B5f3D6a2" />
+          <div class="field-hint">Soulbound &mdash; this cannot be changed later.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wax seals -->
+    <div class="mb-12">
+      <div class="label mb-4">Wax seals (success &amp; failure)</div>
+      <div style="display: flex; gap: var(--space-20); padding: var(--space-8) 0;">
+        <div class="seal">
+          <div class="seal-title">Certified by the Chain</div>
+          <div class="seal-main">Authentic</div>
+          <div class="seal-sub">№ 0142 · VERITAS</div>
+        </div>
+        <div class="seal seal-fail">
+          <div class="seal-title">The hash is broken</div>
+          <div class="seal-main">Rejected</div>
+          <div class="seal-sub">NO MATCH ON CHAIN</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaf -->
+    <div class="mb-12">
+      <div class="label mb-4">Leaf (card) — the base surface</div>
+      <div style="max-width: 480px;">
+        <div class="leaf">
+          <div class="leaf-corner"></div>
+          <div class="label text-brass">Example Leaf</div>
+          <h3 class="display-sm mt-4" style="font-weight: 400;"><em class="italic text-oxblood">B.Tech</em> Computer Science</h3>
+          <div class="label mt-4">Massachusetts Institute of Technology</div>
+          <div class="rule-brass"></div>
+          <p style="font-size: var(--fs-sm); color: var(--ink-faded); font-style: italic; font-family: var(--font-display); line-height: 1.55;">
+            Every leaf sits on its own folded-corner shadow, suggesting a sheet of
+            slightly aged paper set upon another. The corner fold is a small SVG
+            triangle; the drop shadow is a pair of stacked box-shadows in vellum and ink.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marginalia -->
+    <div class="mb-12">
+      <div class="label mb-4">Marginalia (editorial margin note)</div>
+      <aside class="marginalia" style="max-width: 480px;">
+        <strong>Editor's margin</strong>
+        Used sparingly to annotate something the main text glosses over. Italic Newsreader
+        body, hair-line brass left-rule, faded ink colour. Never used for actual instructions
+        &mdash; always for commentary.
+      </aside>
+    </div>
+
+    <!-- Section numeral -->
+    <div class="mb-12">
+      <div class="label mb-4">Section head (catalogue style)</div>
+      <div class="section-head" style="margin-bottom: 0;">
+        <div class="section-numeral">V.</div>
+        <div>
+          <h2 class="section-title">A <em>section</em> in the register.</h2>
+          <p class="section-subtitle">Roman numeral, italic brass, vertical rule, Newsreader display.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fleuron -->
+    <div class="mb-12">
+      <div class="label mb-4">Fleuron (divider)</div>
+      <div class="fleuron">&sect; &nbsp; &bull; &nbsp; &sect;</div>
+    </div>
+
+  </section>
+
+  <footer class="colophon">
+    <div class="colophon-main">
+      <div class="mark">The Workshop &mdash; Vol. I</div>
+      <h4>Édiproof</h4>
+      <p>One stylesheet. Four pages. No framework, no build step, no apology.</p>
+    </div>
+    <div>
+      <h4>The Folios</h4>
+      <ul>
+        <li><a href="01-landing.html">I · Landing</a></li>
+        <li><a href="02-issue.html">II · Issuance</a></li>
+        <li><a href="03-verify.html">III · Verification</a></li>
+        <li><a href="04-my-certificates.html">IV · My Leaves</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Type</h4>
+      <ul>
+        <li>Newsreader &mdash; display</li>
+        <li>IBM Plex Serif &mdash; body</li>
+        <li>IBM Plex Mono &mdash; metadata</li>
+      </ul>
+    </div>
+    <div>
+      <h4>The Palette</h4>
+      <ul>
+        <li>Vellum · Ink · Oxblood</li>
+        <li>Brass · Moss · Error</li>
+      </ul>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

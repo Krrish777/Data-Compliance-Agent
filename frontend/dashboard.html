@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuditLens — Compliance Audit Report SCAN-2026-04-11-0847</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ================================================================
+       AUDIT REPORT — A formal printed document rendered as HTML.
+       NOT a dashboard. A bound report. Single column, max ~850px,
+       generous margins, paper texture, editorial typography.
+       ================================================================ */
+
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+
+    /* ---- Paper body ---------------------------------------------- */
+    body {
+      background-color: #F0EDE6;
+      background-image:
+        radial-gradient(ellipse at 20% 15%, rgba(17, 94, 89, 0.04), transparent 55%),
+        radial-gradient(ellipse at 80% 85%, rgba(185, 28, 28, 0.02), transparent 50%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0 0.05 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-attachment: fixed;
+    }
+
+    /* ---- Document wrapper ---------------------------------------- */
+    .report {
+      max-width: 850px;
+      margin: 0 auto;
+      padding: var(--sp-8) var(--sp-10) var(--sp-24);
+    }
+
+    /* ================================================================
+       I. COVER PAGE
+       ================================================================ */
+
+    .cover {
+      padding: var(--sp-20) 0 var(--sp-16);
+      text-align: center;
+      border-bottom: 3px double var(--ink);
+      position: relative;
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 12vw, 9rem);
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink);
+      opacity: 0.018;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cover-label {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--ink-muted);
+      margin-bottom: var(--sp-6);
+    }
+
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.75rem, 7vw, 4rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: var(--sp-2);
+    }
+
+    .cover-rule {
+      width: 200px;
+      height: 3px;
+      border: none;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+      margin: var(--sp-6) auto var(--sp-10);
+    }
+
+    /* Shield seal on cover */
+    .cover-shield {
+      width: 140px;
+      height: 158px;
+      background: var(--teal-deep);
+      border-radius: 10px 10px 70px 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      position: relative;
+      box-shadow: 0 8px 30px rgba(17, 94, 89, 0.2);
+      text-align: center;
+      margin: 0 auto var(--sp-4);
+    }
+    .cover-shield::before {
+      content: '';
+      position: absolute;
+      inset: 7px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px 6px 62px 62px;
+    }
+    .cover-shield-pct {
+      font-family: var(--font-display);
+      font-size: 2.75rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .cover-shield-label {
+      font-family: var(--font-body);
+      font-size: 0.5625rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-top: 2px;
+    }
+
+    /* Formal metadata table on cover */
+    .cover-meta {
+      width: 100%;
+      max-width: 460px;
+      margin: var(--sp-10) auto var(--sp-8);
+      border-collapse: collapse;
+    }
+    .cover-meta td {
+      padding: var(--sp-2) 0;
+      vertical-align: top;
+      border-bottom: 1px dotted var(--border-dark);
+    }
+    .cover-meta td:first-child {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink-muted);
+      text-align: left;
+      width: 45%;
+      padding-right: var(--sp-4);
+    }
+    .cover-meta td:last-child {
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      color: var(--ink);
+      text-align: right;
+    }
+
+    .cover-classification {
+      display: inline-block;
+      margin-top: var(--sp-8);
+      padding: var(--sp-2) var(--sp-6);
+      border: 2px solid var(--accent-amber);
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--accent-amber);
+    }
+
+    /* ================================================================
+       SECTION SYSTEM — catalogue numbering with horizontal rules
+       ================================================================ */
+
+    .doc-section {
+      padding: var(--sp-16) 0 var(--sp-12);
+    }
+
+    .doc-section + .doc-section {
+      border-top: 1px solid var(--border-dark);
+    }
+
+    .section-marker {
+      display: flex;
+      align-items: baseline;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-10);
+    }
+    .section-marker::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--ink);
+      margin-top: 4px;
+    }
+
+    .section-numeral {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: var(--fs-xl);
+      color: var(--teal-deep);
+      white-space: nowrap;
+    }
+
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3.5vw, var(--fs-2xl));
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.12;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .section-heading em {
+      font-style: italic;
+      font-weight: 500;
+      color: var(--teal-deep);
+    }
+
+    /* ================================================================
+       II. EXECUTIVE SUMMARY
+       ================================================================ */
+
+    .summary-prose {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      font-weight: 400;
+      line-height: 1.65;
+      color: var(--ink-secondary);
+      max-width: 72ch;
+      margin-bottom: var(--sp-10);
+    }
+    .summary-prose strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Compact stats block (NOT KPI cards) */
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--ink);
+      margin-bottom: var(--sp-10);
+    }
+    .summary-stat {
+      padding: var(--sp-5) var(--sp-4);
+      text-align: center;
+      border-right: 1px solid var(--border-dark);
+    }
+    .summary-stat:last-child { border-right: none; }
+    .summary-stat-value {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--teal-deep);
+    }
+    .summary-stat-value.v-red { color: var(--accent-red); }
+    .summary-stat-value.v-amber { color: var(--accent-amber); }
+    .summary-stat-value.v-green { color: var(--accent-green); }
+    .summary-stat-label {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-top: var(--sp-1);
+    }
+
+    /* Severity bar */
+    .severity-bar-block {
+      margin-bottom: var(--sp-4);
+    }
+    .severity-bar-title {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink-muted);
+      margin-bottom: var(--sp-3);
+    }
+    .severity-bar {
+      display: flex;
+      height: 28px;
+      border: 1px solid var(--border-dark);
+      overflow: hidden;
+    }
+    .severity-bar-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      color: white;
+      white-space: nowrap;
+      padding: 0 var(--sp-2);
+    }
+    .severity-bar-seg.critical { background: var(--accent-red); }
+    .severity-bar-seg.high { background: var(--accent-amber); }
+    .severity-bar-seg.medium { background: var(--teal-deep); }
+    .severity-bar-seg.low { background: var(--ink-faint); }
+
+    .severity-legend {
+      display: flex;
+      gap: var(--sp-6);
+      margin-top: var(--sp-3);
+    }
+    .severity-legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+    }
+    .severity-legend-dot {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+    }
+    .severity-legend-dot.critical { background: var(--accent-red); }
+    .severity-legend-dot.high { background: var(--accent-amber); }
+    .severity-legend-dot.medium { background: var(--teal-deep); }
+    .severity-legend-dot.low { background: var(--ink-faint); }
+
+    /* ================================================================
+       III. DETAILED FINDINGS — Rule cards
+       ================================================================ */
+
+    .finding {
+      border: 1px solid var(--border-dark);
+      background: var(--card-white);
+      margin-bottom: var(--sp-8);
+      position: relative;
+    }
+
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--sp-3) var(--sp-6);
+      border-bottom: 1px solid var(--border);
+    }
+    .finding-id {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      font-weight: 500;
+      color: var(--ink-secondary);
+      letter-spacing: 0.05em;
+    }
+    .finding-severity {
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 3px 12px;
+    }
+    .finding-severity.critical {
+      background: var(--accent-red);
+      color: white;
+    }
+    .finding-severity.high {
+      background: var(--accent-amber);
+      color: white;
+    }
+    .finding-severity.medium {
+      background: var(--teal-deep);
+      color: white;
+    }
+    .finding-severity.low {
+      background: var(--ink-faint);
+      color: white;
+    }
+    .finding-severity.passed {
+      background: var(--accent-green);
+      color: white;
+    }
+
+    .finding-body {
+      padding: var(--sp-6);
+    }
+
+    .finding-rule {
+      font-family: var(--font-display);
+      font-size: var(--fs-lg);
+      font-weight: 500;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: var(--sp-5);
+    }
+
+    /* Confidence bar */
+    .confidence-row {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-3);
+    }
+    .confidence-label {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      min-width: 80px;
+    }
+    .confidence-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      max-width: 200px;
+      position: relative;
+    }
+    .confidence-fill {
+      height: 100%;
+      background: var(--teal-deep);
+    }
+    .confidence-val {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+    }
+
+    .finding-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--sp-2) var(--sp-8);
+      font-size: var(--fs-sm);
+      margin-bottom: var(--sp-5);
+    }
+    .finding-detail-label {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+    .finding-detail-value {
+      font-family: var(--font-mono);
+      font-size: var(--fs-sm);
+      color: var(--ink);
+    }
+
+    .finding-assessment {
+      border-top: 1px solid var(--border);
+      padding-top: var(--sp-4);
+      margin-top: var(--sp-4);
+    }
+    .finding-assessment-label {
+      font-family: var(--font-body);
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+      margin-bottom: var(--sp-2);
+    }
+    .finding-assessment-text {
+      font-family: var(--font-body);
+      font-size: var(--fs-sm);
+      line-height: 1.65;
+      color: var(--ink-secondary);
+    }
+
+    /* Critical findings get a left accent */
+    .finding.is-critical {
+      border-left: 4px solid var(--accent-red);
+    }
+    .finding.is-high {
+      border-left: 4px solid var(--accent-amber);
+    }
+    .finding.is-medium {
+      border-left: 4px solid var(--teal-deep);
+    }
+
+    /* Passed findings are visually quieter */
+    .finding.is-passed {
+      background: var(--cream);
+      border-color: var(--border);
+    }
+    .finding.is-passed .finding-body {
+      padding: var(--sp-4) var(--sp-6);
+    }
+    .finding.is-passed .finding-rule {
+      font-size: var(--fs-md);
+      color: var(--ink-secondary);
+      margin-bottom: var(--sp-3);
+    }
+
+    /* Compliant stamp for passed rules */
+    .compliant-stamp {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      border: 2px solid var(--accent-green);
+      padding: var(--sp-1) var(--sp-4);
+      color: var(--accent-green);
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      transform: rotate(-2deg);
+      margin-top: var(--sp-3);
+    }
+    .compliant-stamp-icon {
+      width: 22px;
+      height: 24px;
+      background: var(--accent-green);
+      border-radius: 3px 3px 11px 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 10px;
+    }
+
+    /* ================================================================
+       IV. VIOLATION REGISTER (Appendix)
+       ================================================================ */
+
+    .register {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--fs-sm);
+    }
+    .register thead th {
+      text-align: left;
+      font-family: var(--font-body);
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--ink-muted);
+      padding: var(--sp-3) var(--sp-3);
+      border-bottom: 2px solid var(--ink);
+    }
+    .register tbody td {
+      padding: var(--sp-2) var(--sp-3);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .register tbody tr:nth-child(even) {
+      background: rgba(0, 0, 0, 0.015);
+    }
+    .register tbody tr:hover {
+      background: rgba(17, 94, 89, 0.025);
+    }
+    .register .reg-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--ink-faint);
+      font-size: var(--fs-sm);
+    }
+    .register .reg-mono {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+    }
+    .register .reg-sev {
+      font-weight: 700;
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .register .sev-critical { color: var(--accent-red); }
+    .register .sev-high { color: var(--accent-amber); }
+    .register .sev-medium { color: var(--teal-deep); }
+    .register .sev-low { color: var(--ink-muted); }
+
+    .register-footer {
+      text-align: center;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--fs-sm);
+      color: var(--ink-faint);
+      padding: var(--sp-4) 0;
+      border-top: 2px solid var(--ink);
+      margin-top: 0;
+    }
+
+    /* ================================================================
+       V. END OF REPORT
+       ================================================================ */
+
+    .report-end {
+      padding: var(--sp-16) 0 var(--sp-20);
+      text-align: center;
+    }
+
+    .fleuron {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.8em;
+      margin-bottom: var(--sp-10);
+    }
+
+    .end-title {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: var(--sp-8);
+    }
+
+    .end-shield {
+      width: 48px;
+      height: 54px;
+      background: var(--teal-deep);
+      border-radius: 5px 5px 24px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      margin: 0 auto var(--sp-8);
+      box-shadow: 0 4px 12px rgba(17, 94, 89, 0.15);
+    }
+
+    .end-meta {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--ink-muted);
+      line-height: 1.9;
+      margin-bottom: var(--sp-8);
+    }
+
+    .end-disclaimer {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: var(--fs-sm);
+      color: var(--ink-faint);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    /* ================================================================
+       UTILITIES
+       ================================================================ */
+
+    .drop-cap::first-letter {
+      font-family: var(--font-display);
+      font-size: 4.2em;
+      float: left;
+      line-height: 0.85;
+      padding: 0.05em 0.1em 0 0;
+      font-weight: 300;
+      color: var(--teal-deep);
+      font-style: italic;
+    }
+
+    .text-critical { color: var(--accent-red); }
+    .text-high { color: var(--accent-amber); }
+    .text-green { color: var(--accent-green); }
+
+    /* Print styles */
+    @media print {
+      body { background: white; }
+      .cover { min-height: auto; page-break-after: always; }
+      .doc-section { page-break-inside: avoid; }
+      .finding { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="report">
+
+  <!-- ================================================================
+       I. COVER PAGE
+       ================================================================ -->
+  <div class="cover">
+    <div class="cover-watermark">AUDITLENS</div>
+
+    <div class="cover-label">Prepared by AuditLens Compliance Engine</div>
+
+    <h1 class="cover-title">Compliance Audit Report</h1>
+
+    <hr class="cover-rule" />
+
+    <!-- Shield seal with compliance percentage -->
+    <div class="cover-shield">
+      <div class="cover-shield-pct">87%</div>
+      <div class="cover-shield-label">Compliant</div>
+    </div>
+
+    <!-- Formal metadata table -->
+    <table class="cover-meta">
+      <tr>
+        <td>Prepared by</td>
+        <td>AuditLens v0.1</td>
+      </tr>
+      <tr>
+        <td>Date of Audit</td>
+        <td>11 April 2026</td>
+      </tr>
+      <tr>
+        <td>Scan Identifier</td>
+        <td>SCAN-2026-04-11-0847</td>
+      </tr>
+      <tr>
+        <td>Target Database</td>
+        <td>HI-Small_Trans.db</td>
+      </tr>
+      <tr>
+        <td>Policy Document</td>
+        <td>AML_Compliance_Policy.pdf</td>
+      </tr>
+      <tr>
+        <td>Rules Applied</td>
+        <td>14</td>
+      </tr>
+    </table>
+
+    <div class="cover-classification">Acceptable with Concerns</div>
+  </div>
+
+
+  <!-- ================================================================
+       II. EXECUTIVE SUMMARY
+       ================================================================ -->
+  <div class="doc-section">
+    <div class="section-marker">
+      <span class="section-numeral">&sect; I.</span>
+      <span class="section-heading">Executive <em>Summary</em></span>
+    </div>
+
+    <p class="summary-prose drop-cap">
+      This audit examined <strong>534,993 records</strong> across <strong>4 tables</strong>
+      in the HI-Small_Trans database against <strong>14 compliance rules</strong>
+      extracted from AML_Compliance_Policy.pdf. The scan identified
+      <strong class="text-critical">23 violations</strong> across multiple severity levels.
+      The overall compliance posture is rated <strong>87%</strong>, classified as
+      <em style="font-style: italic; color: var(--accent-amber);">Acceptable with Concerns</em>.
+      Three critical findings require immediate remediation.
+    </p>
+
+    <!-- Stats inline table -->
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <div class="summary-stat-value v-red">23</div>
+        <div class="summary-stat-label">Violations Found</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value">4</div>
+        <div class="summary-stat-label">Tables Scanned</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value v-green">87%</div>
+        <div class="summary-stat-label">Compliance Score</div>
+      </div>
+      <div class="summary-stat">
+        <div class="summary-stat-value">1m 42s</div>
+        <div class="summary-stat-label">Scan Duration</div>
+      </div>
+    </div>
+
+    <!-- Severity distribution bar -->
+    <div class="severity-bar-block">
+      <div class="severity-bar-title">Severity Distribution</div>
+      <div class="severity-bar">
+        <div class="severity-bar-seg critical" style="width: 13.04%;">3</div>
+        <div class="severity-bar-seg high" style="width: 34.78%;">8</div>
+        <div class="severity-bar-seg medium" style="width: 30.44%;">7</div>
+        <div class="severity-bar-seg low" style="width: 21.74%;">5</div>
+      </div>
+      <div class="severity-legend">
+        <div class="severity-legend-item"><span class="severity-legend-dot critical"></span> 3 Critical</div>
+        <div class="severity-legend-item"><span class="severity-legend-dot high"></span> 8 High</div>
+        <div class="severity-legend-item"><span class="severity-legend-dot medium"></span> 7 Medium</div>
+        <div class="severity-legend-item"><span class="severity-legend-dot low"></span> 5 Low</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ================================================================
+       III. DETAILED FINDINGS
+       ================================================================ -->
+  <div class="doc-section">
+    <div class="section-marker">
+      <span class="section-numeral">&sect; II.</span>
+      <span class="section-heading">Detailed <em>Findings</em></span>
+    </div>
+
+    <!-- FINDING 1 — CRITICAL -->
+    <article class="finding is-critical">
+      <div class="finding-header">
+        <span class="finding-id">PII-002</span>
+        <span class="finding-severity critical">Critical</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">SSN columns must be encrypted at rest</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 92%;"></div></div>
+          <span class="confidence-val">0.92</span>
+        </div>
+
+        <div class="finding-details">
+          <div>
+            <div class="finding-detail-label">Violations</div>
+            <div class="finding-detail-value">3 records</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Tables Affected</div>
+            <div class="finding-detail-value">HI-Small_Trans</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Column</div>
+            <div class="finding-detail-value">ssn</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Operator</div>
+            <div class="finding-detail-value">PATTERN_MATCH</div>
+          </div>
+        </div>
+
+        <div class="finding-assessment">
+          <div class="finding-assessment-label">Assessment</div>
+          <div class="finding-assessment-text">
+            Unencrypted Social Security numbers found stored in plaintext within the production table.
+            SSN values match the pattern <code style="font-family: var(--font-mono); font-size: var(--fs-xs); background: var(--cream); padding: 2px 6px; border: 1px solid var(--border);">\d{3}-\d{2}-\d{4}</code>,
+            indicating no encryption or hashing has been applied. This constitutes a direct violation
+            of PII protection requirements under the AML compliance policy. Immediate remediation required:
+            apply column-level encryption or tokenization.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 2 — CRITICAL -->
+    <article class="finding is-critical">
+      <div class="finding-header">
+        <span class="finding-id">AML-001</span>
+        <span class="finding-severity critical">Critical</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Transactions exceeding $10,000 must be flagged for review</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 95%;"></div></div>
+          <span class="confidence-val">0.95</span>
+        </div>
+
+        <div class="finding-details">
+          <div>
+            <div class="finding-detail-label">Violations</div>
+            <div class="finding-detail-value">7 records</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Tables Affected</div>
+            <div class="finding-detail-value">HI-Small_Trans</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Column</div>
+            <div class="finding-detail-value">amount</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Operator</div>
+            <div class="finding-detail-value">GREATER_THAN</div>
+          </div>
+        </div>
+
+        <div class="finding-assessment">
+          <div class="finding-assessment-label">Assessment</div>
+          <div class="finding-assessment-text">
+            Seven transactions with amounts exceeding the $10,000 Currency Transaction Report (CTR) threshold
+            were found without corresponding review flags. Under the Bank Secrecy Act and AML policy,
+            all transactions above this threshold must be reported to FinCEN. The absence of review flags
+            indicates a gap in the transaction monitoring workflow. Each unflagged transaction constitutes
+            a separate reportable violation.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 3 — CRITICAL -->
+    <article class="finding is-critical">
+      <div class="finding-header">
+        <span class="finding-id">AML-004</span>
+        <span class="finding-severity critical">Critical</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Structuring detection: multiple transactions below threshold within 24h</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 88%;"></div></div>
+          <span class="confidence-val">0.88</span>
+        </div>
+
+        <div class="finding-details">
+          <div>
+            <div class="finding-detail-label">Violations</div>
+            <div class="finding-detail-value">2 records</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Tables Affected</div>
+            <div class="finding-detail-value">HI-Small_Trans</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Column</div>
+            <div class="finding-detail-value">amount, timestamp</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Operator</div>
+            <div class="finding-detail-value">CROSS_FIELD</div>
+          </div>
+        </div>
+
+        <div class="finding-assessment">
+          <div class="finding-assessment-label">Assessment</div>
+          <div class="finding-assessment-text">
+            Two account holders show patterns consistent with transaction structuring: multiple deposits
+            just below the $10,000 reporting threshold executed within a 24-hour window. This is a
+            recognized indicator of deliberate threshold evasion and constitutes a potential violation
+            of 31 U.S.C. &sect; 5324. A Suspicious Activity Report (SAR) filing should be evaluated
+            for each flagged account.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 4 — HIGH -->
+    <article class="finding is-high">
+      <div class="finding-header">
+        <span class="finding-id">QUAL-003</span>
+        <span class="finding-severity high">High</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Email address fields must contain valid format</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 89%;"></div></div>
+          <span class="confidence-val">0.89</span>
+        </div>
+
+        <div class="finding-details">
+          <div>
+            <div class="finding-detail-label">Violations</div>
+            <div class="finding-detail-value">4 records</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Tables Affected</div>
+            <div class="finding-detail-value">customers</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Column</div>
+            <div class="finding-detail-value">email</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Operator</div>
+            <div class="finding-detail-value">REGEX_MATCH</div>
+          </div>
+        </div>
+
+        <div class="finding-assessment">
+          <div class="finding-assessment-label">Assessment</div>
+          <div class="finding-assessment-text">
+            Four customer records contain email addresses that do not conform to RFC 5322 format.
+            Invalid entries include missing domain suffixes and malformed local parts. Data quality
+            failures in contact fields compromise the institution's ability to fulfill customer
+            notification requirements under AML compliance mandates.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 5 — HIGH -->
+    <article class="finding is-high">
+      <div class="finding-header">
+        <span class="finding-id">RET-001</span>
+        <span class="finding-severity high">High</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Transaction records must be retained for minimum 5 years</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 91%;"></div></div>
+          <span class="confidence-val">0.91</span>
+        </div>
+
+        <div class="finding-details">
+          <div>
+            <div class="finding-detail-label">Violations</div>
+            <div class="finding-detail-value">2 records</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Tables Affected</div>
+            <div class="finding-detail-value">accounts</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Column</div>
+            <div class="finding-detail-value">last_active</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Operator</div>
+            <div class="finding-detail-value">DATE_COMPARE</div>
+          </div>
+        </div>
+
+        <div class="finding-assessment">
+          <div class="finding-assessment-label">Assessment</div>
+          <div class="finding-assessment-text">
+            Two account records show last-activity dates that fall outside the mandatory 5-year
+            retention window, suggesting premature data purging or archival gaps. AML regulations
+            require all transaction-related records to be maintained and accessible for a minimum
+            of five years from the date of the transaction. Verify archival policies and restore
+            records from backup if applicable.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 6 — MEDIUM -->
+    <article class="finding is-medium">
+      <div class="finding-header">
+        <span class="finding-id">AML-007</span>
+        <span class="finding-severity medium">Medium</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Beneficiary country must match an approved jurisdiction list</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 84%;"></div></div>
+          <span class="confidence-val">0.84</span>
+        </div>
+
+        <div class="finding-details">
+          <div>
+            <div class="finding-detail-label">Violations</div>
+            <div class="finding-detail-value">5 records</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Tables Affected</div>
+            <div class="finding-detail-value">HI-Small_Trans</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Column</div>
+            <div class="finding-detail-value">beneficiary_country</div>
+          </div>
+          <div>
+            <div class="finding-detail-label">Operator</div>
+            <div class="finding-detail-value">NOT_IN_LIST</div>
+          </div>
+        </div>
+
+        <div class="finding-assessment">
+          <div class="finding-assessment-label">Assessment</div>
+          <div class="finding-assessment-text">
+            Five transactions route funds to beneficiary countries not present on the institution's
+            approved jurisdiction list. While not automatically indicative of illicit activity,
+            transactions involving non-approved jurisdictions require enhanced due diligence (EDD)
+            review. Cross-reference with OFAC sanctions lists recommended.
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 7 — PASSED -->
+    <article class="finding is-passed">
+      <div class="finding-header">
+        <span class="finding-id">PII-006</span>
+        <span class="finding-severity passed">Passed</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Phone numbers must be masked in non-production environments</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 91%;"></div></div>
+          <span class="confidence-val">0.91</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: var(--sp-2);">
+          <div style="font-size: var(--fs-sm); color: var(--ink-muted);">No violations found</div>
+          <div class="compliant-stamp">
+            <span class="compliant-stamp-icon">&#10003;</span>
+            Sealed &middot; Compliant
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 8 — PASSED -->
+    <article class="finding is-passed">
+      <div class="finding-header">
+        <span class="finding-id">AML-009</span>
+        <span class="finding-severity passed">Passed</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">All accounts must have a valid KYC completion date</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 93%;"></div></div>
+          <span class="confidence-val">0.93</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: var(--sp-2);">
+          <div style="font-size: var(--fs-sm); color: var(--ink-muted);">No violations found</div>
+          <div class="compliant-stamp">
+            <span class="compliant-stamp-icon">&#10003;</span>
+            Sealed &middot; Compliant
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- FINDING 9 — PASSED -->
+    <article class="finding is-passed">
+      <div class="finding-header">
+        <span class="finding-id">PII-010</span>
+        <span class="finding-severity passed">Passed</span>
+      </div>
+      <div class="finding-body">
+        <div class="finding-rule">Date-of-birth fields must not be stored in plaintext alongside names</div>
+
+        <div class="confidence-row">
+          <span class="confidence-label">Confidence</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width: 87%;"></div></div>
+          <span class="confidence-val">0.87</span>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: var(--sp-2);">
+          <div style="font-size: var(--fs-sm); color: var(--ink-muted);">No violations found</div>
+          <div class="compliant-stamp">
+            <span class="compliant-stamp-icon">&#10003;</span>
+            Sealed &middot; Compliant
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Note: remaining 5 rules (QUAL-011 through AML-014) follow the same pattern. Truncated for brevity in this demo. -->
+    <div style="text-align: center; padding: var(--sp-6) 0; font-family: var(--font-display); font-style: italic; color: var(--ink-faint); font-size: var(--fs-sm);">
+      &mdash; 5 additional rules examined; all passed without violation &mdash;
+    </div>
+  </div>
+
+
+  <!-- ================================================================
+       IV. APPENDIX A — VIOLATION REGISTER
+       ================================================================ -->
+  <div class="doc-section">
+    <div class="section-marker">
+      <span class="section-numeral">&sect; III.</span>
+      <span class="section-heading">Appendix A &mdash; Violation <em>Register</em></span>
+    </div>
+
+    <table class="register">
+      <thead>
+        <tr>
+          <th style="width: 44px;">&numero;</th>
+          <th>Table</th>
+          <th>Column</th>
+          <th>Rule</th>
+          <th>Value</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="reg-num">001</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">ssn</td>
+          <td class="reg-mono">PII-002</td>
+          <td class="reg-mono">123-45-****</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">002</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">ssn</td>
+          <td class="reg-mono">PII-002</td>
+          <td class="reg-mono">987-65-****</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">003</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">ssn</td>
+          <td class="reg-mono">PII-002</td>
+          <td class="reg-mono">456-12-****</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">004</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$14,892.00</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">005</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$23,100.50</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">006</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$11,250.00</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">007</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$18,600.75</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">008</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$12,044.33</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">009</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$31,500.00</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">010</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount</td>
+          <td class="reg-mono">AML-001</td>
+          <td class="reg-mono">$10,200.00</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">011</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount, timestamp</td>
+          <td class="reg-mono">AML-004</td>
+          <td class="reg-mono">4x $9,800</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">012</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">amount, timestamp</td>
+          <td class="reg-mono">AML-004</td>
+          <td class="reg-mono">3x $9,500</td>
+          <td class="reg-sev sev-critical">Critical</td>
+        </tr>
+        <tr>
+          <td class="reg-num">013</td>
+          <td>customers</td>
+          <td class="reg-mono">email</td>
+          <td class="reg-mono">QUAL-003</td>
+          <td class="reg-mono">not-an-email</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">014</td>
+          <td>customers</td>
+          <td class="reg-mono">email</td>
+          <td class="reg-mono">QUAL-003</td>
+          <td class="reg-mono">john@</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">015</td>
+          <td>customers</td>
+          <td class="reg-mono">email</td>
+          <td class="reg-mono">QUAL-003</td>
+          <td class="reg-mono">@invalid.co</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">016</td>
+          <td>customers</td>
+          <td class="reg-mono">email</td>
+          <td class="reg-mono">QUAL-003</td>
+          <td class="reg-mono">[empty]</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">017</td>
+          <td>accounts</td>
+          <td class="reg-mono">last_active</td>
+          <td class="reg-mono">RET-001</td>
+          <td class="reg-mono">2019-11-02</td>
+          <td class="reg-sev sev-high">High</td>
+        </tr>
+        <tr>
+          <td class="reg-num">018</td>
+          <td>accounts</td>
+          <td class="reg-mono">last_active</td>
+          <td class="reg-mono">RET-001</td>
+          <td class="reg-mono">2020-03-18</td>
+          <td class="reg-sev sev-medium">Medium</td>
+        </tr>
+        <tr>
+          <td class="reg-num">019</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">beneficiary_country</td>
+          <td class="reg-mono">AML-007</td>
+          <td class="reg-mono">NK</td>
+          <td class="reg-sev sev-medium">Medium</td>
+        </tr>
+        <tr>
+          <td class="reg-num">020</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">beneficiary_country</td>
+          <td class="reg-mono">AML-007</td>
+          <td class="reg-mono">IR</td>
+          <td class="reg-sev sev-medium">Medium</td>
+        </tr>
+        <tr>
+          <td class="reg-num">021</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">beneficiary_country</td>
+          <td class="reg-mono">AML-007</td>
+          <td class="reg-mono">SY</td>
+          <td class="reg-sev sev-medium">Medium</td>
+        </tr>
+        <tr>
+          <td class="reg-num">022</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">beneficiary_country</td>
+          <td class="reg-mono">AML-007</td>
+          <td class="reg-mono">CU</td>
+          <td class="reg-sev sev-medium">Medium</td>
+        </tr>
+        <tr>
+          <td class="reg-num">023</td>
+          <td>HI-Small_Trans</td>
+          <td class="reg-mono">beneficiary_country</td>
+          <td class="reg-mono">AML-007</td>
+          <td class="reg-mono">MM</td>
+          <td class="reg-sev sev-medium">Medium</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="register-footer">
+      &mdash; End of Register &middot; 23 entries &mdash;
+    </div>
+  </div>
+
+
+  <!-- ================================================================
+       V. END OF REPORT
+       ================================================================ -->
+  <div class="report-end">
+    <div class="fleuron">&sect; &middot; &middot; &middot; &sect;</div>
+
+    <div class="end-title">End of Audit Report</div>
+
+    <div class="end-shield">&#10003;</div>
+
+    <div class="end-meta">
+      Prepared by AuditLens v0.1<br />
+      Scan ID: SCAN-2026-04-11-0847<br />
+      Generated: 11 April 2026, 08:47 UTC
+    </div>
+
+    <div class="end-disclaimer">
+      This report is a static snapshot of the audit findings at the time of scan.
+      It does not constitute legal compliance certification. Findings should be
+      reviewed by a qualified compliance officer before remediation decisions
+      are made.
+    </div>
+
+    <div class="fleuron" style="margin-top: var(--sp-10);">&sect; &middot; &middot; &middot; &sect;</div>
+  </div>
+
+</div>
+
+</body>
+</html>
