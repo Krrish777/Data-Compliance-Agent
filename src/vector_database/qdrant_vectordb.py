@@ -1,6 +1,8 @@
 from typing import List, Dict, Any, Optional
 import json
+import os
 import uuid
+from pathlib import Path
 
 # Replaced pymilvus with qdrant_client for local support on Windows
 from qdrant_client import QdrantClient, models
@@ -9,20 +11,26 @@ from src.utils.logger import setup_logger
 
 log = setup_logger(__name__)
 
+# Anchor the local Qdrant dir at the project root so ingest (upsert) and
+# query (search) always read/write the same on-disk store regardless of the
+# cwd the process is launched from.
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_DEFAULT_DB_PATH = str(_PROJECT_ROOT / "qdrant_db")
+
 
 class LocalVectorDB:
     def __init__(
-        self, 
-        db_path: str = "./qdrant_db",
+        self,
+        db_path: Optional[str] = None,
         collection_name: str = "document_chunks",
         embedding_dim: int = 384
     ):
-        self.db_path = db_path
+        self.db_path = os.path.abspath(db_path or _DEFAULT_DB_PATH)
         self.collection_name = collection_name
         self.embedding_dim = embedding_dim
         self.client = None
         self.collection_exists = False
-        
+
         self._initialize_client()
         self._setup_collection()
     

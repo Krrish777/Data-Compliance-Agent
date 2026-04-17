@@ -11,7 +11,9 @@ This bridges the two modes:
 """
 from __future__ import annotations
 
+import os
 import uuid
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -25,10 +27,47 @@ log = setup_logger(__name__)
 POLICY_COLLECTION = "policy_rules"
 EMBEDDING_DIM = 384  # BGE-small-en-v1.5
 
+# Anchor the local Qdrant dir at the project root so ingest (upsert) and
+# query (search) always hit the same on-disk store regardless of the cwd
+# the process happens to be launched from.
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_DB_PATH = str(_PROJECT_ROOT / "qdrant_db")
+
 
 def _rule_uuid(rule_id: str) -> str:
     """Deterministic UUID from rule_id."""
     return str(uuid.uuid5(uuid.NAMESPACE_DNS, rule_id))
+
+
+# ── Process-wide singleton ────────────────────────────────────────────────────
+# Qdrant's local (file-based) client holds an exclusive lock on the storage
+# directory. Opening a second QdrantClient(path=...) in the same process while
+# the first is still alive fails (or, worse, silently routes to a different
+# on-disk location). The interceptor graph calls PolicyRuleStore() on every
+# policy_mapper_node invocation, so we memoise a single instance per (db_path,
+# collection) pair to prevent lock contention and "initialized but data not
+# fetching" symptoms.
+_STORE_SINGLETONS: Dict[str, "PolicyRuleStore"] = {}
+
+
+def get_policy_store(
+    db_path: Optional[str] = None,
+    collection_name: str = POLICY_COLLECTION,
+    embedding_dim: int = EMBEDDING_DIM,
+) -> "PolicyRuleStore":
+    """Return a cached PolicyRuleStore for the given db_path/collection."""
+    resolved_path = os.path.abspath(db_path or DEFAULT_DB_PATH)
+    key = f"{resolved_path}::{collection_name}"
+    existing = _STORE_SINGLETONS.get(key)
+    if existing is not None and existing.client is not None:
+        return existing
+    store = PolicyRuleStore(
+        db_path=resolved_path,
+        collection_name=collection_name,
+        embedding_dim=embedding_dim,
+    )
+    _STORE_SINGLETONS[key] = store
+    return store
 
 
 class PolicyRuleStore:
@@ -43,11 +82,13 @@ class PolicyRuleStore:
 
     def __init__(
         self,
-        db_path: str = "./qdrant_db",
+        db_path: Optional[str] = None,
         collection_name: str = POLICY_COLLECTION,
         embedding_dim: int = EMBEDDING_DIM,
     ):
-        self.db_path = db_path
+        # Always resolve to an absolute path so ingest and query hit the same
+        # on-disk collection regardless of the caller's cwd.
+        self.db_path = os.path.abspath(db_path or DEFAULT_DB_PATH)
         self.collection_name = collection_name
         self.embedding_dim = embedding_dim
         self.client: Optional[QdrantClient] = None
@@ -85,7 +126,16 @@ class PolicyRuleStore:
 
     def close(self) -> None:
         if self.client and hasattr(self.client, "close"):
-            self.client.close()
+            try:
+                self.client.close()
+            except Exception as e:
+                log.warning(f"PolicyRuleStore.close: {e}")
+        # Null out the client reference so the local-mode file lock is
+        # released before any subsequent QdrantClient(path=...) in this
+        # process. Also drop the singleton entry (if any) for this path.
+        self.client = None
+        key = f"{self.db_path}::{self.collection_name}"
+        _STORE_SINGLETONS.pop(key, None)
 
     # ── Ingestion ─────────────────────────────────────────────────────────
 
