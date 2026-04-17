@@ -1,7 +1,20 @@
 import logging
+import sys
 from datetime import datetime
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
 from pathlib import Path
+
+# Force UTF-8 on stdout/stderr so Unicode log chars (checkmarks, em-dashes, etc.)
+# don't raise UnicodeEncodeError under Windows' default cp1252 console.
+# Must run BEFORE any handler (including Rich's) is constructed.
+if sys.platform == "win32":
+    for _stream_name in ("stdout", "stderr"):
+        _stream = getattr(sys, _stream_name, None)
+        if _stream is not None and hasattr(_stream, "reconfigure"):
+            try:
+                _stream.reconfigure(encoding="utf-8", errors="replace")
+            except (ValueError, AttributeError):
+                pass
 
 from rich.logging import RichHandler
 
@@ -40,7 +53,16 @@ def setup_logger(
     
     # Console handler with Rich formatting
     if log_to_console:
+        # Build a Rich console that emits ANSI via UTF-8 stdout instead of
+        # calling the Win32 legacy console API (which chokes on ✓ / → / em-dash).
+        from rich.console import Console
+        _rich_console = Console(
+            force_terminal=True,
+            legacy_windows=False,
+            color_system="auto",
+        )
         console_handler = RichHandler(
+            console=_rich_console,
             rich_tracebacks=True,
             markup=True,
             show_time=True,
