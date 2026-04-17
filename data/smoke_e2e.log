@@ -1,0 +1,382 @@
+[2;36m[04/17/26 13:16:00][0m[2;36m [0m[34mINFO    [0m RedisCache connected:         ]8;id=8029074;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py\[2mdocument_cache.py[0m]8;;\[2m:[0m]8;id=8029075;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py#152\[2m152[0m]8;;\
+[2;36m                    [0m         localhost:[1;36m6379[0m/[1;36m0[0m              [2m                     [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m InMemoryCache initialized with ]8;id=8029081;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py\[2mdocument_cache.py[0m]8;;\[2m:[0m]8;id=8029082;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py#60\[2m60[0m]8;;\
+[2;36m                    [0m         max size: 200MB                [2m                    [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m Memory fallback cache enabled ]8;id=8029088;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py\[2mdocument_cache.py[0m]8;;\[2m:[0m]8;id=8029089;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py#264\[2m264[0m]8;;\
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m CacheManager initialized for  ]8;id=8029095;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py\[2mdocument_cache.py[0m]8;;\[2m:[0m]8;id=8029096;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py#266\[2m266[0m]8;;\
+[2;36m                    [0m         user: default                 [2m                     [0m
+[2;36m[04/17/26 13:16:00][0m[2;36m [0m[34mINFO    [0m pdf_reader: CacheManager           ]8;id=8029103;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\pdf_reader.py\[2mpdf_reader.py[0m]8;;\[2m:[0m]8;id=8029104;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\pdf_reader.py#38\[2m38[0m]8;;\
+[2;36m                    [0m         initialised [1m([0mredis+memory[1m)[0m         [2m                [0m
+[2;36m[04/17/26 13:16:15][0m[2;36m [0m[34mINFO    [0m build_graph: compliance pipeline       ]8;id=8029111;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029112;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#459\[2m459[0m]8;;\
+[2;36m                    [0m         compiled successfully                  [2m            [0m
+[36m╭────────────────────────────────────────────────────╮[0m
+[36m│[0m [1mGraph-based E2E smoke test[0m                         [36m│[0m
+[36m│[0m Uses the compiled StateGraph (the real demo path). [36m│[0m
+[36m╰────────────────────────────────────────────────────╯[0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m build_graph: compliance pipeline       ]8;id=8029117;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029118;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#459\[2m459[0m]8;;\
+[2;36m                    [0m         compiled successfully                  [2m            [0m
+[36mInvoking graph [0m[1;36m([0m[36mthis will stream LLM calls[0m[1;36m)[0m[36m...[0m
+[2;36m[04/17/26 13:16:15][0m[2;36m [0m[34mINFO    [0m [1m[[0mNODE START[1m][0m rule_extraction_node  ]8;id=8029125;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\middleware\logging_mw.py\[2mlogging_mw.py[0m]8;;\[2m:[0m]8;id=8029126;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\middleware\logging_mw.py#45\[2m45[0m]8;;\
+[2;36m                    [0m         | [33minput_keys[0m=[1m[[0m[32m'batch_size'[0m,        [2m                [0m
+[2;36m                    [0m         [32m'current_stage'[0m, [32m'db_config'[0m,      [2m                [0m
+[2;36m                    [0m         [32m'db_type'[0m, [32m'document_path'[0m,        [2m                [0m
+[2;36m                    [0m         [32m'errors'[0m, [32m'raw_rules'[0m,             [2m                [0m
+[2;36m                    [0m         [32m'violations_db_path'[0m[1m][0m              [2m                [0m
+[2;36m[04/17/26 13:16:15][0m[2;36m [0m[34mINFO    [0m rule_extraction_node:        ]8;id=8029133;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\rule_extraction.py\[2mrule_extraction.py[0m]8;;\[2m:[0m]8;id=8029134;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\rule_extraction.py#129\[2m129[0m]8;;\
+[2;36m                    [0m         reading PDF from             [2m                      [0m
+[2;36m                    [0m         [32m'C:\Users\777kr\Desktop\Data[0m [2m                      [0m
+[2;36m                    [0m         [32m-Compliance-Agent\data\AML_C[0m [2m                      [0m
+[2;36m                    [0m         [32mompliance_Policy.pdf'[0m        [2m                      [0m
+[2;36m[04/17/26 13:16:15][0m[2;36m [0m[34mINFO    [0m DocumentProcessor: Cache       ]8;id=8029141;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\docs_processing\docs_processor.py\[2mdocs_processor.py[0m]8;;\[2m:[0m]8;id=8029142;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\docs_processing\docs_processor.py#75\[2m75[0m]8;;\
+[2;36m                    [0m         ENABLED                        [2m                    [0m
+[2;36m[04/17/26 13:16:15][0m[2;36m [0m[34mINFO    [0m pdf_reader: cache MISS —           ]8;id=8029148;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\pdf_reader.py\[2mpdf_reader.py[0m]8;;\[2m:[0m]8;id=8029149;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\pdf_reader.py#84\[2m84[0m]8;;\
+[2;36m                    [0m         processing                         [2m                [0m
+[2;36m                    [0m         AML_Compliance_Policy.pdf          [2m                [0m
+[2;36m[04/17/26 13:16:15][0m[2;36m [0m[34mINFO    [0m ✓ Cache HIT:                  ]8;id=8029155;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py\[2mdocument_cache.py[0m]8;;\[2m:[0m]8;id=8029156;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\utils\document_cache.py#340\[2m340[0m]8;;\
+[2;36m                    [0m         AML_Compliance_Policy.pdf [1m([0m[1;36m10[0m [2m                     [0m
+[2;36m                    [0m         chunks[1m)[0m                       [2m                     [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m 📦 Loaded [1;36m10[0m chunks from      ]8;id=8029162;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\docs_processing\docs_processor.py\[2mdocs_processor.py[0m]8;;\[2m:[0m]8;id=8029163;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\docs_processing\docs_processor.py#128\[2m128[0m]8;;\
+[2;36m                    [0m         cache:                        [2m                     [0m
+[2;36m                    [0m         AML_Compliance_Policy.pdf     [2m                     [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m pdf_reader: cached [1;36m10[0m chunks for  ]8;id=8029169;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\pdf_reader.py\[2mpdf_reader.py[0m]8;;\[2m:[0m]8;id=8029170;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\pdf_reader.py#100\[2m100[0m]8;;\
+[2;36m                    [0m         AML_Compliance_Policy.pdf         [2m                 [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_extraction_node: [1;36m10[0m     ]8;id=8029176;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\rule_extraction.py\[2mrule_extraction.py[0m]8;;\[2m:[0m]8;id=8029177;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\rule_extraction.py#149\[2m149[0m]8;;\
+[2;36m                    [0m         chunks to process            [2m                      [0m
+[2;36m[04/17/26 13:16:28][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m1[0m/[1;36m10[0m [1m([0m[1;36m10[0m%[1m)[0m[1m][0m Chunk [1;36m1[0m/[1;36m10[0m — ]8;id=8029184;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029185;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m0[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:16:39][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m2[0m/[1;36m10[0m [1m([0m[1;36m20[0m%[1m)[0m[1m][0m Chunk [1;36m2[0m/[1;36m10[0m — ]8;id=8029190;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029191;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m3[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:16:49][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m3[0m/[1;36m10[0m [1m([0m[1;36m30[0m%[1m)[0m[1m][0m Chunk [1;36m3[0m/[1;36m10[0m — ]8;id=8029196;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029197;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m3[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:16:59][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m4[0m/[1;36m10[0m [1m([0m[1;36m40[0m%[1m)[0m[1m][0m Chunk [1;36m4[0m/[1;36m10[0m — ]8;id=8029202;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029203;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m4[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:17:10][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m5[0m/[1;36m10[0m [1m([0m[1;36m50[0m%[1m)[0m[1m][0m Chunk [1;36m5[0m/[1;36m10[0m — ]8;id=8029208;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029209;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m6[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:17:20][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m6[0m/[1;36m10[0m [1m([0m[1;36m60[0m%[1m)[0m[1m][0m Chunk [1;36m6[0m/[1;36m10[0m — ]8;id=8029214;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029215;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m6[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:17:28][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m7[0m/[1;36m10[0m [1m([0m[1;36m70[0m%[1m)[0m[1m][0m Chunk [1;36m7[0m/[1;36m10[0m — ]8;id=8029220;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029221;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m3[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:17:39][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m8[0m/[1;36m10[0m [1m([0m[1;36m80[0m%[1m)[0m[1m][0m Chunk [1;36m8[0m/[1;36m10[0m — ]8;id=8029226;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029227;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m4[0m rules                            [2m                [0m
+[2;36m[04/17/26 13:17:50][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m9[0m/[1;36m10[0m [1m([0m[1;36m90[0m%[1m)[0m[1m][0m Chunk [1;36m9[0m/[1;36m10[0m — ]8;id=8029232;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029233;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m12[0m rules                           [2m                [0m
+[2;36m[04/17/26 13:17:58][0m[2;36m [0m[33mWARNING [0m Retry [1;36m1[0m/[1;36m3[0m after RateLimitError: Error   ]8;id=8029240;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\middleware\retry.py\[2mretry.py[0m]8;;\[2m:[0m]8;id=8029241;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\middleware\retry.py#74\[2m74[0m]8;;\
+[2;36m                    [0m         code: [1;36m429[0m - [1m{[0m[32m'error'[0m: [1m{[0m[32m'message'[0m: 'Rate [2m           [0m
+[2;36m                    [0m         limit reached for model                 [2m           [0m
+[2;36m                    [0m         `llama-[1;36m3.1[0m-8b-instant` in organization  [2m           [0m
+[2;36m                    [0m         `org_01j5z1vm67ezws2050z2h9xapk`        [2m           [0m
+[2;36m                    [0m         service tier `on_demand` on tokens per  [2m           [0m
+[2;36m                    [0m         minute [1m([0mTPM[1m)[0m: Limit [1m([0mwaiting [1;36m2.[0m0s[1m)[0m      [2m           [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m [1m[[0mProgress [1;36m10[0m/[1;36m10[0m [1m([0m[1;36m100[0m%[1m)[0m[1m][0m Chunk      ]8;id=8029246;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py\[2mcallbacks.py[0m]8;;\[2m:[0m]8;id=8029247;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\streaming\callbacks.py#135\[2m135[0m]8;;\
+[2;36m                    [0m         [1;36m10[0m/[1;36m10[0m — [1;36m7[0m rules                    [2m                [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m rule_extraction_node:        ]8;id=8029253;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\rule_extraction.py\[2mrule_extraction.py[0m]8;;\[2m:[0m]8;id=8029254;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\rule_extraction.py#211\[2m211[0m]8;;\
+[2;36m                    [0m         extracted [1;36m31[0m unique rules    [2m                      [0m
+[2;36m                    [0m         from [1;36m10[0m chunks               [2m                      [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m [1m[[0mNODE END[1m][0m   rule_extraction_node  ]8;id=8029260;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\middleware\logging_mw.py\[2mlogging_mw.py[0m]8;;\[2m:[0m]8;id=8029261;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\middleware\logging_mw.py#52\[2m52[0m]8;;\
+[2;36m                    [0m         | [33mduration[0m=[1;36m114322[0m[1;36m.[0m4ms |            [2m                [0m
+[2;36m                    [0m         [33moutput_keys[0m=[1m[[0m[32m'current_stage'[0m,      [2m                [0m
+[2;36m                    [0m         [32m'raw_rules'[0m[1m][0m                       [2m                [0m
+   rule_extraction -> current_stage, raw_rules
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m schema_discovery_node:       ]8;id=8029268;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\schema_discovery.py\[2mschema_discovery.py[0m]8;;\[2m:[0m]8;id=8029269;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\schema_discovery.py#34\[2m34[0m]8;;\
+[2;36m                    [0m         connecting to sqlite         [2m                      [0m
+[2;36m                    [0m         database                     [2m                      [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m Connected to database:          ]8;id=8029276;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\baseconnector.py\[2mbaseconnector.py[0m]8;;\[2m:[0m]8;id=8029277;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\baseconnector.py#55\[2m55[0m]8;;\
+[2;36m                    [0m         sqlite:[35m/[0m[35m/[0m[35m/[0m[95mC[0m:\Users\777kr\Deskto [2m                   [0m
+[2;36m                    [0m         p\Data-Compliance-Agent\data\HI [2m                   [0m
+[2;36m                    [0m         -Small_Trans.db                 [2m                   [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m Discovered schema: [1;36m1[0m tables  ]8;id=8029284;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\sqlite_connector.py\[2msqlite_connector.py[0m]8;;\[2m:[0m]8;id=8029285;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\sqlite_connector.py#86\[2m86[0m]8;;\
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m schema_discovery_node: found ]8;id=8029291;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\schema_discovery.py\[2mschema_discovery.py[0m]8;;\[2m:[0m]8;id=8029292;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\schema_discovery.py#65\[2m65[0m]8;;\
+[2;36m                    [0m         [1;36m1[0m tables, [1;36m12[0m columns total   [2m                      [0m
+   schema_discovery -> current_stage, schema_metadata
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029298;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029299;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'RET-001'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'All [0m      [2m            [0m
+[2;36m                    [0m         [32mrequirements in this document are [0m     [2m            [0m
+[2;36m                    [0m         [32mmandatory.'[0m                            [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029304;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029305;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'SEC-001'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Automated[0m [2m            [0m
+[2;36m                    [0m         [32msystems SHALL flag all transactions [0m   [2m            [0m
+[2;36m                    [0m         [32mthat fail any rule defined herein '[0m    [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029310;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029311;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'RET-002'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m.                      [2m            [0m
+[2;36m                    [0m         [33mrule_text[0m=[32m'Non-compliance with these [0m  [2m            [0m
+[2;36m                    [0m         [32mrules must be reported to the [0m         [2m            [0m
+[2;36m                    [0m         [32mCompliance Office within'[0m              [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029316;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029317;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'PAY-002'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Bitcoin [0m  [2m            [0m
+[2;36m                    [0m         [32mand Cash payments carry elevated risk [0m [2m            [0m
+[2;36m                    [0m         [32mand require additional review.'[0m        [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029322;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029323;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'LAUN-001'[0m — no scannable logic        [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Automated[0m [2m            [0m
+[2;36m                    [0m         [32mreports must be generated daily for [0m   [2m            [0m
+[2;36m                    [0m         [32mall transactions where Is Launderi'[0m    [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029328;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029329;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'LAUN-002'[0m — no scannable logic        [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"All[0m[32m [0m      [2m            [0m
+[2;36m                    [0m         [32mtransaction records where Is [0m          [2m            [0m
+[2;36m                    [0m         [32mLaundering equals '1' must be flagged [0m [2m            [0m
+[2;36m                    [0m         [32min the vi"[0m                             [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029334;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029335;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'LAUN-003'[0m — no scannable logic        [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"The[0m[32m Is [0m   [2m            [0m
+[2;36m                    [0m         [32mLaundering field must only contain [0m    [2m            [0m
+[2;36m                    [0m         [32mvalues '0' or '1'. Any record where [0m   [2m            [0m
+[2;36m                    [0m         [32mIs"[0m                                    [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029340;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029341;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'PRIV-LAU-001'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"Is[0m[32m [0m       [2m            [0m
+[2;36m                    [0m         [32mLaundering = '1'"[0m                      [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029346;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029347;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-LAU-002'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"Is[0m[32m [0m       [2m            [0m
+[2;36m                    [0m         [32mLaundering NOT IN [0m[32m([0m[32m'0','1'[0m[32m)[0m[32m"[0m           [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029352;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029353;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'SEC-ACC-001'[0m — no scannable logic     [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"Is[0m[32m [0m       [2m            [0m
+[2;36m                    [0m         [32mLaundering[0m[32m='1' AND Payment [0m            [2m            [0m
+[2;36m                    [0m         [32mFormat[0m[32m='Bitcoin'"[0m                      [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029358;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029359;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-002'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Account [0m  [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029364;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029365;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-003'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Account_2[0m [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029370;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029371;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-004'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'From Bank[0m [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029376;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029377;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-005'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'To Bank [0m  [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029382;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029383;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'RET-001'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'All [0m      [2m            [0m
+[2;36m                    [0m         [32mrequirements in this document are [0m     [2m            [0m
+[2;36m                    [0m         [32mmandatory.'[0m                            [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029388;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029389;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'SEC-001'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Automated[0m [2m            [0m
+[2;36m                    [0m         [32msystems SHALL flag all transactions [0m   [2m            [0m
+[2;36m                    [0m         [32mthat fail any rule defined herein '[0m    [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029394;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029395;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'RET-002'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m.                      [2m            [0m
+[2;36m                    [0m         [33mrule_text[0m=[32m'Non-compliance with these [0m  [2m            [0m
+[2;36m                    [0m         [32mrules must be reported to the [0m         [2m            [0m
+[2;36m                    [0m         [32mCompliance Office within'[0m              [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029401;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029402;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'RET-003'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029407;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029408;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'SEC-002'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029413;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029414;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'AMT-001'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029419;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029420;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'AMT-002'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029425;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029426;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'AMT-003'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029431;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029432;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'AMT-004'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029437;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029438;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'PAY-001'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029443;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029444;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'PAY-002'[0m — no scannable logic         [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Bitcoin [0m  [2m            [0m
+[2;36m                    [0m         [32mand Cash payments carry elevated risk [0m [2m            [0m
+[2;36m                    [0m         [32mand require additional review.'[0m        [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029449;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029450;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'FMT-001'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029455;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029456;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'FMT-002'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029461;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029462;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'FMT-003'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029467;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029468;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'FMT-004'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029473;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029474;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'FMT-005'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029479;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029480;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'LDR-001'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029485;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029486;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'LAUN-001'[0m — no scannable logic        [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Automated[0m [2m            [0m
+[2;36m                    [0m         [32mreports must be generated daily for [0m   [2m            [0m
+[2;36m                    [0m         [32mall transactions where Is Launderi'[0m    [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029491;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029492;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'LAUN-002'[0m — no scannable logic        [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"All[0m[32m [0m      [2m            [0m
+[2;36m                    [0m         [32mtransaction records where Is [0m          [2m            [0m
+[2;36m                    [0m         [32mLaundering equals '1' must be flagged [0m [2m            [0m
+[2;36m                    [0m         [32min the vi"[0m                             [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029497;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029498;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'LAUN-003'[0m — no scannable logic        [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"The[0m[32m Is [0m   [2m            [0m
+[2;36m                    [0m         [32mLaundering field must only contain [0m    [2m            [0m
+[2;36m                    [0m         [32mvalues '0' or '1'. Any record where [0m   [2m            [0m
+[2;36m                    [0m         [32mIs"[0m                                    [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029503;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029504;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'ACC-001'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029509;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029510;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'ACC-002'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029515;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029516;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'ACC-003'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node: skipping        ]8;id=8029521;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029522;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#153\[2m153[0m]8;;\
+[2;36m                    [0m         duplicate rule_id [32m'ACC-004'[0m            [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029527;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029528;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'PRIV-LAU-001'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"Is[0m[32m [0m       [2m            [0m
+[2;36m                    [0m         [32mLaundering = '1'"[0m                      [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029533;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029534;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-LAU-002'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"Is[0m[32m [0m       [2m            [0m
+[2;36m                    [0m         [32mLaundering NOT IN [0m[32m([0m[32m'0','1'[0m[32m)[0m[32m"[0m           [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029539;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029540;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'SEC-ACC-001'[0m — no scannable logic     [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m"Is[0m[32m [0m       [2m            [0m
+[2;36m                    [0m         [32mLaundering[0m[32m='1' AND Payment [0m            [2m            [0m
+[2;36m                    [0m         [32mFormat[0m[32m='Bitcoin'"[0m                      [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029545;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029546;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-002'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Account [0m  [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029551;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029552;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-003'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'Account_2[0m [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029557;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029558;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-004'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'From Bank[0m [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[33mWARNING [0m rule_structuring_node: DROPPING rule   ]8;id=8029563;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029564;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#163\[2m163[0m]8;;\
+[2;36m                    [0m         [32m'QUAL-ACC-005'[0m — no scannable logic    [2m            [0m
+[2;36m                    [0m         [1m([0mfield+operator[1m)[0m. [33mrule_text[0m=[32m'To Bank [0m  [2m            [0m
+[2;36m                    [0m         [32mIS NULL'[0m                               [2m            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m rule_structuring_node [1m([0mstub[1m)[0m: [1;36m17[0m       ]8;id=8029570;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py\[2mgraph.py[0m]8;;\[2m:[0m]8;id=8029571;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\graph.py#285\[2m285[0m]8;;\
+[2;36m                    [0m         structured, [1;36m0[0m low-confidence           [2m            [0m
+   rule_structuring -> current_stage, low_confidence_rules, structured_rules
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m data_scanning_node: starting    ]8;id=8029578;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029579;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\data_scanning.py#60\[2m60[0m]8;;\
+[2;36m                    [0m         scan with [1;36m17[0m rules on [1;36m1[0m tables  [2m                   [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m Starting scan                   ]8;id=8029586;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029587;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#73\[2m73[0m]8;;\
+[2;36m                    [0m         scan_20260417_074810_207bda72   [2m                   [0m
+[2;36m                    [0m         with [1;36m17[0m rules across [1;36m1[0m tables   [2m                   [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m Connected to database:          ]8;id=8029592;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\baseconnector.py\[2mbaseconnector.py[0m]8;;\[2m:[0m]8;id=8029593;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\baseconnector.py#55\[2m55[0m]8;;\
+[2;36m                    [0m         sqlite:[35m/[0m[35m/[0m[35m/[0m[95mC[0m:\Users\777kr\Deskto [2m                   [0m
+[2;36m                    [0m         p\Data-Compliance-Agent\data\HI [2m                   [0m
+[2;36m                    [0m         -Small_Trans.db                 [2m                   [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m Connected to database:          ]8;id=8029598;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\baseconnector.py\[2mbaseconnector.py[0m]8;;\[2m:[0m]8;id=8029599;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\baseconnector.py#55\[2m55[0m]8;;\
+[2;36m                    [0m         sqlite:[35m/[0m[35m/[0m[35m/[0m[95mC[0m:\Users\777kr\Deskto [2m                   [0m
+[2;36m                    [0m         p\Data-Compliance-Agent\data\hi [2m                   [0m
+[2;36m                    [0m         _small_violations.db            [2m                   [0m
+[2;36m[04/17/26 13:18:10][0m[2;36m [0m[34mINFO    [0m Created violations_log table ]8;id=8029606;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\violations_store.py\[2mviolations_store.py[0m]8;;\[2m:[0m]8;id=8029607;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\violations_store.py#88\[2m88[0m]8;;\
+[2;36m                    [0m         for sqlite                   [2m                      [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m Created [1;36m6[0m indexes on         ]8;id=8029613;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\violations_store.py\[2mviolations_store.py[0m]8;;\[2m:[0m]8;id=8029614;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\violations_store.py#97\[2m97[0m]8;;\
+[2;36m                    [0m         violations_log               [2m                      [0m
+[2;36m[04/17/26 13:18:49][0m[2;36m [0m[34mINFO    [0m Found [1;36m3711[0m violations in table ]8;id=8029620;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029621;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'AMT-001'[0m                      [2m                    [0m
+[2;36m[04/17/26 13:19:28][0m[2;36m [0m[34mINFO    [0m Found [1;36m3711[0m violations in table ]8;id=8029626;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029627;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'AMT-002'[0m                      [2m                    [0m
+[2;36m[04/17/26 13:19:29][0m[2;36m [0m[34mINFO    [0m Found [1;36m81[0m violations in table   ]8;id=8029632;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029633;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'AMT-003'[0m                      [2m                    [0m
+[2;36m[04/17/26 13:19:33][0m[2;36m [0m[34mINFO    [0m Found [1;36m554[0m violations in table  ]8;id=8029638;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029639;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'AMT-004'[0m                      [2m                    [0m
+[2;36m[04/17/26 13:19:34][0m[2;36m [0m[34mINFO    [0m Found [1;36m6[0m violations in table    ]8;id=8029644;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029645;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'FMT-002'[0m                      [2m                    [0m
+[2;36m[04/17/26 13:20:08][0m[2;36m [0m[34mINFO    [0m Found [1;36m3711[0m violations in table ]8;id=8029650;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029651;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'FMT-003'[0m                      [2m                    [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m Found [1;36m1[0m violations in table    ]8;id=8029656;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029657;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#166\[2m166[0m]8;;\
+[2;36m                    [0m         [32m'transactions'[0m for rule        [2m                    [0m
+[2;36m                    [0m         [32m'LDR-001'[0m                      [2m                    [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m Scan                           ]8;id=8029663;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py\[2mdata_scanning.py[0m]8;;\[2m:[0m]8;id=8029664;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\data_scanning.py#173\[2m173[0m]8;;\
+[2;36m                    [0m         scan_20260417_074810_207bda72  [2m                    [0m
+[2;36m                    [0m         complete: [1;36m11775[0m violations     [2m                    [0m
+[2;36m                    [0m         across [1;36m17[0m tables               [2m                    [0m
+   data_scanning -> current_stage, scan_id, scan_summary
+[2;36m[04/17/26 13:20:11][0m[2;36m [0m[34mINFO    [0m violation_validator_node ]8;id=8029671;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\violation_validator.py\[2mviolation_validator.py[0m]8;;\[2m:[0m]8;id=8029672;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\violation_validator.py#312\[2m312[0m]8;;\
+[2;36m                    [0m         : done — [1;36m0[0m validated, [1;36m0[0m  [2m                          [0m
+[2;36m                    [0m         confirmed, [1;36m0[0m false       [2m                          [0m
+[2;36m                    [0m         positives                [2m                          [0m
+   violation_validator -> current_stage, validation_summary
+[2;36m[04/17/26 13:20:12][0m[2;36m [0m[34mINFO    [0m Created rule_explanations   ]8;id=8029678;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\violations_store.py\[2mviolations_store.py[0m]8;;\[2m:[0m]8;id=8029679;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\tools\database\violations_store.py#211\[2m211[0m]8;;\
+[2;36m                    [0m         table                       [2m                       [0m
+[2;36m[04/17/26 13:20:13][0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029686;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029687;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'AMT-001'[0m     [2m                            [0m
+[2;36m                    [0m         [1m([0m[1;36m3711[0m violations[1m)[0m      [2m                            [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029692;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029693;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'AMT-002'[0m     [2m                            [0m
+[2;36m                    [0m         [1m([0m[1;36m3711[0m violations[1m)[0m      [2m                            [0m
+[2;36m[04/17/26 13:20:14][0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029698;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029699;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'AMT-003'[0m [1m([0m[1;36m81[0m [2m                            [0m
+[2;36m                    [0m         violations[1m)[0m            [2m                            [0m
+[2;36m[04/17/26 13:20:16][0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029704;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029705;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'AMT-004'[0m     [2m                            [0m
+[2;36m                    [0m         [1m([0m[1;36m554[0m violations[1m)[0m       [2m                            [0m
+[2;36m[04/17/26 13:20:17][0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029710;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029711;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'FMT-002'[0m [1m([0m[1;36m6[0m  [2m                            [0m
+[2;36m                    [0m         violations[1m)[0m            [2m                            [0m
+[2;36m[04/17/26 13:20:18][0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029716;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029717;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'FMT-003'[0m     [2m                            [0m
+[2;36m                    [0m         [1m([0m[1;36m3711[0m violations[1m)[0m      [2m                            [0m
+[2;36m[04/17/26 13:20:19][0m[2;36m [0m[34mINFO    [0m explanation_generator: ]8;id=8029722;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029723;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#273\[2m273[0m]8;;\
+[2;36m                    [0m         generating explanation [2m                            [0m
+[2;36m                    [0m         for rule [32m'LDR-001'[0m [1m([0m[1;36m1[0m  [2m                            [0m
+[2;36m                    [0m         violations[1m)[0m            [2m                            [0m
+[2;36m[04/17/26 13:20:20][0m[2;36m [0m[34mINFO    [0m explanation_generator_ ]8;id=8029729;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py\[2mexplanation_generator.py[0m]8;;\[2m:[0m]8;id=8029730;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\explanation_generator.py#334\[2m334[0m]8;;\
+[2;36m                    [0m         node: generated        [2m                            [0m
+[2;36m                    [0m         explanations for [1;36m7[0m     [2m                            [0m
+[2;36m                    [0m         rules                  [2m                            [0m
+   explanation_generator -> current_stage, rule_explanations
+[2;36m[04/17/26 13:20:20][0m[2;36m [0m[34mINFO    [0m violation_reporting_node: ]8;id=8029737;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\violation_reporting.py\[2mviolation_reporting.py[0m]8;;\[2m:[0m]8;id=8029738;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\violation_reporting.py#88\[2m88[0m]8;;\
+[2;36m                    [0m         generating report for     [2m                         [0m
+[2;36m                    [0m         [33mscan_id[0m=[32m'scan_20260417_07[0m [2m                         [0m
+[2;36m                    [0m         [32m4810_207bda72'[0m            [2m                         [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m violation_reporting_node ]8;id=8029744;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\violation_reporting.py\[2mviolation_reporting.py[0m]8;;\[2m:[0m]8;id=8029745;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\violation_reporting.py#187\[2m187[0m]8;;\
+[2;36m                    [0m         : report ready — [1;36m11775[0m   [2m                          [0m
+[2;36m                    [0m         violations, [33mscore[0m=[1;36m58[0m[1;36m.8[0m%  [2m                          [0m
+[2;36m                    [0m         [33mgrade[0m=[35mD[0m, [1;36m0[0m need review   [2m                          [0m
+   violation_reporting -> current_stage, violation_report
+[2;36m[04/17/26 13:20:21][0m[2;36m [0m[34mINFO    [0m PDF report written to       ]8;id=8029752;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\report_generator.py\[2mreport_generator.py[0m]8;;\[2m:[0m]8;id=8029753;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\report_generator.py#413\[2m413[0m]8;;\
+[2;36m                    [0m         data\compliance_report_scan [2m                       [0m
+[2;36m                    [0m         _20260417_074810_207bda72.p [2m                       [0m
+[2;36m                    [0m         df                          [2m                       [0m
+[2;36m                   [0m[2;36m [0m[34mINFO    [0m HTML report written to      ]8;id=8029759;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\report_generator.py\[2mreport_generator.py[0m]8;;\[2m:[0m]8;id=8029760;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\stages\report_generator.py#672\[2m672[0m]8;;\
+[2;36m                    [0m         data\compliance_report_scan [2m                       [0m
+[2;36m                    [0m         _20260417_074810_207bda72.h [2m                       [0m
+[2;36m                    [0m         tml                         [2m                       [0m
+[2;36m[04/17/26 13:20:21][0m[2;36m [0m[34mINFO    [0m report_generation_node:     ]8;id=8029767;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\report_generation.py\[2mreport_generation.py[0m]8;;\[2m:[0m]8;id=8029768;file://C:\Users\777kr\Desktop\Data-Compliance-Agent\src\agents\nodes\report_generation.py#44\[2m44[0m]8;;\
+[2;36m                    [0m         reports generated —         [2m                       [0m
+[2;36m                    [0m         [33mpdf[0m=[35mdata[0m\compliance_report_ [2m                       [0m
+[2;36m                    [0m         scan_20260417_074810_207bda [2m                       [0m
+[2;36m                    [0m         72.pdf,                     [2m                       [0m
+[2;36m                    [0m         [33mhtml[0m=[35mdata[0m\compliance_report [2m                       [0m
+[2;36m                    [0m         _scan_20260417_074810_207bd [2m                       [0m
+[2;36m                    [0m         a72.html                    [2m                       [0m
+   report_generation -> current_stage, report_paths
+
+╭───────────────────────────── [36mSmoke Test Result[0m ──────────────────────────────╮
+│ [1mDuration:[0m         246.6s                                                     │
+│ [1mraw_rules:[0m        62                                                         │
+│ [1mstructured_rules:[0m 17                                                         │
+│ [1mtotal_violations:[0m 11775                                                      │
+│ [1mtables_scanned:[0m   17                                                         │
+│ [1mreport_paths.pdf:[0m data\compliance_report_scan_20260417_074810_207bda72.pdf   │
+│ [1mreport_paths.html:[0m data\compliance_report_scan_20260417_074810_207bda72.html │
+│ [1merrors:[0m           0                                                          │
+╰──────────────────────────────────────────────────────────────────────────────╯
+[1;32m✔ Graph E2E smoke test PASSED[0m

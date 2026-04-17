@@ -1,0 +1,18 @@
++---------------------------------------+
+| HI-Small Financial Transactions       |
+| Anti-Money Laundering Compliance Scan |
+| 2026-04-17 07:17 UTC                  |
++---------------------------------------+
+
+----------------- Step 1: Generate AML Compliance Policy PDF ------------------
+Traceback (most recent call last):
+  File "C:\Users\777kr\Desktop\Data-Compliance-Agent\run_hi_small.py", line 827, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\777kr\Desktop\Data-Compliance-Agent\run_hi_small.py", line 766, in main
+    policy_pdf = step1_generate_pdf()
+  File "C:\Users\777kr\Desktop\Data-Compliance-Agent\run_hi_small.py", line 78, in step1_generate_pdf
+    from scripts.generate_policy_pdf import build_pdf
+  File "C:\Users\777kr\Desktop\Data-Compliance-Agent\scripts\generate_policy_pdf.py", line 23, in <module>
+    from reportlab.lib import colors
+ModuleNotFoundError: No module named 'reportlab'

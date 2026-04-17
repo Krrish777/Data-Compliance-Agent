@@ -1,0 +1,21 @@
+
+> agent-chat-ui@0.1.0 dev C:\Users\777kr\Desktop\Data-Compliance-Agent\agent-chat-ui
+> next dev
+
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://172.168.0.69:3000
+- Environments: .env.local
+✓ Ready in 2.2s
+
+○ Compiling / ...
+ GET / 200 in 6.3s (next.js: 5.7s, application-code: 679ms)
+[browser] Image with src "http://localhost:3000/vercel.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+✓ Compiled in 545ms
+✓ Compiled in 2.7s
+ GET / 200 in 1089ms (next.js: 343ms, application-code: 745ms)
+ GET / 200 in 337ms (next.js: 18ms, application-code: 319ms)
+ GET / 200 in 598ms (next.js: 62ms, application-code: 536ms)
+○ Compiling /scan ...
+ GET /scan 200 in 5.6s (next.js: 5.3s, application-code: 342ms)
+ GET /scan 200 in 186ms (next.js: 25ms, application-code: 161ms)

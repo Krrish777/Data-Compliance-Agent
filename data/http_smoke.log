@@ -1,0 +1,11 @@
+[1] Creating thread...
+    thread_id = 332b44c0-173d-4882-8e92-0c2aa276bc60
+[2] Listing assistants...
+    found 1 assistant(s): ['agent']
+[3] Starting a stream run (cached rules should be instant)...
+[4] Stream done. 401 chunks, events seen: {'metadata': 1, 'messages/metadata': 2, 'messages/partial': 398}
+[5] Final state:
+    total_violations: 0
+    rules_processed:  0
+    report_paths:     {}
+FAIL: no reports in final state

@@ -1,0 +1,19 @@
+[1] create thread
+[2] stream run (no safety cap this time)
+    [update] rule_extraction
+    [update] schema_discovery
+    [update] rule_structuring
+    [update] data_scanning
+    [update] violation_validator
+    [update] explanation_generator
+    [update] violation_reporting
+    [update] report_generation
+[3] done in 276.8s
+    events: {'metadata': 1, 'updates': 8, 'messages/metadata': 7, 'messages/partial': 1691}
+    nodes_seen: ['rule_extraction', 'schema_discovery', 'rule_structuring', 'data_scanning', 'violation_validator', 'explanation_generator', 'violation_reporting', 'report_generation']
+    raw_rules: 31
+    structured_rules: 17
+    total_violations: 11775
+    rules_processed:  17
+    report_paths:     {'pdf': 'data\\compliance_report_scan_20260417_080042_3e10a3f9.pdf', 'html': 'data\\compliance_report_scan_20260417_080042_3e10a3f9.html'}
+PASS: HTTP E2E produced reports
