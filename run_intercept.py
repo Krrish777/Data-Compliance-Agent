@@ -240,15 +240,17 @@ def main():
 
 def _ensure_policy_rules(db_path: str):
     """Check if policy rules exist in Qdrant; if not, create some defaults."""
-    from src.vector_database.policy_store import PolicyRuleStore
+    from src.vector_database.policy_store import get_policy_store
 
     console.print("\n[bold]Checking policy rule store…[/bold]")
-    store = PolicyRuleStore()
+    # Use the shared singleton so the interceptor graph's policy_mapper_node
+    # hits the exact same Qdrant local-mode client (same file lock) as the
+    # ingest path. Don't close() it — the graph will reuse it.
+    store = get_policy_store()
     count = store.count()
 
     if count > 0:
         console.print(f"[green]✓ Found {count} policy rules in vector DB[/green]")
-        store.close()
         return
 
     console.print("[yellow]No policy rules found — ingesting default AML rules…[/yellow]")
@@ -351,7 +353,8 @@ def _ensure_policy_rules(db_path: str):
 
     n = store.ingest_structured_rules(default_rules, framework="AML")
     console.print(f"[green]✓ Ingested {n} default AML policy rules[/green]")
-    store.close()
+    # Intentionally DO NOT close — the interceptor graph will reuse this
+    # singleton store instance when policy_mapper_node runs.
 
 
 if __name__ == "__main__":

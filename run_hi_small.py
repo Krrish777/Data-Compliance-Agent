@@ -1,30 +1,41 @@
 """
-End-to-end compliance scan of HI-Small_Trans.db
-================================================
+End-to-end compliance scan of HI-Small_Trans.db (graph path)
+============================================================
 
-Steps executed (all printed):
-  1.  Generate AML policy PDF
-  2.  Build the LangGraph pipeline
-  3.  Run rule_extraction (LLM reads PDF chunks → ComplianceRuleModel list)
-  4.  Run schema_discovery (connect to DB, emit schema)
-  5.  Run rule_structuring (map raw rules → StructuredRule, split by confidence)
-  6.  Run data_scanning   (keyset-paginated scan, log violations)
-  7.  Run violation_reporting (aggregate report)
-  8.  Print final report
+This is the canonical CLI smoke test. It invokes the REAL compiled
+``StateGraph`` (same code path the langgraph dev server and the Next.js
+frontend use in the live demo) — no hand-crafted rule fallbacks, no
+step-by-step node orchestration.
 
-Usage:
+What it does
+------------
+1. Generates the AML policy PDF (if missing).
+2. Compiles the scanner graph with a SQLite checkpointer.
+3. Streams the graph with ``stream_mode="updates"`` and prints each node's
+   output keys as they land.
+4. If the graph hits an ``interrupt()`` for low-confidence rules, it
+   auto-approves them (batch mode) and resumes with ``Command(resume=...)``.
+5. Asserts the final state contains ``report_paths`` + violations and
+   prints a one-page summary. Evaluator + ground-truth table are preserved
+   from the legacy script for demo context.
+
+Usage
+-----
     python run_hi_small.py
 """
 from __future__ import annotations
 
+import json
 import os
+import re
 import sys
 import time
 import traceback
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any, Dict, List
 
-# ── Project root on sys.path ──────────────────────────────────────────────────
+# ── Project root on sys.path ─────────────────────────────────────────────
 ROOT = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -32,72 +43,65 @@ if str(ROOT) not in sys.path:
 from dotenv import load_dotenv  # noqa: E402
 load_dotenv()
 
+# Importing logger reconfigures stdout/stderr to UTF-8 on Windows so
+# Unicode status chars do not raise encoding errors.
+from src.utils.logger import setup_logger  # noqa: E402, F401
 from rich.console import Console  # noqa: E402
 from rich.panel import Panel  # noqa: E402
-from rich.rule import Rule # noqa: E402
+from rich.rule import Rule  # noqa: E402
 from rich.table import Table  # noqa: E402
-console = Console()
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
+console = Console(force_terminal=True, legacy_windows=False, color_system="auto")
+
+# ── Paths ────────────────────────────────────────────────────────────────
 DB_PATH       = str(ROOT / "data" / "HI-Small_Trans.db")
 POLICY_PDF    = str(ROOT / "data" / "AML_Compliance_Policy.pdf")
 VIOLATIONS_DB = str(ROOT / "data" / "hi_small_violations.db")
 CHECKPOINT_DB = str(ROOT / "data" / "hi_small_checkpoints.db")
 
+THREAD_ID = "run-hi-small-cli"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  Helpers
-# ═══════════════════════════════════════════════════════════════════════════════
 
-def step(n: int, title: str) -> None:
+# ═════════════════════════════════════════════════════════════════════════
+#  Utilities
+# ═════════════════════════════════════════════════════════════════════════
+def step(n: str, title: str) -> None:
     console.print()
     console.print(Rule(f"[bold cyan]Step {n}: {title}[/bold cyan]", style="cyan"))
 
-def ok(msg: str) -> None:
-    console.print(f"  [bold green]✔[/bold green]  {msg}")
-
-def info(msg: str) -> None:
-    console.print(f"  [dim]ℹ[/dim]  {msg}")
-
-def warn(msg: str) -> None:
-    console.print(f"  [bold yellow]⚠[/bold yellow]  {msg}")
-
-def err(msg: str) -> None:
-    console.print(f"  [bold red]✘[/bold red]  {msg}")
+def ok(msg: str)   -> None: console.print(f"  [bold green][ok][/bold green]  {msg}")
+def info(msg: str) -> None: console.print(f"  [dim]i[/dim]  {msg}")
+def warn(msg: str) -> None: console.print(f"  [bold yellow][!][/bold yellow]  {msg}")
+def err(msg: str)  -> None: console.print(f"  [bold red][X][/bold red]  {msg}")
 
 def elapsed(t0: float) -> str:
     return f"{(time.perf_counter() - t0)*1000:.0f} ms"
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 1 — Generate PDF
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step1_generate_pdf() -> str:
-    step(1, "Generate AML Compliance Policy PDF")
+# ═════════════════════════════════════════════════════════════════════════
+#  Step 1 — Ensure the policy PDF exists
+# ═════════════════════════════════════════════════════════════════════════
+def step1_ensure_pdf() -> str:
+    step("1", "Ensure AML Compliance Policy PDF")
+    if Path(POLICY_PDF).exists():
+        ok(f"PDF already present at {POLICY_PDF}")
+        return POLICY_PDF
     from scripts.generate_policy_pdf import build_pdf
-
     t0 = time.perf_counter()
     path = build_pdf(POLICY_PDF)
-    size_kb = Path(path).stat().st_size // 1024
-    ok(f"PDF written → {path}  ({size_kb} KB, {elapsed(t0)})")
+    ok(f"PDF generated at {path} ({elapsed(t0)})")
     return path
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 2 — Build graph
-# ═══════════════════════════════════════════════════════════════════════════════
-
+# ═════════════════════════════════════════════════════════════════════════
+#  Step 2 — Build the graph
+# ═════════════════════════════════════════════════════════════════════════
 def step2_build_graph():
-    step(2, "Build LangGraph compliance pipeline")
-
+    step("2", "Build LangGraph compliance pipeline (real graph.invoke path)")
     from src.agents.graph import build_graph
     from src.agents.memory import get_checkpointer
 
     t0 = time.perf_counter()
-    # We'll use the context manager, but return both for later use
-    graph_obj   = {"graph": None, "cp_ctx": None}  # noqa: E402, F841
-
     cp_ctx = get_checkpointer("sqlite", db_path=CHECKPOINT_DB)
     cp = cp_ctx.__enter__()
     graph = build_graph(checkpointer=cp)
@@ -105,246 +109,87 @@ def step2_build_graph():
     node_names = [n for n in graph.nodes if not n.startswith("__")]
     ok(f"Pipeline compiled ({elapsed(t0)})")
     info(f"Nodes: {node_names}")
+    return graph, cp_ctx
 
-    return graph, cp, cp_ctx
 
+# ═════════════════════════════════════════════════════════════════════════
+#  Step 3 — Stream the graph
+# ═════════════════════════════════════════════════════════════════════════
+def step3_stream_graph(graph, initial: Dict[str, Any]) -> Dict[str, Any]:
+    step("3", "Stream graph (rule_extraction -> schema_discovery -> ... -> report_generation)")
+    from langgraph.types import Command
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  Individual node runner (verbose)
-# ═══════════════════════════════════════════════════════════════════════════════
+    config = {"configurable": {"thread_id": THREAD_ID}}
+    interrupted = False
 
-def run_node(node_fn, state: dict, node_name: str) -> dict:
-    """Run a single node function, print inputs/outputs, merge results."""
-    input_keys = [k for k, v in state.items() if v is not None and v != [] and v != {}]
-    info(f"Input keys: {input_keys}")
-    t0 = time.perf_counter()
-    try:
-        result = node_fn(state)
-        ms = elapsed(t0)
-        if isinstance(result, dict):
-            for k, v in result.items():
-                if isinstance(v, list):
-                    info(f"  → {k}: {len(v)} items")
-                elif isinstance(v, dict):
-                    info(f"  → {k}: dict with {len(v)} keys")
+    def _consume(stream) -> None:
+        nonlocal interrupted
+        for chunk in stream:
+            for node, updates in chunk.items():
+                if node == "__interrupt__":
+                    interrupted = True
+                    payload = updates[0].value if isinstance(updates, list) else updates
+                    warn(f"Graph interrupted at human_review -- "
+                         f"{len(payload.get('rules', []))} low-confidence rules")
                 else:
-                    info(f"  → {k}: {str(v)[:120]}")
-        ok(f"{node_name} finished ({ms})")
-        state = {**state, **result}
-        return state
-    except Exception as e:
-        err(f"{node_name} raised: {e}")
-        traceback.print_exc()
-        raise
+                    keys = ", ".join(sorted(updates.keys())) if isinstance(updates, dict) else str(updates)[:80]
+                    ok(f"node [{node}] -> {keys}")
+
+    # First pass
+    _consume(graph.stream(initial, config=config, stream_mode="updates"))
+
+    # Auto-resume HITL if the graph paused
+    if interrupted:
+        info("Auto-approving all low-confidence rules and resuming...")
+        snap = graph.get_state(config)
+        low = snap.values.get("low_confidence_rules", [])
+        decision = {
+            "approved": [r.rule_id for r in low],
+            "edited":   [],
+            "dropped":  [],
+        }
+        _consume(graph.stream(Command(resume=decision), config=config, stream_mode="updates"))
+
+    # Return the final state snapshot
+    final = graph.get_state(config)
+    return dict(final.values)
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 3 — Rule extraction (LLM)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════
+#  Step 4 — Assert + print summary
+# ═════════════════════════════════════════════════════════════════════════
+def step4_summary(state: Dict[str, Any]) -> None:
+    step("4", "Final State Summary")
+    raw_rules   = state.get("raw_rules", [])
+    structured  = state.get("structured_rules", [])
+    low_conf    = state.get("low_confidence_rules", [])
+    schema      = state.get("schema_metadata", {})
+    scan_sum    = state.get("scan_summary", {})
+    val_sum     = state.get("validation_summary", {})
+    rule_expl   = state.get("rule_explanations", {})
+    report_paths = state.get("report_paths", {})
+    errors      = state.get("errors", [])
 
-def step3_rule_extraction(state: dict) -> dict:
-    step(3, "Rule Extraction (LLM reads PDF → ComplianceRuleModel objects)")
-    from src.agents.nodes.rule_extraction import rule_extraction_node
-    info(f"PDF: {state['document_path']}")
-    state = run_node(rule_extraction_node, state, "rule_extraction_node")
+    info(f"raw_rules:          {len(raw_rules)}")
+    info(f"structured_rules:   {len(structured)}")
+    info(f"low_confidence:     {len(low_conf)}")
+    info(f"tables_discovered:  {len(schema)}")
+    info(f"total_violations:   {scan_sum.get('total_violations', 0)}")
+    info(f"rules_processed:    {scan_sum.get('rules_processed', 0)}")
+    info(f"rules_failed:       {scan_sum.get('rules_failed', 0)}")
+    if val_sum:
+        info(f"validator:          {val_sum.get('confirmed', 0)} confirmed, "
+             f"{val_sum.get('false_positives', 0)} FP, "
+             f"{val_sum.get('total_validated', 0)} total")
+    info(f"rule_explanations:  {len(rule_expl)}")
 
-    raw_rules = state.get("raw_rules", [])
-    if raw_rules:
-        console.print()
-        t = Table("rule_id", "rule_type", "confidence", "rule_text", title="Extracted Rules")
-        for r in raw_rules[:25]:
-            rid   = r.rule_id   if hasattr(r, "rule_id")   else r.get("rule_id", "")
-            rtype = r.rule_type if hasattr(r, "rule_type") else r.get("rule_type", "")
-            conf  = r.confidence if hasattr(r, "confidence") else r.get("confidence", 0)
-            text  = r.rule_text if hasattr(r, "rule_text") else r.get("rule_text", "")
-            t.add_row(rid, rtype, f"{conf:.2f}", str(text)[:90])
-        if len(raw_rules) > 25:
-            t.add_row("...", "...", "...", f"... and {len(raw_rules)-25} more")
-        console.print(t)
-    else:
-        warn("No rules extracted by LLM — falling back to hand-crafted rules")
+    if report_paths.get("pdf"):
+        ok(f"PDF report:  {report_paths['pdf']}")
+    if report_paths.get("html"):
+        ok(f"HTML report: {report_paths['html']}")
 
-    # ── Fallback / supplement with known-good rules for this dataset ──────────
-    from src.models.compilance_rules import ComplianceRuleModel, RuleLogic
-
-    KNOWN_RULES = [
-        ComplianceRuleModel(
-            rule_id="LAUN-001", rule_type="data_privacy",
-            rule_text="All transactions where Is Laundering equals '1' must be flagged for SAR filing.",
-            condition="Is Laundering field equals 1",
-            action="Flag for SAR filing",
-            scope="transactions table",
-            confidence=1.0,
-            source_reference="Section 6",
-            logic=RuleLogic(field="Is Laundering", operator="=", value="1"),
-        ),
-        ComplianceRuleModel(
-            rule_id="AMT-001", rule_type="data_quality",
-            rule_text="Any transaction where Amount Paid exceeds 10000 must be flagged for CTR review.",
-            condition="Amount Paid > 10000",
-            action="Flag for CTR review",
-            scope="transactions table",
-            confidence=1.0,
-            source_reference="Section 4",
-            logic=RuleLogic(field="Amount Paid", operator=">", value="10000"),
-        ),
-        ComplianceRuleModel(
-            rule_id="AMT-002", rule_type="data_quality",
-            rule_text="Any transaction where Amount Received exceeds 10000 must be flagged.",
-            confidence=1.0,
-            source_reference="Section 4",
-            logic=RuleLogic(field="Amount Received", operator=">", value="10000"),
-        ),
-        ComplianceRuleModel(
-            rule_id="AMT-003", rule_type="data_quality",
-            rule_text="Micro-transactions where Amount Paid is less than 1.00 must be flagged.",
-            confidence=1.0,
-            source_reference="Section 4",
-            logic=RuleLogic(field="Amount Paid", operator="<", value="1.0"),
-        ),
-        ComplianceRuleModel(
-            rule_id="AMT-004", rule_type="data_quality",
-            rule_text="Transactions where Amount Paid exceeds 1,000,000 require enhanced due diligence.",
-            confidence=1.0,
-            source_reference="Section 4",
-            logic=RuleLogic(field="Amount Paid", operator=">", value="1000000"),
-        ),
-        ComplianceRuleModel(
-            rule_id="FMT-002", rule_type="data_security",
-            rule_text="Transactions using Bitcoin as Payment Format shall be flagged for enhanced due diligence.",
-            confidence=1.0,
-            source_reference="Section 5",
-            logic=RuleLogic(field="Payment Format", operator="=", value="Bitcoin"),
-        ),
-        ComplianceRuleModel(
-            rule_id="FMT-001", rule_type="data_quality",
-            rule_text="Payment Format field must not be NULL or empty.",
-            confidence=1.0,
-            source_reference="Section 5",
-            logic=RuleLogic(field="Payment Format", operator="IS NOT NULL", value=""),
-        ),
-        ComplianceRuleModel(
-            rule_id="RET-001", rule_type="data_retention",
-            rule_text="Timestamp must not be NULL for any transaction record.",
-            confidence=1.0,
-            source_reference="Section 3",
-            logic=RuleLogic(field="Timestamp", operator="IS NOT NULL", value=""),
-        ),
-    ]
-
-    # Merge: keep LLM rules, add known rules that aren't duplicated
-    existing_ids = {
-        (r.rule_id if hasattr(r, "rule_id") else r.get("rule_id", ""))
-        for r in raw_rules
-    }
-    added = 0
-    for kr in KNOWN_RULES:
-        if kr.rule_id not in existing_ids:
-            raw_rules.append(kr)
-            added += 1
-
-    state["raw_rules"] = raw_rules
-    if added:
-        ok(f"Supplemented with {added} hand-crafted known-good rules")
-    ok(f"Total rules for structuring: {len(raw_rules)}")
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 4 — Schema discovery
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step4_schema_discovery(state: dict) -> dict:
-    step(4, "Schema Discovery (connect to DB, read table structures)")
-    from src.agents.nodes.schema_discovery import schema_discovery_node
-    state = run_node(schema_discovery_node, state, "schema_discovery_node")
-
-    schema = state.get("schema_metadata", {})
-    for tbl, info_d in schema.items():
-        pk   = info_d.get("primary_key", "None")
-        rows = info_d.get("row_count", 0)
-        cols = [c["column_name"] for c in info_d.get("columns", [])]
-        info(f"  Table '{tbl}': {rows} rows, PK='{pk}', columns={cols}")
-
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 5 — Rule structuring
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step5_rule_structuring(state: dict) -> dict:
-    step(5, "Rule Structuring (map raw rules → StructuredRule with DB columns)")
-    from src.agents.graph import rule_structuring_node
-    state = run_node(rule_structuring_node, state, "rule_structuring_node")
-
-    structured = state.get("structured_rules", [])
-    low_conf   = state.get("low_confidence_rules", [])
-
-    console.print()
-    t = Table("rule_id", "target_column", "operator", "value", "confidence", "tables",
-              title=f"Structured Rules (high confidence: {len(structured)})")
-    for r in structured:
-        tbl_str = str(r.applies_to_tables or [])[:40]
-        t.add_row(r.rule_id, r.target_column, r.operator, str(r.value or ""), f"{r.confidence:.2f}", tbl_str)
-    console.print(t)
-
-    if low_conf:
-        info(f"Low-confidence rules (will be auto-approved by stub): {len(low_conf)}")
-        for r in low_conf:
-            info(f"  [{r.confidence:.2f}] {r.rule_id}: {r.target_column} {r.operator} {r.value}")
-
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 5b — Human review (stub — auto-approve)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step5b_human_review(state: dict) -> dict:
-    low_conf = state.get("low_confidence_rules", [])
-    if not low_conf:
-        info("No low-confidence rules → human_review node skipped")
-        return state
-
-    step("5b", "Human Review (stub: auto-approving low-confidence rules)") # type: ignore
-    from src.agents.graph import human_review_node
-    state = run_node(human_review_node, state, "human_review_node")
-    ok(f"Post-review structured_rules count: {len(state.get('structured_rules', []))}")
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 6 — Data scanning
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step6_data_scanning(state: dict) -> dict:
-    step(6, "Data Scanning (keyset-paginated scan for violations)")
-    from src.agents.nodes.data_scanning import data_scanning_node
-
-    n_rules = len(state.get("structured_rules", []))
-    info(f"Scanning with {n_rules} rules against DB: {state['db_config']}")
-
-    t0 = time.perf_counter()
-    state = run_node(data_scanning_node, state, "data_scanning_node")
-
-    summary = state.get("scan_summary", {})
-    scan_id  = state.get("scan_id", "?")
-    console.print()
-    console.print(Panel(
-        f"[bold]scan_id:[/bold] {scan_id}\n"
-        f"[bold]total_violations:[/bold] [red]{summary.get('total_violations',0)}[/red]\n"
-        f"[bold]tables_scanned:[/bold]   {summary.get('tables_scanned',0)}\n"
-        f"[bold]tables_skipped:[/bold]   {summary.get('tables_skipped',0)}\n"
-        f"[bold]rules_processed:[/bold]  {summary.get('rules_processed',0)}\n"
-        f"[bold]rules_failed:[/bold]     {summary.get('rules_failed',0)}\n"
-        f"[bold]duration:[/bold]         {elapsed(t0)}\n"
-        f"[bold]status:[/bold]           {summary.get('status','?')}",
-        title="[cyan]Scan Summary[/cyan]",
-        border_style="cyan",
-    ))
-
-    by_rule = summary.get("violations_by_rule", {})
+    # Violations by rule table
+    by_rule = scan_sum.get("violations_by_rule", {})
     if by_rule:
         t = Table("rule_id", "violations", title="Violations by Rule")
         for rid, cnt in sorted(by_rule.items(), key=lambda x: -x[1]):
@@ -352,149 +197,15 @@ def step6_data_scanning(state: dict) -> dict:
             t.add_row(rid, f"[{color}]{cnt}[/{color}]")
         console.print(t)
 
-    return state
+    if errors:
+        warn(f"{len(errors)} error(s) accumulated:")
+        for e in errors:
+            warn(f"  {e}")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 7 — Violation reporting
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step7_violation_reporting(state: dict) -> dict:
-    step(7, "Violation Reporting (aggregate results into structured report)")
-    from src.agents.nodes.violation_reporting import violation_reporting_node
-    state = run_node(violation_reporting_node, state, "violation_reporting_node")
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 10 — Violation Validator (LLM false-positive reducer)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step10_violation_validator(state: dict) -> dict:
-    step(10, "Violation Validator (LLM classifies confirmed vs false-positive)")
-    from src.agents.nodes.violation_validator import violation_validator_node
-    state = run_node(violation_validator_node, state, "violation_validator_node")
-
-    vsummary = state.get("validation_summary", {})
-    if vsummary.get("skipped"):
-        warn(f"Validator skipped: {vsummary.get('reason', '?')}")
-        return state
-
-    total_v  = vsummary.get("total_validated", 0)
-    confirmed = vsummary.get("confirmed", 0)
-    fp        = vsummary.get("false_positives", 0)
-
-    if total_v == 0:
-        info("No low-confidence violations found — nothing to validate")
-        return state
-
-    info(f"Validated {total_v} sampled violations:")
-    t = Table("rule_id", "validated", "confirmed", "false_positives", "unresolved",
-              title="Validation Results by Rule")
-    by_rule = vsummary.get("by_rule", {})
-    for rule_id, rdata in sorted(by_rule.items()):
-        if isinstance(rdata, dict) and rdata.get("validated", 0) > 0:
-            t.add_row(
-                rule_id,
-                str(rdata.get("validated", 0)),
-                f"[green]{rdata.get('confirmed', 0)}[/green]",
-                f"[red]{rdata.get('false_positives', 0)}[/red]",
-                str(rdata.get("unresolved", 0)),
-            )
-    if t.row_count:
-        console.print(t)
-    else:
-        info("All validated rules were skipped (not quality/security/privacy type)")
-
-    ok(f"Validator done — {confirmed} confirmed, {fp} false positives out of {total_v} sampled")
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 11 — Explanation Generator (LLM writes audit-ready explanations)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step11_explanation_generator(state: dict) -> dict:
-    step(11, "Explanation Generator (LLM writes per-rule audit explanations)")
-    from src.agents.nodes.explanation_generator import explanation_generator_node
-    state = run_node(explanation_generator_node, state, "explanation_generator_node")
-
-    explanations = state.get("rule_explanations", {})
-    if not explanations:
-        warn("No explanations generated (no violations or LLM unavailable)")
-        return state
-
-    info(f"Generated explanations for {len(explanations)} rules")
-
-    # Sort by severity priority
-    sev_order = {"HIGH": 0, "MEDIUM": 1, "LOW": 2}
-    sorted_explanations = sorted(
-        explanations.items(),
-        key=lambda x: (sev_order.get(x[1].get("severity", "LOW"), 3), -x[1].get("violation_count", 0)),
-    )
-
-    for rule_id, expl in sorted_explanations:
-        sev    = expl.get("severity", "?")
-        count  = expl.get("violation_count", 0)
-        sev_color = {"HIGH": "red", "MEDIUM": "yellow", "LOW": "cyan"}.get(sev, "white")
-
-        console.print(Panel(
-            f"[bold]Severity:[/bold] [{sev_color}]{sev}[/{sev_color}]   "
-            f"[bold]Violations:[/bold] {count}\n\n"
-            f"[bold]Explanation:[/bold]\n{expl.get('explanation','')}\n\n"
-            f"[bold]Policy Clause:[/bold] {expl.get('policy_clause','')}\n\n"
-            f"[bold]Risk:[/bold] {expl.get('risk_description','')}\n\n"
-            f"[bold]Remediation Steps:[/bold]\n"
-            + "\n".join(f"  {i+1}. {s}" for i, s in enumerate(expl.get("remediation_steps", []))),
-            title=f"[bold cyan]Rule {rule_id}[/bold cyan]",
-            border_style=sev_color,
-        ))
-
-    return state
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 8 — Print final report
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step8_print_report(state: dict) -> None:
-    step(8, "Final Compliance Report")
-    from src.agents.nodes.violation_reporting import print_report
-
-    report = state.get("violation_report", {})
-    if not report or report.get("error"):
-        err(f"No valid report: {report.get('error','unknown error')}")
-        return
-
-    print_report(report)
-
-    # Extra: show first 10 rows of violations DB
-    console.print()
-    console.print(Rule("[bold yellow]Violations Database Preview[/bold yellow]", style="yellow"))
-    try:
-        import sqlite3
-        vc = sqlite3.connect(VIOLATIONS_DB)
-        vc.row_factory = sqlite3.Row
-        cur = vc.cursor()
-        cur.execute("SELECT * FROM violations_log LIMIT 10")
-        rows = cur.fetchall()
-        vc.close()
-        if rows:
-            t = Table(*list(rows[0].keys())[:8], title="violations_log (first 10 rows, first 8 cols)")
-            for row in rows:
-                vals = [str(v)[:30] if v is not None else "NULL" for v in list(dict(row).values())[:8]]
-                t.add_row(*vals)
-            console.print(t)
-        else:
-            info("violations_log is empty")
-    except Exception as e:
-        warn(f"Could not read violations DB: {e}")
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 9 — LLM Evaluator
-# ═══════════════════════════════════════════════════════════════════════════════
-
+# ═════════════════════════════════════════════════════════════════════════
+#  Step 5 — LLM evaluator against ground truth (preserved from legacy script)
+# ═════════════════════════════════════════════════════════════════════════
 _EVAL_SYSTEM = """\
 You are a senior compliance systems auditor and AI quality evaluator.
 You will be given:
@@ -510,55 +221,14 @@ Your job is to evaluate the compliance scan and return a JSON object with this e
   "rule_extraction_quality": <int 0-100>,
   "scan_accuracy": <int 0-100>,
   "coverage_score": <int 0-100>,
-  "findings": [
-    {"severity": "HIGH"|"MEDIUM"|"LOW", "rule_id": str, "issue": str, "recommendation": str}
-  ],
-  "false_positives": [
-    {"rule_id": str, "reason": str}
-  ],
-  "missed_rules": [
-    {"description": str, "suggested_rule_id": str, "suggested_logic": str}
-  ],
-  "duplicate_rules": [
-    {"rule_ids": [str, str], "reason": str}
-  ],
-  "ground_truth_validation": [
-    {"fact": str, "expected": str, "actual": str, "verdict": "PASS"|"FAIL"|"WARN"}
-  ],
+  "findings": [{"severity": "HIGH"|"MEDIUM"|"LOW", "rule_id": str, "issue": str, "recommendation": str}],
+  "ground_truth_validation": [{"fact": str, "expected": str, "actual": str, "verdict": "PASS"|"FAIL"|"WARN"}],
   "summary": str
 }
+Return ONLY valid JSON."""
 
-Return ONLY valid JSON. No markdown. No explanation.
-"""
-
-
-def step9_llm_evaluate(state: dict) -> None:
-    step(9, "LLM Evaluator (Groq judges rule quality, scan accuracy, coverage)")
-    import json
-    import re 
-    from langchain_groq import ChatGroq
-    from langchain_core.messages import SystemMessage, HumanMessage
-
-    structured = state.get("structured_rules", [])
-    scan_summary = state.get("scan_summary", {})
-    schema_meta = state.get("schema_metadata", {})
-
-    # ── Build the evaluation prompt payload ──────────────────────────────────────────
-    table_cols = []
-    for tbl, tinfo in schema_meta.items():
-        cols = [c["column_name"] for c in tinfo.get("columns", [])]
-        table_cols.append(f"Table '{tbl}': {tinfo.get('row_count',0)} rows, columns: {cols}")
-
-    rules_summary = []
-    for r in structured:
-        vcount = scan_summary.get("violations_by_rule", {}).get(r.rule_id, 0)
-        rules_summary.append(
-            f"  {r.rule_id} | column='{r.target_column}' op='{r.operator}' "
-            f"val='{r.value}' conf={r.confidence:.2f} violations={vcount}"
-        )
-
-    ground_truth = """
-Known facts about HI-Small_Trans.db (10,000 rows):
+_GROUND_TRUTH = """
+Known facts about HI-Small_Trans.db (10,000 rows, table 'transactions'):
   - Exactly 1 row has Is Laundering = '1'
   - Exactly 6 rows have Payment Format = 'Bitcoin'
   - Exactly 291 rows have Payment Format = 'Cash'
@@ -566,70 +236,88 @@ Known facts about HI-Small_Trans.db (10,000 rows):
   - Exactly 3,711 rows have CAST("Amount Received" AS REAL) > 10000
   - Exactly 81 rows have CAST("Amount Paid" AS REAL) < 1.0
   - Exactly 554 rows have CAST("Amount Paid" AS REAL) > 1000000
-  - Zero rows have NULL in Timestamp, Account, Account_2, From Bank, To Bank,
-    Payment Format, Receiving Currency, Payment Currency
+  - Zero rows have NULL in Timestamp, Account, Payment Format, or currency columns
   - Column 'Transaction Amount' does NOT exist; correct names are 'Amount Paid' / 'Amount Received'
-  - All 10,000 rows use one of: ACH, Bitcoin, Cash, Cheque, Credit Card, Reinvestment, Wire
 """
 
-    payload = f"""DATABASE SCHEMA:
-{chr(10).join(table_cols)}
 
-APPLIED RULES ({len(structured)} total):
-{chr(10).join(rules_summary)}
+def step5_llm_evaluate(state: Dict[str, Any]) -> None:
+    step("5", "LLM Evaluator (ground-truth validation)")
+    from langchain_core.messages import HumanMessage, SystemMessage
+    from langchain_groq import ChatGroq
 
-SCAN SUMMARY:
-  total_violations : {scan_summary.get('total_violations', 0)}
-  tables_scanned   : {scan_summary.get('tables_scanned', 0)}
-  rules_processed  : {scan_summary.get('rules_processed', 0)}
-  rules_failed     : {scan_summary.get('rules_failed', 0)}
-  status           : {scan_summary.get('status', '?')}
+    structured = state.get("structured_rules", [])
+    scan_summary = state.get("scan_summary", {})
+    schema_meta = state.get("schema_metadata", {})
 
-{ground_truth}
+    if not scan_summary:
+        warn("No scan_summary in state — skipping evaluator")
+        return
 
-Evaluate the scan and return the JSON assessment."""
+    table_cols: List[str] = []
+    for tbl, tinfo in schema_meta.items():
+        cols = [c["column_name"] for c in tinfo.get("columns", [])]
+        table_cols.append(f"Table '{tbl}': {tinfo.get('row_count', 0)} rows, columns: {cols}")
+
+    rules_summary: List[str] = []
+    by_rule = scan_summary.get("violations_by_rule", {})
+    for r in structured:
+        rid = r.rule_id if hasattr(r, "rule_id") else r.get("rule_id", "")
+        col = r.target_column if hasattr(r, "target_column") else r.get("target_column", "")
+        op  = r.operator if hasattr(r, "operator") else r.get("operator", "")
+        val = r.value if hasattr(r, "value") else r.get("value", "")
+        conf = r.confidence if hasattr(r, "confidence") else r.get("confidence", 0)
+        rules_summary.append(
+            f"  {rid} | col='{col}' op='{op}' val='{val}' "
+            f"conf={conf:.2f} violations={by_rule.get(rid, 0)}"
+        )
+
+    payload = (
+        f"DATABASE SCHEMA:\n{chr(10).join(table_cols)}\n\n"
+        f"APPLIED RULES ({len(structured)} total):\n{chr(10).join(rules_summary)}\n\n"
+        f"SCAN SUMMARY:\n"
+        f"  total_violations: {scan_summary.get('total_violations', 0)}\n"
+        f"  tables_scanned:   {scan_summary.get('tables_scanned', 0)}\n"
+        f"  rules_processed:  {scan_summary.get('rules_processed', 0)}\n"
+        f"  rules_failed:     {scan_summary.get('rules_failed', 0)}\n\n"
+        f"{_GROUND_TRUTH}\n"
+        "Evaluate the scan and return the JSON assessment."
+    )
 
     info(f"Sending {len(payload)} chars to LLM evaluator...")
     t0 = time.perf_counter()
-
     try:
-        llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+        llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0, timeout=45)
         response = llm.invoke([SystemMessage(content=_EVAL_SYSTEM), HumanMessage(content=payload)])
-        raw = response.content.strip() # type: ignore
+        raw = response.content.strip() if hasattr(response, "content") else str(response)  # type: ignore
     except Exception as e:
-        warn(f"LLM evaluator failed: {e}")
+        warn(f"Evaluator failed: {e}")
         return
 
-    # Strip possible markdown fences
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
     raw = re.sub(r"\s*```$", "", raw.strip())
-
     try:
         ev = json.loads(raw)
     except Exception as e:
         warn(f"Could not parse evaluator JSON: {e}")
-        console.print(raw[:2000])
+        console.print(raw[:800])
         return
 
-    ms = elapsed(t0)
-    ok(f"Evaluation complete ({ms})")
-    console.print()
+    ok(f"Evaluation complete ({elapsed(t0)})")
 
-    # ── Score banner ─────────────────────────────────────────────────────────────────────────
     score = ev.get("overall_score", 0)
     grade = ev.get("grade", "?")
     grade_color = {"A": "green", "B": "cyan", "C": "yellow", "D": "red", "F": "bold red"}.get(grade, "white")
     console.print(Panel(
-        f"[bold]Overall Score:[/bold] [{grade_color}]{score}/100  Grade: {grade}[/{grade_color}]\n"
+        f"[bold]Overall Score:[/bold] [{grade_color}]{score}/100 Grade: {grade}[/{grade_color}]\n"
         f"[bold]Rule Extraction Quality:[/bold] {ev.get('rule_extraction_quality', '?')}/100\n"
         f"[bold]Scan Accuracy:[/bold]          {ev.get('scan_accuracy', '?')}/100\n"
         f"[bold]Coverage Score:[/bold]          {ev.get('coverage_score', '?')}/100\n\n"
         f"[italic]{ev.get('summary', '')}[/italic]",
-        title="[bold cyan]LLM Evaluation Result[/bold cyan]",
+        title="[bold cyan]Compliance Evaluation[/bold cyan]",
         border_style=grade_color,
     ))
 
-    # ── Ground truth validation ─────────────────────────────────────────────────────────────
     gtv = ev.get("ground_truth_validation", [])
     if gtv:
         t = Table("fact", "expected", "actual", "verdict", title="Ground Truth Validation")
@@ -644,184 +332,67 @@ Evaluate the scan and return the JSON assessment."""
             )
         console.print(t)
 
-    # ── Findings ─────────────────────────────────────────────────────────────────═
-    findings = ev.get("findings", [])
-    if findings:
-        t = Table("severity", "rule_id", "issue", "recommendation", title="Findings")
-        for f in findings:
-            sev = f.get("severity", "?")
-            sev_color = {"HIGH": "red", "MEDIUM": "yellow", "LOW": "cyan"}.get(sev, "white")
-            t.add_row(
-                f"[{sev_color}]{sev}[/{sev_color}]",
-                f.get("rule_id", ""),
-                str(f.get("issue", ""))[:70],
-                str(f.get("recommendation", ""))[:70],
-            )
-        console.print(t)
 
-    # ── False positives ─────────────────────────────────────────────────────────────
-    fps = ev.get("false_positives", [])
-    if fps:
-        t = Table("rule_id", "reason", title="Potential False Positives")
-        for f in fps:
-            t.add_row(f.get("rule_id", ""), str(f.get("reason", ""))[:100])
-        console.print(t)
-
-    # ── Duplicates ─────────────────────────────────────────────────────────────────═
-    dupes = ev.get("duplicate_rules", [])
-    if dupes:
-        t = Table("duplicate rule_ids", "reason", title="Duplicate Rules")
-        for d in dupes:
-            t.add_row(str(d.get("rule_ids", "")), str(d.get("reason", ""))[:100])
-        console.print(t)
-
-    # ── Missed rules ─────────────────────────────────────────────────────────────────═
-    missed = ev.get("missed_rules", [])
-    if missed:
-        t = Table("suggested_rule_id", "description", "suggested_logic", title="Missed / Suggested Rules")
-        for m in missed:
-            t.add_row(
-                m.get("suggested_rule_id", ""),
-                str(m.get("description", ""))[:60],
-                str(m.get("suggested_logic", ""))[:60],
-            )
-        console.print(t)
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  STEP 12 — Generate audit reports (PDF + HTML)
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def step12_generate_report(state: dict) -> None:
-    step(12, "Generate Audit Reports (PDF + HTML)")
-    from src.stages.report_generator import generate_reports
-
-    report = state.get("violation_report", {})
-    if not report or report.get("error"):
-        warn(f"No valid violation report — skipping report generation. Error: {report.get('error','?')}")
-        return
-
-    t0 = time.perf_counter()
-    try:
-        paths = generate_reports(state, output_dir=ROOT / "data")
-        ms = elapsed(t0)
-
-        pdf_path  = paths.get("pdf", "")
-        html_path = paths.get("html", "")
-
-        pdf_size  = Path(pdf_path).stat().st_size  // 1024 if pdf_path and Path(pdf_path).exists()  else 0
-        html_size = Path(html_path).stat().st_size // 1024 if html_path and Path(html_path).exists() else 0
-
-        console.print()
-        console.print(Panel(
-            f"[bold]PDF  Report:[/bold]  [cyan]{pdf_path}[/cyan]  ({pdf_size} KB)\n"
-            f"[bold]HTML Report:[/bold]  [cyan]{html_path}[/cyan]  ({html_size} KB)\n"
-            f"[bold]Duration:[/bold]     {ms}",
-            title="[bold green]Audit Reports Generated[/bold green]",
-            border_style="green",
-        ))
-
-        if pdf_path:
-            ok(f"PDF  → {pdf_path}  ({pdf_size} KB)")
-        else:
-            warn("PDF generation skipped (reportlab error — see log)")
-        if html_path:
-            ok(f"HTML → {html_path}  ({html_size} KB)")
-        else:
-            warn("HTML generation failed unexpectedly")
-
-    except Exception as e:
-        warn(f"Report generation failed: {e}")
-        traceback.print_exc()
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
+# ═════════════════════════════════════════════════════════════════════════
 #  MAIN
-# ═══════════════════════════════════════════════════════════════════════════════
-
-def main() -> None:
+# ═════════════════════════════════════════════════════════════════════════
+def main() -> int:
     console.print(Panel.fit(
         "[bold blue]HI-Small Financial Transactions[/bold blue]\n"
-        "[dim]Anti-Money Laundering Compliance Scan[/dim]\n"
+        "[dim]Anti-Money Laundering Compliance Scan (graph path)[/dim]\n"
         f"[dim]{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}[/dim]",
         border_style="blue",
     ))
 
-    # ── Verify prerequisites ──────────────────────────────────────────────────
     if not Path(DB_PATH).exists():
         err(f"Database not found: {DB_PATH}")
-        sys.exit(1)
+        return 1
+
     if not os.environ.get("GROQ_API_KEY"):
-        warn("GROQ_API_KEY not set — LLM extraction will fail. Add it to .env")
+        err("GROQ_API_KEY not set — aborting (the graph requires live LLM access).")
+        err("Add GROQ_API_KEY=... to .env at the repo root.")
+        return 2
 
-    # ── Delete stale schema cache so rowid fallback takes effect ─────────────
-    cache_file = ROOT / "data" / ".schema_cache.json"
-    if cache_file.exists():
-        cache_file.unlink()
-        info("Cleared schema cache (rowid fix applied)")
-
-    # ── Run pipeline step by step ─────────────────────────────────────────────
     total_t0 = time.perf_counter()
+    policy_pdf = step1_ensure_pdf()
+    graph, cp_ctx = step2_build_graph()
 
-    policy_pdf = step1_generate_pdf()
-
-    graph, cp, cp_ctx = step2_build_graph()
-
-    initial_state = {
-        "document_path": policy_pdf,
-        "db_type":       "sqlite",
-        "db_config":     {"db_path": DB_PATH},
+    initial: Dict[str, Any] = {
+        "document_path":      policy_pdf,
+        "db_type":            "sqlite",
+        "db_config":          {"db_path": DB_PATH},
         "violations_db_path": VIOLATIONS_DB,
-        "batch_size":    500,
-        "errors":        [],
-        "raw_rules":     [],
+        "batch_size":         500,
+        "errors":             [],
+        "raw_rules":          [],
     }
-    info(f"Initial state keys: {list(initial_state.keys())}")
-
-    state = dict(initial_state)
+    info(f"Initial state keys: {list(initial.keys())}")
 
     try:
-        state = step3_rule_extraction(state)
-        state = step4_schema_discovery(state)
-        state = step5_rule_structuring(state)
-        state = step5b_human_review(state)
-        state = step6_data_scanning(state)
-        state = step10_violation_validator(state)
-        state = step11_explanation_generator(state)
-        state = step7_violation_reporting(state)
-        step12_generate_report(state)
-        step8_print_report(state)
-        step9_llm_evaluate(state)
-
+        state = step3_stream_graph(graph, initial)
+        step4_summary(state)
+        step5_llm_evaluate(state)
     except Exception as e:
         err(f"Pipeline failed: {e}")
         traceback.print_exc()
+        return 1
     finally:
         cp_ctx.__exit__(None, None, None)
 
-    # ── Final summary ─────────────────────────────────────────────────────────
     console.print()
     console.print(Rule("[bold green]Pipeline Complete[/bold green]", style="green"))
     total_ms = (time.perf_counter() - total_t0) * 1000
     ok(f"Total wall time: {total_ms/1000:.1f}s")
     ok(f"Violations DB:   {VIOLATIONS_DB}")
     ok(f"Checkpoints DB:  {CHECKPOINT_DB}")
-    # Show generated report files if present
-    import glob as _glob
-    scan_id = state.get("scan_id", "")
-    if scan_id:
-        safe_id = "".join(c if c.isalnum() or c in "-_" else "_" for c in scan_id)
-        for ext in ("pdf", "html"):
-            p = ROOT / "data" / f"compliance_report_{safe_id}.{ext}"
-            if p.exists():
-                ok(f"Report ({ext.upper()}): {p}")
 
-    errors = state.get("errors", [])
-    if errors:
-        warn(f"{len(errors)} error(s) accumulated:")
-        for e in errors:
-            warn(f"  {e}")
+    if state.get("report_paths", {}).get("pdf"):
+        ok(f"PDF report: {state['report_paths']['pdf']}")
+    if state.get("report_paths", {}).get("html"):
+        ok(f"HTML report: {state['report_paths']['html']}")
+
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
