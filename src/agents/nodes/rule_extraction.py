@@ -157,6 +157,8 @@ def rule_extraction_node(state: Dict[str, Any]) -> Dict[str, Any]:
         model="llama-3.1-8b-instant",
         temperature=0,
         rate_limiter=rate_limiter,
+        timeout=30,
+        max_retries=0,  # handled by @retry_with_backoff on the caller
     )
     chain = rule_extraction_prompt | llm
 
