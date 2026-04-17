@@ -55,15 +55,17 @@ def policy_mapper_node(
         search_text += f" PII categories: {', '.join(pii_cats)}"
 
     # ── Retrieve from Qdrant ────────────────────────────────────────────
+    # Use the process-wide singleton so we don't fight Qdrant's local-mode
+    # file lock on every node invocation. Do NOT close() here — the store
+    # is shared across calls for the life of the process.
     try:
-        from src.vector_database.policy_store import PolicyRuleStore
+        from src.vector_database.policy_store import get_policy_store
 
-        store = PolicyRuleStore()
+        store = get_policy_store()
         raw_hits = store.search_policies(
             query_text=search_text,
             top_k=TOP_K_RETRIEVE,
         )
-        store.close()
     except Exception as e:
         log.error(f"policy_mapper: vector search failed: {e}")
         raw_hits = []

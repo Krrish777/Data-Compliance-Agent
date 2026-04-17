@@ -150,7 +150,7 @@ def rule_structuring_node(state: Dict[str, Any]) -> Dict[str, Any]:
 
         # Skip duplicate rule_ids (LLM may extract the same rule from multiple chunks)
         if rule_id in _seen_rule_ids:
-            log.debug(f"rule_structuring_node: skipping duplicate rule_id {rule_id!r}")
+            log.info(f"rule_structuring_node: skipping duplicate rule_id {rule_id!r}")
             continue
 
         # Determine column + operator from logic block
@@ -160,12 +160,19 @@ def rule_structuring_node(state: Dict[str, Any]) -> Dict[str, Any]:
             val = logic.value if logic.value not in (None, "null", "NULL", "") else None
         else:
             # No scannable logic — skip entirely
-            log.debug(f"rule_structuring_node: skipping rule {rule_id!r} — no scannable logic")
+            log.warning(
+                f"rule_structuring_node: DROPPING rule {rule_id!r} — "
+                f"no scannable logic (field+operator). "
+                f"rule_text={rule_text[:80]!r}"
+            )
             continue
 
         # Rules that point at multiple columns can't be mapped to a single SQL condition
         if " and " in col.lower() or col.strip() == "*":
-            log.debug(f"rule_structuring_node: skipping rule {rule_id!r} — multi-column field '{col}'")
+            log.warning(
+                f"rule_structuring_node: DROPPING rule {rule_id!r} — "
+                f"multi-column field {col!r} cannot map to single SQL condition"
+            )
             continue
 
         # ── Normalise operator via alias table first, then hard-coded specials ──
@@ -179,7 +186,10 @@ def rule_structuring_node(state: Dict[str, Any]) -> Dict[str, Any]:
         second_column: Optional[str] = None
 
         if op in _TRULY_UNSCANNABLE:
-            log.debug(f"rule_structuring_node: skipping rule {rule_id!r} — unscannable operator '{op}'")
+            log.warning(
+                f"rule_structuring_node: DROPPING rule {rule_id!r} — "
+                f"unscannable operator {op!r}"
+            )
             continue
 
         if op in _BETWEEN_OPS:

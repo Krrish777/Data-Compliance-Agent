@@ -31,6 +31,7 @@ from typing import Any, Dict, List
 from langchain_groq import ChatGroq
 from sqlmodel import Session, create_engine
 
+from src.agents.middleware.retry import retry_with_backoff
 from src.agents.tools.database.violations_store import (
     get_violations_sample_for_validation,
     update_violation_status,
@@ -65,6 +66,15 @@ Respond ONLY with a single JSON object in this exact format:
 # LLM helpers
 # ---------------------------------------------------------------------------
 
+@retry_with_backoff(max_retries=2, initial_delay=2.0, backoff_factor=2.0)
+def _invoke_validator_llm(llm: ChatGroq, system_prompt: str, human_msg: str) -> Any:
+    """Invoke the validator LLM with exponential backoff on 429/500/timeout."""
+    return llm.invoke([
+        {"role": "system", "content": system_prompt},
+        {"role": "user",   "content": human_msg},
+    ])
+
+
 def _call_llm(llm: ChatGroq, rule_text: str, records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Ask the LLM to validate *records* against *rule_text*.
@@ -90,13 +100,10 @@ def _call_llm(llm: ChatGroq, rule_text: str, records: List[Dict[str, Any]]) -> L
     )
 
     try:
-        response = llm.invoke([
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user",   "content": human_msg},
-        ])
+        response = _invoke_validator_llm(llm, _SYSTEM_PROMPT, human_msg)
         raw = response.content if hasattr(response, "content") else str(response)
     except Exception as exc:
-        log.warning(f"violation_validator LLM call failed: {exc}")
+        log.warning(f"violation_validator LLM call failed after retries: {exc}")
         return []
 
     return _parse_response(raw)
@@ -208,7 +215,13 @@ def violation_validator_node(state: Dict[str, Any]) -> Dict[str, Any]:
         rtext = rule.rule_text if hasattr(rule, "rule_text") else rule.get("rule_text", "")
         rule_lookup[rid] = {"rule_type": rtype, "rule_text": rtext}
 
-    llm = ChatGroq(model=_MODEL, api_key=api_key, temperature=0)  # type: ignore
+    llm = ChatGroq(
+        model=_MODEL,
+        api_key=api_key,
+        temperature=0,
+        timeout=30,
+        max_retries=0,
+    )  # type: ignore
 
     engine = create_engine(f"sqlite:///{db_path}", echo=False)
 

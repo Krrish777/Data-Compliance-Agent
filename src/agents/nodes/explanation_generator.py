@@ -31,6 +31,7 @@ from typing import Any, Dict, List
 from langchain_groq import ChatGroq
 from sqlmodel import Session, create_engine, text
 
+from src.agents.middleware.retry import retry_with_backoff
 from src.agents.tools.database.violations_store import (
     create_explanations_table,
     get_scan_summary,
@@ -124,16 +125,22 @@ def _build_prompt(
     )
 
 
+@retry_with_backoff(max_retries=2, initial_delay=2.0, backoff_factor=2.0)
+def _invoke_explanation_llm(llm: ChatGroq, system_prompt: str, human_msg: str) -> Any:
+    """Invoke the explanation LLM with exponential backoff on 429/500/timeout."""
+    return llm.invoke([
+        {"role": "system", "content": system_prompt},
+        {"role": "user",   "content": human_msg},
+    ])
+
+
 def _call_llm(llm: ChatGroq, human_msg: str) -> Dict[str, Any]:
     """Invoke LLM and parse JSON response. Returns {} on any failure."""
     try:
-        response = llm.invoke([
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user",   "content": human_msg},
-        ])
+        response = _invoke_explanation_llm(llm, _SYSTEM_PROMPT, human_msg)
         raw = response.content if hasattr(response, "content") else str(response)
     except Exception as exc:
-        log.warning(f"explanation_generator LLM call failed: {exc}")
+        log.warning(f"explanation_generator LLM call failed after retries: {exc}")
         return {}
 
     # Strip markdown fences
@@ -202,7 +209,13 @@ def explanation_generator_node(state: Dict[str, Any]) -> Dict[str, Any]:
         rid = rule.rule_id if hasattr(rule, "rule_id") else rule.get("rule_id", "")
         rule_lookup[rid] = rule
 
-    llm = ChatGroq(model=_MODEL, api_key=api_key, temperature=0)  # type: ignore
+    llm = ChatGroq(
+        model=_MODEL,
+        api_key=api_key,
+        temperature=0,
+        timeout=45,
+        max_retries=0,
+    )  # type: ignore
     engine = create_engine(f"sqlite:///{db_path}", echo=False)
 
     rule_explanations: Dict[str, Any] = {}
