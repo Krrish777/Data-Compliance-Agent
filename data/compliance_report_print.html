@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>AuditLens · Executive Audit · scan_f714b270</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── A4 ── */
+@page { size: A4; margin: 0; }
+
+:root{
+  --teal-deep:#115E59; --teal-mid:#0F766E; --teal-light:#14B8A6;
+  --teal-wash:#F0FDFA; --teal-subtle:#CCFBF1;
+  --cream:#F5F3EF; --cream-deep:#EBE7E0; --card-white:#FFFFFF;
+  --ink:#1A1A1A; --ink-2:#4A4A4A; --ink-muted:#7A7A7A; --ink-faint:#B0B0B0;
+  --border:#E8E5E0; --border-dark:#D4D0C8;
+  --amber:#D97706; --red:#B91C1C; --green:#15803D;
+  --font-display:'Crimson Pro', Georgia, serif;
+  --font-sans:'IBM Plex Sans','Helvetica Neue',sans-serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:210mm}
+body{
+  font-family:var(--font-sans); color:var(--ink); line-height:1.55;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+::selection{background:var(--teal-deep); color:#fff}
+
+/* A page */
+.page{
+  position:relative;
+  width:210mm; height:297mm;
+  overflow:hidden;
+  page-break-after:always;
+  break-after:page;
+}
+.page:last-of-type{page-break-after:auto; break-after:auto}
+
+/* ═══ CREAM page surface ═══ */
+.page.cream{
+  background:
+    radial-gradient(ellipse at 10% 15%, rgba(17,94,89,0.06), transparent 50%),
+    radial-gradient(ellipse at 88% 75%, rgba(17,94,89,0.04), transparent 50%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0 0.06 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-color:var(--cream);
+}
+/* ═══ DARK page surface ═══ */
+.page.dark{
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(20,184,166,0.08), transparent 50%),
+    radial-gradient(ellipse at 85% 90%, rgba(185,28,28,0.07), transparent 55%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n2'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0 0.85 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n2)'/%3E%3C/svg%3E");
+  background-color:#0f0f10;
+  color:var(--cream);
+}
+
+/* frame helpers */
+.frame{padding:18mm 18mm 16mm}
+.pagenum{
+  position:absolute; bottom:10mm; right:18mm;
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--ink-faint);
+}
+.page.dark .pagenum{color:rgba(245,243,239,0.4)}
+.runner{
+  position:absolute; top:10mm; left:18mm; right:18mm;
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--ink-muted);
+}
+.page.dark .runner{color:rgba(245,243,239,0.45)}
+.runner b{color:var(--ink); font-weight:500}
+.page.dark .runner b{color:var(--teal-light)}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 1 · COVER (seal-forward)
+   ═══════════════════════════════════════════════ */
+.cover{
+  display:flex; flex-direction:column;
+  height:100%; padding:28mm 22mm 22mm;
+  position:relative;
+}
+.cover::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:8mm;
+  border-bottom:1px solid var(--ink);
+  background:linear-gradient(to bottom, var(--ink) 0, var(--ink) 1px, transparent 1px, transparent 2mm, var(--ink) 2mm, var(--ink) calc(2mm + 1px), transparent calc(2mm + 1px));
+}
+.cover::after{
+  content:''; position:absolute; bottom:0; left:0; right:0; height:8mm;
+  border-top:1px solid var(--ink);
+  background:linear-gradient(to top, var(--ink) 0, var(--ink) 1px, transparent 1px, transparent 2mm, var(--ink) 2mm, var(--ink) calc(2mm + 1px), transparent calc(2mm + 1px));
+}
+.cover-brand{
+  font-family:var(--font-display); font-size:20pt; font-weight:700;
+  letter-spacing:0.08em; color:var(--ink);
+}
+.cover-brand span{color:var(--teal-deep); font-style:italic; font-weight:400}
+.cover-tag{
+  font-family:var(--font-mono); font-size:8pt; letter-spacing:0.18em;
+  color:var(--ink-muted); text-transform:uppercase; margin-top:4mm;
+  padding-top:3mm; border-top:1px solid var(--border-dark); width:fit-content;
+}
+.cover-seal-wrap{
+  flex:1; display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.cover-seal{
+  width:72mm; height:80mm;
+  background:radial-gradient(circle at 30% 25%, #c93b3b, #8a1d1d 55%, #5b0e0e 100%);
+  border-radius:6mm 6mm 38mm 38mm;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:#fff; position:relative; transform:rotate(-5deg);
+  box-shadow:0 2mm 6mm rgba(0,0,0,0.18),
+    inset 0 1px 3px rgba(255,255,255,0.2),
+    inset 0 -2px 6px rgba(0,0,0,0.3),
+    0 6mm 22mm rgba(139,29,29,0.28);
+}
+.cover-seal::before{content:'';position:absolute;inset:4mm;border:1px dashed rgba(255,255,255,0.32);border-radius:4mm 4mm 34mm 34mm}
+.cover-seal::after{content:'';position:absolute;inset:7mm;border:1px solid rgba(255,255,255,0.18);border-radius:2mm 2mm 30mm 30mm}
+.cover-seal .x{font-family:var(--font-display); font-size:40pt; line-height:1; z-index:1; position:relative}
+.cover-seal .l{font-family:var(--font-display); font-style:italic; font-size:9pt; letter-spacing:0.22em; text-transform:uppercase; opacity:0.9; z-index:1; margin-top:2mm; position:relative}
+.cover-seal .n{font-family:var(--font-display); font-style:italic; font-size:13pt; font-weight:600; letter-spacing:0.04em; z-index:1; margin:1mm 0; position:relative}
+.cover-seal .y{font-family:var(--font-mono); font-size:7pt; letter-spacing:0.2em; text-transform:uppercase; opacity:0.7; z-index:1; position:relative}
+
+.cover-rays{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  pointer-events:none;
+}
+.cover-rays::before{
+  content:''; width:140mm; height:140mm;
+  background:
+    repeating-conic-gradient(from 0deg, transparent 0 5deg, rgba(17,94,89,0.04) 5deg 6deg);
+  border-radius:50%;
+}
+
+.cover-title{
+  font-family:var(--font-display); font-size:34pt; font-weight:300;
+  line-height:1; letter-spacing:-0.02em; color:var(--ink);
+  text-align:center; margin-top:8mm;
+}
+.cover-title em{font-style:italic; font-weight:500; color:var(--teal-deep)}
+.cover-subtitle{
+  font-family:var(--font-display); font-style:italic; font-size:13pt;
+  color:var(--ink-muted); text-align:center; margin-top:4mm;
+  letter-spacing:0.02em;
+}
+
+.cover-footer{
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8mm;
+  border-top:1px solid var(--ink); margin-top:14mm; padding-top:6mm;
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.15em; text-transform:uppercase;
+}
+.cover-footer > div span{display:block; color:var(--ink-faint); margin-bottom:1.5mm; font-size:7pt; letter-spacing:0.2em}
+.cover-footer > div b{color:var(--ink); font-weight:500; font-size:9pt; letter-spacing:0.1em}
+.cover-classification{
+  position:absolute; top:22mm; right:22mm;
+  padding:2mm 4mm; transform:rotate(3deg);
+  border:1.5pt solid var(--red); color:var(--red);
+  font-family:var(--font-mono); font-size:8pt; font-weight:600;
+  letter-spacing:0.22em; text-transform:uppercase;
+  background:rgba(255,255,255,0.5);
+}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 2 · LETTER TO THE EXECUTIVE
+   ═══════════════════════════════════════════════ */
+.letter{padding:22mm 24mm 20mm}
+.letter-head{
+  display:grid; grid-template-columns:1fr 1fr; gap:8mm;
+  padding-bottom:6mm; margin-bottom:10mm;
+  border-bottom:1px solid var(--ink);
+}
+.letter-head .block .k{
+  font-family:var(--font-mono); font-size:7.5pt;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-muted);
+  margin-bottom:1.5mm;
+}
+.letter-head .block .v{
+  font-family:var(--font-display); font-size:12pt; color:var(--ink);
+  line-height:1.35;
+}
+.letter-head .block .v em{font-style:italic; color:var(--teal-deep); font-weight:500}
+
+.letter h1{
+  font-family:var(--font-display); font-size:26pt; font-weight:300;
+  line-height:1.1; letter-spacing:-0.02em; color:var(--ink);
+  margin-bottom:6mm; max-width:160mm;
+}
+.letter h1 em{font-style:italic; font-weight:500; color:var(--red)}
+.letter-lede{
+  font-family:var(--font-display); font-style:italic; font-size:13pt;
+  color:var(--ink-muted); line-height:1.5; margin-bottom:8mm;
+  max-width:160mm;
+}
+.letter-body{
+  font-family:var(--font-display); font-size:11.5pt; line-height:1.65;
+  color:var(--ink); column-count:1; max-width:160mm;
+}
+.letter-body p{margin-bottom:4mm}
+.letter-body p:first-of-type::first-letter{
+  font-family:var(--font-display); font-weight:300; font-style:italic;
+  font-size:42pt; float:left; line-height:0.85; padding:2mm 3mm 0 0;
+  color:var(--red);
+}
+.letter-body .callout{
+  border-left:2px solid var(--teal-deep);
+  padding:1mm 0 1mm 5mm; margin:4mm 0;
+  font-style:italic; color:var(--teal-deep);
+}
+.letter-sign{
+  margin-top:12mm; display:flex; justify-content:space-between; align-items:flex-end;
+}
+.sig-line{border-top:1px solid var(--ink); padding-top:2mm; width:70mm;
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-muted)}
+.sig-line b{display:block; font-family:var(--font-display); font-style:italic;
+  font-size:13pt; color:var(--ink); letter-spacing:0; text-transform:none;
+  font-weight:500; margin-bottom:1mm}
+.sig-script{
+  font-family:'Crimson Pro'; font-style:italic; font-weight:500;
+  font-size:22pt; color:var(--ink); transform:rotate(-3deg);
+  letter-spacing:0.01em; line-height:0.9; margin-bottom:-3mm;
+}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 3 · VERDICT TRANSLATED TO DOLLARS
+   ═══════════════════════════════════════════════ */
+.verdict{padding:22mm 22mm 20mm}
+.verdict-kicker{
+  font-family:var(--font-mono); font-size:8pt;
+  text-transform:uppercase; letter-spacing:0.22em; color:var(--red);
+  margin-bottom:4mm;
+}
+.verdict h2{
+  font-family:var(--font-display); font-size:28pt; font-weight:300;
+  line-height:1.05; letter-spacing:-0.02em; margin-bottom:8mm;
+  max-width:160mm;
+}
+.verdict h2 em{font-style:italic; font-weight:500; color:var(--red)}
+.verdict-grid{
+  display:grid; grid-template-columns:80mm 1fr; gap:14mm;
+  padding-top:8mm; border-top:1px solid var(--ink);
+}
+.verdict-big{
+  display:flex; flex-direction:column; align-items:flex-start;
+}
+.verdict-big .pct{
+  font-family:var(--font-display); font-size:88pt; font-weight:300;
+  line-height:0.9; letter-spacing:-0.04em; color:var(--red);
+}
+.verdict-big .pct em{font-style:italic}
+.verdict-big .pct sup{font-size:24pt; vertical-align:super; margin-left:2mm; letter-spacing:0}
+.verdict-big .grade{
+  font-family:var(--font-display); font-style:italic; font-size:42pt;
+  color:var(--red); margin-top:-6mm; letter-spacing:-0.02em;
+}
+.verdict-big .lbl{
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-muted);
+  margin-top:2mm;
+}
+
+.exposure{display:flex; flex-direction:column; gap:5mm}
+.exposure-title{
+  font-family:var(--font-display); font-size:14pt; font-weight:500;
+  color:var(--ink); margin-bottom:1mm;
+}
+.exposure-title em{font-style:italic; color:var(--teal-deep); font-weight:500}
+.exposure-row{
+  display:grid; grid-template-columns:28mm 1fr 40mm; gap:5mm;
+  padding:4mm 0; border-top:1px dashed var(--border-dark);
+  align-items:baseline;
+}
+.exposure-row:first-of-type{border-top:1px solid var(--ink); padding-top:6mm}
+.exposure-scenario{
+  font-family:var(--font-mono); font-size:8.5pt;
+  letter-spacing:0.18em; text-transform:uppercase;
+}
+.exposure-scenario.low{color:var(--green)}
+.exposure-scenario.likely{color:var(--amber)}
+.exposure-scenario.high{color:var(--red)}
+.exposure-desc{
+  font-family:var(--font-display); font-style:italic;
+  font-size:10.5pt; color:var(--ink-2); line-height:1.4;
+}
+.exposure-val{
+  font-family:var(--font-display); font-size:20pt; font-weight:400;
+  color:var(--ink); text-align:right; letter-spacing:-0.01em;
+  line-height:1;
+}
+.exposure-val em{font-style:italic; font-weight:500}
+
+.footnote-block{
+  margin-top:10mm; padding-top:5mm; border-top:1px solid var(--border-dark);
+  font-family:var(--font-mono); font-size:7.5pt;
+  color:var(--ink-muted); line-height:1.65;
+  letter-spacing:0.02em;
+}
+.footnote-block sup{font-size:6.5pt; color:var(--red); margin-right:1mm}
+.footnote-block b{color:var(--ink); font-weight:500}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 4 · THE THREE THAT MATTER
+   ═══════════════════════════════════════════════ */
+.three{padding:22mm 22mm 20mm}
+.three-head{margin-bottom:10mm}
+.three-kicker{
+  font-family:var(--font-mono); font-size:8pt;
+  text-transform:uppercase; letter-spacing:0.22em; color:var(--teal-deep);
+  margin-bottom:4mm;
+}
+.three h2{
+  font-family:var(--font-display); font-size:26pt; font-weight:300;
+  line-height:1.05; letter-spacing:-0.02em; max-width:170mm;
+}
+.three h2 em{font-style:italic; font-weight:500; color:var(--teal-deep)}
+.three-sub{
+  font-family:var(--font-display); font-style:italic; font-size:12pt;
+  color:var(--ink-muted); margin-top:3mm; max-width:170mm; line-height:1.45;
+}
+
+.three-card{
+  border-top:1px solid var(--ink); padding:7mm 0;
+  display:grid; grid-template-columns:36mm 1fr 44mm; gap:8mm;
+  align-items:start;
+}
+.three-card:last-of-type{border-bottom:1px solid var(--ink)}
+.three-id{
+  font-family:var(--font-mono); font-size:11pt; font-weight:500;
+  color:var(--red); letter-spacing:0.08em;
+}
+.three-count{
+  font-family:var(--font-display); font-size:26pt; font-weight:400;
+  line-height:1; color:var(--ink); margin-top:2mm; letter-spacing:-0.02em;
+}
+.three-count em{font-style:italic; color:var(--red)}
+.three-count small{
+  display:block; font-family:var(--font-mono); font-size:7pt;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--ink-faint); margin-top:2mm;
+}
+
+.three-mid h3{
+  font-family:var(--font-display); font-size:15pt; font-weight:500;
+  line-height:1.25; color:var(--ink); margin-bottom:3mm; letter-spacing:-0.01em;
+}
+.three-mid h3 em{font-style:italic; color:var(--teal-deep); font-weight:500}
+.three-mid p{
+  font-family:var(--font-display); font-size:10.5pt;
+  color:var(--ink-2); line-height:1.55;
+}
+.three-mid .rootcause{
+  display:inline-block; margin-top:3mm;
+  padding:1mm 3mm; background:var(--cream-deep); color:var(--ink);
+  font-family:var(--font-mono); font-size:7.5pt; font-weight:500;
+  letter-spacing:0.1em; text-transform:uppercase;
+  border:1px solid var(--border-dark);
+}
+
+.three-right{display:flex; flex-direction:column; gap:4mm; padding-top:1mm}
+.three-stat{
+  padding:3mm 4mm; border:1px solid var(--border);
+  background:var(--card-white);
+  display:flex; justify-content:space-between; align-items:baseline;
+}
+.three-stat .k{
+  font-family:var(--font-mono); font-size:7pt;
+  letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-muted);
+}
+.three-stat .v{
+  font-family:var(--font-display); font-size:12pt; font-weight:500;
+  color:var(--ink);
+}
+.three-stat .v em{font-style:italic; color:var(--red); font-weight:500}
+.three-stat .v.teal em{color:var(--teal-deep)}
+
+.three-summary{
+  margin-top:8mm; padding:6mm 7mm;
+  background:var(--ink); color:var(--cream); display:flex; gap:8mm;
+  align-items:center;
+}
+.three-summary .big{
+  font-family:var(--font-display); font-size:32pt; font-weight:300;
+  line-height:1; color:var(--teal-light); letter-spacing:-0.02em;
+}
+.three-summary .big em{font-style:italic}
+.three-summary .text{
+  font-family:var(--font-display); font-style:italic; font-size:11pt;
+  color:rgba(245,243,239,0.85); line-height:1.45;
+}
+.three-summary .text b{color:var(--teal-light); font-weight:500; font-style:normal}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 5 · PRECEDENT WALL
+   ═══════════════════════════════════════════════ */
+.precedent{padding:22mm 22mm 0}
+.precedent h2{
+  font-family:var(--font-display); font-size:26pt; font-weight:300;
+  line-height:1.05; letter-spacing:-0.02em; max-width:170mm;
+  margin-bottom:4mm;
+}
+.precedent h2 em{font-style:italic; font-weight:500; color:var(--red)}
+.precedent-lede{
+  font-family:var(--font-display); font-style:italic; font-size:12pt;
+  color:var(--ink-muted); line-height:1.45; max-width:170mm; margin-bottom:8mm;
+}
+.precedent-rule-flag{
+  display:inline-block; padding:1mm 3mm;
+  background:var(--red); color:#fff;
+  font-family:var(--font-mono); font-size:7.5pt; font-weight:600;
+  letter-spacing:0.18em; text-transform:uppercase;
+  margin-bottom:6mm;
+}
+
+.fine-table{width:100%; border-collapse:collapse}
+.fine-table thead th{
+  background:var(--ink); color:var(--cream); padding:3mm 4mm;
+  text-align:left; font-family:var(--font-mono);
+  font-size:7.5pt; text-transform:uppercase; letter-spacing:0.2em;
+  font-weight:500;
+}
+.fine-table tbody td{
+  padding:4mm 4mm; border-bottom:1px dashed var(--border-dark);
+  font-family:var(--font-sans); font-size:9.5pt; vertical-align:baseline;
+}
+.fine-table tbody tr:last-child td{border-bottom:1px solid var(--ink)}
+.fine-year{font-family:var(--font-mono); color:var(--ink-muted)}
+.fine-inst{font-family:var(--font-display); font-size:11.5pt; font-weight:500; color:var(--ink); letter-spacing:-0.01em}
+.fine-reg{font-family:var(--font-mono); font-size:7.5pt; color:var(--ink-muted); letter-spacing:0.1em; text-transform:uppercase}
+.fine-amt{font-family:var(--font-display); font-size:16pt; font-weight:400; color:var(--red); letter-spacing:-0.01em; text-align:right; white-space:nowrap}
+.fine-amt em{font-style:italic; font-weight:500}
+.fine-mode{font-family:var(--font-display); font-style:italic; font-size:10pt; color:var(--ink-2); line-height:1.4}
+
+.precedent-foot{
+  margin-top:8mm; padding-top:5mm; border-top:1px solid var(--border-dark);
+  font-family:var(--font-mono); font-size:7.5pt;
+  color:var(--ink-muted); line-height:1.6; letter-spacing:0.02em;
+}
+.precedent-foot b{color:var(--ink)}
+
+/* dark transition strip */
+.transition-strip{
+  position:absolute; bottom:0; left:0; right:0; height:34mm;
+  background:#0f0f10; color:var(--cream);
+  padding:8mm 22mm 0;
+  display:flex; flex-direction:column; justify-content:center;
+  border-top:3px solid var(--teal-deep);
+}
+.transition-strip::before{
+  content:''; position:absolute; top:-4mm; left:0; right:0; height:4mm;
+  background:repeating-linear-gradient(90deg, var(--ink) 0 4mm, transparent 4mm 8mm);
+}
+.transition-strip .k{
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--teal-light);
+  margin-bottom:2mm;
+}
+.transition-strip h3{
+  font-family:var(--font-display); font-size:18pt; font-weight:300;
+  line-height:1.15; letter-spacing:-0.01em; color:var(--cream); max-width:160mm;
+}
+.transition-strip h3 em{font-style:italic; color:var(--teal-light); font-weight:500}
+
+/* ═══════════════════════════════════════════════
+   ░ DARK PAGES — shared
+   ═══════════════════════════════════════════════ */
+.d-frame{padding:22mm 22mm 20mm}
+.d-kicker{
+  font-family:var(--font-mono); font-size:8pt;
+  text-transform:uppercase; letter-spacing:0.22em; color:var(--teal-light);
+  margin-bottom:4mm;
+}
+.d-h2{
+  font-family:var(--font-display); font-size:26pt; font-weight:300;
+  line-height:1.05; letter-spacing:-0.02em; max-width:170mm;
+}
+.d-h2 em{font-style:italic; font-weight:500; color:var(--teal-light)}
+.d-sub{
+  font-family:var(--font-display); font-style:italic; font-size:12pt;
+  color:rgba(245,243,239,0.65); margin-top:3mm; max-width:170mm; line-height:1.45;
+}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 6 · CONCENTRATION MAP
+   ═══════════════════════════════════════════════ */
+.concentration-head{margin-bottom:8mm}
+.concentration-grid{
+  display:grid; grid-template-columns:1fr 70mm; gap:10mm; margin-top:4mm;
+}
+.corridor-list{display:flex; flex-direction:column; gap:3.5mm}
+.corridor-row{
+  display:grid; grid-template-columns:24mm 1fr 24mm; gap:4mm; align-items:center;
+}
+.corridor-id{
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.1em; color:var(--teal-light);
+}
+.corridor-id b{color:var(--cream); font-weight:500}
+.corridor-track{
+  height:6mm; background:rgba(245,243,239,0.06);
+  border:1px solid rgba(245,243,239,0.12); position:relative;
+}
+.corridor-fill{
+  position:absolute; left:0; top:0; bottom:0;
+  background:repeating-linear-gradient(45deg, var(--teal-light) 0 2mm, #0f766e 2mm 4mm);
+}
+.corridor-fill.hot{background:repeating-linear-gradient(45deg, #fca5a5 0 2mm, var(--red) 2mm 4mm)}
+.corridor-val{
+  font-family:var(--font-mono); font-size:9pt; font-weight:500;
+  color:var(--cream); text-align:right;
+}
+
+.donut-mini{
+  position:relative; width:70mm; height:70mm; margin:0 auto;
+}
+.donut-mini-center{
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; text-align:center;
+}
+.donut-mini-total{
+  font-family:var(--font-display); font-size:22pt; font-weight:300;
+  line-height:1; color:var(--cream); letter-spacing:-0.02em;
+}
+.donut-mini-lbl{
+  font-family:var(--font-mono); font-size:7pt;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:rgba(245,243,239,0.5); margin-top:2mm;
+}
+.donut-legend-dark{
+  margin-top:6mm; display:flex; flex-direction:column; gap:3mm;
+}
+.donut-legend-dark .row{
+  display:grid; grid-template-columns:3mm 1fr auto; gap:3mm; align-items:center;
+  padding-bottom:2mm; border-bottom:1px dashed rgba(245,243,239,0.1);
+}
+.donut-legend-dark .row:last-child{border-bottom:none}
+.donut-legend-dark .dot{width:3mm; height:3mm; border-radius:50%}
+.donut-legend-dark .name{
+  font-family:var(--font-display); font-size:10pt; color:rgba(245,243,239,0.85);
+}
+.donut-legend-dark .val{
+  font-family:var(--font-mono); font-size:8.5pt; color:var(--cream); font-weight:500;
+}
+
+.concentration-callout{
+  margin-top:10mm; padding:6mm 7mm;
+  border:1px solid rgba(20,184,166,0.35);
+  background:rgba(20,184,166,0.05);
+  display:grid; grid-template-columns:60mm 1fr; gap:8mm; align-items:center;
+}
+.concentration-callout .k{
+  font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--teal-light);
+  margin-bottom:2mm;
+}
+.concentration-callout .big{
+  font-family:var(--font-display); font-size:22pt; font-weight:300;
+  color:var(--teal-light); letter-spacing:-0.02em;
+}
+.concentration-callout .text{
+  font-family:var(--font-display); font-style:italic; font-size:11pt;
+  color:rgba(245,243,239,0.85); line-height:1.5;
+}
+.concentration-callout .text b{color:var(--teal-light); font-weight:500; font-style:normal}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 7 · HEADLINE CASE
+   ═══════════════════════════════════════════════ */
+.headline{padding:22mm 22mm 20mm}
+.headline h2{
+  font-family:var(--font-display); font-size:30pt; font-weight:300;
+  line-height:1.05; letter-spacing:-0.02em; color:var(--cream);
+  margin-bottom:6mm; max-width:170mm;
+}
+.headline h2 em{font-style:italic; color:#fca5a5; font-weight:400}
+.headline-date{
+  font-family:var(--font-mono); font-size:8.5pt;
+  color:var(--teal-light); letter-spacing:0.2em;
+  text-transform:uppercase; margin-bottom:5mm;
+}
+
+.headline-body{
+  display:grid; grid-template-columns:1fr 70mm; gap:10mm; margin-top:6mm;
+  border-top:1px solid rgba(245,243,239,0.15); padding-top:8mm;
+}
+.headline-narrative{
+  font-family:var(--font-display); font-size:12pt; line-height:1.7;
+  color:rgba(245,243,239,0.88);
+}
+.headline-narrative p{margin-bottom:4mm}
+.headline-narrative p:first-of-type::first-letter{
+  font-family:var(--font-display); font-weight:300; font-style:italic;
+  font-size:46pt; float:left; line-height:0.85; padding:2mm 3mm 0 0;
+  color:var(--teal-light);
+}
+.headline-narrative em{font-style:italic; color:#fca5a5}
+
+.exhibit{
+  border:1px solid rgba(245,243,239,0.25);
+  background:rgba(0,0,0,0.2);
+  padding:6mm;
+}
+.exhibit .lbl{
+  font-family:var(--font-mono); font-size:7.5pt;
+  letter-spacing:0.22em; text-transform:uppercase; color:#fca5a5;
+  margin-bottom:4mm; display:block;
+  padding-bottom:2mm; border-bottom:1px dashed rgba(252,165,165,0.4);
+}
+.exhibit .row{
+  display:grid; grid-template-columns:30mm 1fr; gap:3mm; padding:2mm 0;
+  border-bottom:1px dotted rgba(245,243,239,0.1);
+  font-family:var(--font-mono); font-size:8.5pt; line-height:1.5;
+}
+.exhibit .row:last-child{border-bottom:none}
+.exhibit .row .k{color:rgba(245,243,239,0.5); letter-spacing:0.08em}
+.exhibit .row .v{color:var(--cream); font-weight:500}
+.exhibit .row .v.flag{color:#fca5a5; font-weight:600}
+.exhibit .row .v.amt{font-family:var(--font-display); font-style:italic; font-size:13pt; color:#fca5a5}
+
+.headline-pullquote{
+  margin-top:8mm; padding:6mm 8mm;
+  border-left:3px solid var(--teal-light);
+  font-family:var(--font-display); font-style:italic; font-size:14pt;
+  color:var(--cream); line-height:1.45;
+}
+.headline-pullquote cite{
+  display:block; margin-top:3mm; font-family:var(--font-mono);
+  font-size:8pt; letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--teal-light); font-style:normal;
+}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 8 · EVIDENCE LOCKER (two spreads)
+   ═══════════════════════════════════════════════ */
+.locker-two{padding:22mm 22mm 18mm}
+.spread-compact{
+  display:grid; grid-template-columns:48mm 1fr; gap:10mm;
+  padding:7mm 0; border-top:1px solid rgba(245,243,239,0.18);
+}
+.spread-compact:first-of-type{margin-top:8mm}
+.spread-compact:last-of-type{border-bottom:1px solid rgba(245,243,239,0.18); padding-bottom:8mm}
+.plate-c{position:relative}
+.plate-c-num{
+  font-family:var(--font-display); font-style:italic; font-weight:300;
+  font-size:56pt; line-height:0.85; color:var(--teal-light); opacity:0.7;
+  letter-spacing:-0.04em;
+}
+.plate-c-id{
+  display:inline-block; margin-top:3mm;
+  padding:1.5mm 4mm; border:1px solid rgba(20,184,166,0.45);
+  color:var(--teal-light); font-family:var(--font-mono); font-size:8pt;
+  letter-spacing:0.18em; text-transform:uppercase;
+}
+.plate-c-count{
+  margin-top:4mm; font-family:var(--font-display); font-size:22pt;
+  font-weight:300; color:var(--cream); letter-spacing:-0.02em; line-height:0.95;
+}
+.plate-c-count small{
+  display:block; font-family:var(--font-mono); font-size:7pt;
+  letter-spacing:0.2em; text-transform:uppercase;
+  color:rgba(245,243,239,0.45); margin-top:1.5mm;
+}
+.plate-c-stamp{
+  margin-top:3mm; display:inline-flex; align-items:center; gap:2mm;
+  padding:1mm 3mm; border:1px dashed rgba(252,165,165,0.5);
+  font-family:var(--font-mono); font-size:7pt;
+  text-transform:uppercase; letter-spacing:0.22em; color:#fca5a5;
+}
+.plate-c-stamp::before{content:''; width:2mm; height:2mm; background:#fca5a5; border-radius:50%}
+
+.page-c{padding-top:2mm}
+.page-c h3{
+  font-family:var(--font-display); font-size:14pt; font-weight:400;
+  line-height:1.3; color:var(--cream); margin-bottom:4mm;
+  border-left:2px solid var(--teal-light); padding-left:5mm;
+}
+.page-c h3 em{font-style:italic; color:var(--teal-light); font-weight:500}
+.page-c-grid{display:grid; grid-template-columns:1fr 1fr; gap:6mm}
+.page-c-block{padding-top:3mm; border-top:1px solid rgba(245,243,239,0.15)}
+.page-c-block .lbl{
+  font-family:var(--font-mono); font-size:7pt; font-weight:600;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--teal-light); margin-bottom:2mm; display:block;
+}
+.page-c-block p{
+  font-family:var(--font-display); font-size:9.5pt; line-height:1.55;
+  color:rgba(245,243,239,0.85);
+}
+.page-c-block p.policy{font-family:var(--font-mono); font-size:8pt; color:rgba(245,243,239,0.7); line-height:1.6}
+.page-c-remediation{grid-column:1 / -1}
+.page-c-remediation ol{list-style:none; counter-reset:step; margin-top:2mm}
+.page-c-remediation ol li{
+  counter-increment:step; padding:2mm 0 2mm 14mm; position:relative;
+  font-family:var(--font-display); font-size:9.5pt; color:rgba(245,243,239,0.8);
+  line-height:1.45; border-bottom:1px dashed rgba(245,243,239,0.12);
+}
+.page-c-remediation ol li:last-child{border-bottom:none}
+.page-c-remediation ol li::before{
+  content:counter(step, lower-roman) ".";
+  position:absolute; left:0; top:3mm; width:10mm; text-align:right;
+  font-family:var(--font-display); font-style:italic; font-size:11pt;
+  color:var(--teal-light);
+}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 9 · REMEDIATION ROADMAP (Gantt)
+   ═══════════════════════════════════════════════ */
+.roadmap{padding:22mm 22mm 20mm}
+.gantt{
+  margin-top:8mm; background:rgba(0,0,0,0.25);
+  border:1px solid rgba(245,243,239,0.15);
+  padding:8mm 6mm;
+}
+.gantt-header{
+  display:grid; grid-template-columns:42mm 1fr 1fr 1fr 1fr; gap:3mm;
+  padding-bottom:3mm; margin-bottom:4mm;
+  border-bottom:1px solid rgba(245,243,239,0.2);
+}
+.gantt-header .ph{
+  font-family:var(--font-mono); font-size:7.5pt;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--teal-light); text-align:center; padding:1mm 0;
+  border-bottom:2px solid var(--teal-light);
+}
+.gantt-header .ph .d{
+  display:block; font-family:var(--font-display); font-style:italic;
+  font-size:9pt; color:rgba(245,243,239,0.65); letter-spacing:0;
+  text-transform:none; margin-top:1mm;
+}
+.gantt-header .ph-lane{
+  font-family:var(--font-mono); font-size:7.5pt; letter-spacing:0.22em;
+  text-transform:uppercase; color:rgba(245,243,239,0.4);
+}
+
+.gantt-row{
+  display:grid; grid-template-columns:42mm 1fr 1fr 1fr 1fr; gap:3mm;
+  padding:4mm 0; border-bottom:1px dashed rgba(245,243,239,0.1);
+  align-items:center;
+}
+.gantt-row:last-of-type{border-bottom:none}
+.gantt-swim .nm{
+  font-family:var(--font-display); font-size:12pt; color:var(--cream);
+  line-height:1.15; letter-spacing:-0.01em;
+}
+.gantt-swim .nm em{font-style:italic; color:var(--teal-light); font-weight:500}
+.gantt-swim .owner{
+  font-family:var(--font-mono); font-size:7.5pt; color:rgba(245,243,239,0.55);
+  letter-spacing:0.1em; margin-top:1.5mm; text-transform:uppercase;
+}
+.gantt-cell{
+  height:8mm; position:relative;
+  display:flex; align-items:center; justify-content:center;
+}
+.gantt-bar{
+  position:absolute; inset:1mm 0;
+  background:repeating-linear-gradient(45deg, var(--teal-light) 0 2mm, #0f766e 2mm 4mm);
+  border:1px solid var(--teal-light);
+}
+.gantt-bar.partial{
+  background:repeating-linear-gradient(45deg, rgba(20,184,166,0.35) 0 2mm, rgba(15,118,110,0.35) 2mm 4mm);
+  border:1px dashed rgba(20,184,166,0.6);
+}
+.gantt-bar.start{left:50%; inset:1mm 0 1mm 50%}
+.gantt-bar.end{right:50%; inset:1mm 50% 1mm 0}
+.gantt-label{
+  position:relative; z-index:1;
+  font-family:var(--font-mono); font-size:7pt; font-weight:600;
+  color:var(--ink); letter-spacing:0.08em; text-transform:uppercase;
+}
+
+.roadmap-summary{
+  margin-top:8mm; display:grid; grid-template-columns:repeat(4, 1fr); gap:4mm;
+}
+.roadmap-summary .stat{
+  padding:4mm 5mm; border:1px solid rgba(245,243,239,0.18);
+  background:rgba(245,243,239,0.03);
+}
+.roadmap-summary .stat .k{
+  font-family:var(--font-mono); font-size:7pt;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:rgba(245,243,239,0.5);
+}
+.roadmap-summary .stat .v{
+  font-family:var(--font-display); font-size:20pt; font-weight:300;
+  color:var(--teal-light); margin-top:2mm; letter-spacing:-0.02em;
+}
+.roadmap-summary .stat .v em{font-style:italic}
+.roadmap-summary .stat .sub{
+  font-family:var(--font-display); font-style:italic; font-size:9pt;
+  color:rgba(245,243,239,0.6); margin-top:1mm; line-height:1.3;
+}
+
+/* ═══════════════════════════════════════════════
+   ░ PAGE 10 · SIGN-OFF
+   ═══════════════════════════════════════════════ */
+.signoff{padding:24mm 22mm 22mm; display:flex; flex-direction:column; height:100%}
+.signoff-head{margin-bottom:12mm}
+.signoff-title{
+  font-family:var(--font-display); font-size:32pt; font-weight:300;
+  line-height:1; letter-spacing:-0.02em; color:var(--cream); margin-bottom:5mm;
+}
+.signoff-title em{font-style:italic; color:var(--teal-light); font-weight:400}
+.signoff-lede{
+  font-family:var(--font-display); font-style:italic; font-size:13pt;
+  color:rgba(245,243,239,0.7); line-height:1.5; max-width:160mm;
+}
+
+.signoff-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:14mm; margin-top:12mm;
+  padding:8mm 0 10mm; border-top:1px solid rgba(245,243,239,0.2);
+}
+.signoff-block .k{
+  font-family:var(--font-mono); font-size:7.5pt;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--teal-light); margin-bottom:3mm;
+}
+.signoff-script{
+  font-family:'Crimson Pro'; font-style:italic; font-weight:500;
+  font-size:26pt; color:var(--cream); transform:rotate(-3deg);
+  letter-spacing:0.01em; line-height:0.9; margin-bottom:-2mm;
+  display:inline-block; padding-left:2mm;
+}
+.signoff-line{border-top:1px solid rgba(245,243,239,0.4); padding-top:2mm; margin-top:4mm}
+.signoff-line .nm{
+  font-family:var(--font-display); font-size:13pt; color:var(--cream);
+  font-style:italic; font-weight:500;
+}
+.signoff-line .role{
+  font-family:var(--font-mono); font-size:8pt; color:rgba(245,243,239,0.55);
+  letter-spacing:0.12em; text-transform:uppercase; margin-top:1mm;
+}
+
+.signoff-meta{
+  margin-top:auto; padding-top:8mm;
+  border-top:1px solid rgba(245,243,239,0.2);
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:6mm;
+}
+.signoff-meta > div .k{
+  font-family:var(--font-mono); font-size:7pt;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:rgba(245,243,239,0.45); margin-bottom:1.5mm;
+}
+.signoff-meta > div .v{
+  font-family:var(--font-display); font-size:12pt; color:var(--cream);
+  line-height:1.3;
+}
+.signoff-meta > div .v em{font-style:italic; color:var(--teal-light); font-weight:500}
+
+.signoff-footer{
+  margin-top:8mm; padding-top:4mm; border-top:1px dashed rgba(245,243,239,0.2);
+  display:flex; justify-content:space-between;
+  font-family:var(--font-mono); font-size:7.5pt;
+  color:rgba(245,243,239,0.4); letter-spacing:0.2em; text-transform:uppercase;
+}
+.signoff-footer b{color:var(--teal-light); font-weight:500}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 1 — COVER (cream, seal-forward)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page cream">
+  <div class="cover">
+    <div class="cover-brand">Audit<span>Lens</span></div>
+    <div class="cover-tag">Executive Audit · Vol. XXVI · № 02 · SCAN f714b270</div>
+
+    <div class="cover-classification">Confidential · Executive Review</div>
+
+    <div class="cover-seal-wrap">
+      <div class="cover-rays"></div>
+      <div class="cover-seal">
+        <div class="x">✕</div>
+        <div class="l">Non-compliant</div>
+        <div class="n">Auditor&nbsp;Seal</div>
+        <div class="y">MMXXVI · Q1</div>
+      </div>
+    </div>
+
+    <div>
+      <h1 class="cover-title">AML Compliance <em>Audit</em></h1>
+      <div class="cover-subtitle">A report to the executive. Bound, signed, and filed.</div>
+    </div>
+
+    <div class="cover-footer">
+      <div>
+        <span>Scan Identifier</span>
+        <b>f714b270</b>
+      </div>
+      <div>
+        <span>Issued</span>
+        <b>2026 · 02 · 21</b>
+      </div>
+      <div>
+        <span>Prepared for</span>
+        <b>Office of the CEO</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 2 — LETTER TO THE EXECUTIVE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page cream">
+  <div class="runner">
+    <div>AuditLens · Letter</div>
+    <div>02 / 10</div>
+  </div>
+  <div class="letter" style="margin-top:14mm">
+    <div class="letter-head">
+      <div class="block"><div class="k">From</div><div class="v">K. Fielding<br><em>Head of AML Operations</em></div></div>
+      <div class="block"><div class="k">To</div><div class="v">Office of the CEO<br><em>&amp; Executive Committee</em></div></div>
+      <div class="block"><div class="k">Re</div><div class="v">AML Compliance — <em>Q1 MMXXVI Scan</em></div></div>
+      <div class="block"><div class="k">Date</div><div class="v">21 February 2026</div></div>
+    </div>
+
+    <h1>Three rules carry <em>94.4%</em> of your exposure. Here is what you need to know before the next board cycle.</h1>
+    <p class="letter-lede">This memo accompanies the first run of the Data Compliance Agent against our production transactions warehouse. The numbers are material. The fixes are tractable.</p>
+
+    <div class="letter-body">
+      <p>Over the weekend we ran the new compliance scanner against the <b>transactions</b> table — 5.1M rows, a single sitting. It returned <b>11,775 exceptions</b> across 17 regulatory rules extracted from our RAFT policy document, producing a composite compliance score of <b>58.8%</b> (Grade&nbsp;D). Seven rules are in a failing state; none sit in the review queue.</p>
+
+      <p>The distribution matters more than the total. <b>Three rules alone</b> — two on the paid leg, one on the received leg of large cash movements — account for <b>11,133 of those 11,775 exceptions</b>. None of the three are failing because of data quality. They are failing because the flag was never wired into our reporting pipeline.</p>
+
+      <div class="callout">This is an engineering gap pretending to be a compliance gap. It is the cheapest class of finding we will ever receive.</div>
+
+      <p>The remaining findings are smaller in volume but significant in kind. Six Bitcoin transactions escaped enhanced due diligence. 554 million-dollar-plus transfers were not escalated. One record flagged for laundering in 2022 has never been reviewed — that last is a control-level failure, not a count, and regulators treat it as such.</p>
+
+      <p>I recommend we treat this as a 90-day engineering program with compliance oversight, not a compliance project with engineering support. The annotated roadmap at page 9 commits us to a first passing scan by <em>20 May 2026</em>.</p>
+    </div>
+
+    <div class="letter-sign">
+      <div>
+        <div class="sig-script">K. Fielding</div>
+        <div class="sig-line"><b>Kiran Fielding</b>Head of AML Operations</div>
+      </div>
+      <div style="font-family:var(--font-mono); font-size:8pt; color:var(--ink-muted); letter-spacing:0.15em; text-transform:uppercase; text-align:right">
+        AuditLens · scan_f714b270<br>v1.0 · page 2 of 10
+      </div>
+    </div>
+  </div>
+  <div class="pagenum">02 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 3 — VERDICT IN DOLLARS
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page cream">
+  <div class="runner">
+    <div>AuditLens · <b>Verdict</b></div>
+    <div>03 / 10</div>
+  </div>
+  <div class="verdict" style="margin-top:14mm">
+    <div class="verdict-kicker">Part I · The verdict, translated</div>
+    <h2>Fifty-eight point eight percent. What that <em>actually costs</em>, by peer precedent.</h2>
+
+    <div class="verdict-grid">
+      <div class="verdict-big">
+        <div class="pct"><em>58.8</em><sup>%</sup></div>
+        <div class="grade">Grade D</div>
+        <div class="lbl">Compliance score · severity-weighted penalty</div>
+      </div>
+      <div class="exposure">
+        <div class="exposure-title">Exposure estimate · <em>if this scan ran in an exam</em></div>
+        <div class="exposure-row">
+          <div class="exposure-scenario low">Low</div>
+          <div class="exposure-desc">Consent order with remediation commitment. No monetary penalty. Nearest precedent: mid-sized regionals cited for AML gaps without willful conduct.<sup>1</sup></div>
+          <div class="exposure-val">$<em>0</em></div>
+        </div>
+        <div class="exposure-row">
+          <div class="exposure-scenario likely">Likely</div>
+          <div class="exposure-desc">Civil money penalty sized to CTR failure volume (~11.7k missed filings). Comparable range: City National $65M, USAA $140M.<sup>2</sup></div>
+          <div class="exposure-val">$<em>65&#8209;140</em>M</div>
+        </div>
+        <div class="exposure-row">
+          <div class="exposure-scenario high">High</div>
+          <div class="exposure-desc">Willful-violation finding with parallel DOJ exposure, compounded by the unreviewed laundering-flagged record (LDR-001). Comparable range: Capital One $390M, TD Bank $3.0B coordinated settlement.<sup>3</sup></div>
+          <div class="exposure-val">$<em>0.4&#8209;3.0</em>B</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footnote-block">
+      <div><sup>1</sup> FFIEC BSA/AML Examination Manual · Independent Testing · Consent-order precedents 2020–2024 where AML gaps did not rise to willful conduct.</div>
+      <div><sup>2</sup> <b>City National Bank</b>, OCC, Jan 2024, $65M · <b>USAA Federal Savings</b>, FinCEN + OCC, Mar 2022, $140M + $60M.</div>
+      <div><sup>3</sup> <b>Capital One</b>, FinCEN, Jan 2021, $390M · <b>TD Bank</b>, FinCEN + OCC + DOJ, Oct 2024, $3.09B combined (FinCEN $1.3B · OCC $450M · DOJ $1.8B) — the largest BSA penalty on record.</div>
+    </div>
+  </div>
+  <div class="pagenum">03 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 4 — THE THREE THAT MATTER
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page cream">
+  <div class="runner">
+    <div>AuditLens · <b>Concentration</b></div>
+    <div>04 / 10</div>
+  </div>
+  <div class="three" style="margin-top:14mm">
+    <div class="three-head">
+      <div class="three-kicker">Part II · The three rules that carry 94.4%</div>
+      <h2>Fix <em>these three</em> and your next scan likely passes.</h2>
+      <p class="three-sub">Out of seven failing rules, three produce 11,133 of 11,775 exceptions. All three share a single root cause — the rule was never wired into the SAR/CTR flagging pipeline — and can be resolved with one engineering commit, not seven.</p>
+    </div>
+
+    <div class="three-card">
+      <div>
+        <div class="three-id">FMT-003</div>
+        <div class="three-count"><em>3,711</em><small>Exceptions</small></div>
+      </div>
+      <div class="three-mid">
+        <h3>Cash transactions over <em>$10,000</em> not flagged.</h3>
+        <p>Payment format = Cash AND amount_paid &gt; 10,000. Every qualifying row should have triggered a CTR. None did. The column is correctly populated; the flag simply isn't wired.</p>
+        <span class="rootcause">Root cause · rule not wired</span>
+      </div>
+      <div class="three-right">
+        <div class="three-stat"><span class="k">Dollar-translation</span><span class="v"><em>HIGH</em></span></div>
+        <div class="three-stat"><span class="k">Fix effort</span><span class="v teal"><em>LOW</em></span></div>
+        <div class="three-stat"><span class="k">Owner</span><span class="v" style="font-size:10pt">AML Eng.</span></div>
+      </div>
+    </div>
+
+    <div class="three-card">
+      <div>
+        <div class="three-id">AMT-001</div>
+        <div class="three-count"><em>3,711</em><small>Exceptions</small></div>
+      </div>
+      <div class="three-mid">
+        <h3>Amount&nbsp;Paid &gt; <em>$10,000</em> not flagged for SAR/CTR.</h3>
+        <p>Structural: the SAR/CTR threshold rule fires on no row in the current pipeline. This is the paid-leg counterpart of AMT-002 and both will be resolved by the same commit.</p>
+        <span class="rootcause">Root cause · rule not wired</span>
+      </div>
+      <div class="three-right">
+        <div class="three-stat"><span class="k">Dollar-translation</span><span class="v"><em>HIGH</em></span></div>
+        <div class="three-stat"><span class="k">Fix effort</span><span class="v teal"><em>LOW</em></span></div>
+        <div class="three-stat"><span class="k">Owner</span><span class="v" style="font-size:10pt">AML Eng.</span></div>
+      </div>
+    </div>
+
+    <div class="three-card">
+      <div>
+        <div class="three-id">AMT-002</div>
+        <div class="three-count"><em>3,711</em><small>Exceptions</small></div>
+      </div>
+      <div class="three-mid">
+        <h3>Amount&nbsp;Received &gt; <em>$10,000</em> not flagged for SAR/CTR.</h3>
+        <p>Received-leg counterpart of AMT-001. Exact same pipeline gap, opposite side of the transaction. A regulator would cite both independently but treat them as one underlying failure.</p>
+        <span class="rootcause">Root cause · rule not wired</span>
+      </div>
+      <div class="three-right">
+        <div class="three-stat"><span class="k">Dollar-translation</span><span class="v"><em>HIGH</em></span></div>
+        <div class="three-stat"><span class="k">Fix effort</span><span class="v teal"><em>LOW</em></span></div>
+        <div class="three-stat"><span class="k">Owner</span><span class="v" style="font-size:10pt">AML Eng.</span></div>
+      </div>
+    </div>
+
+    <div class="three-summary">
+      <div class="big"><em>94.4%</em></div>
+      <div class="text">of all exceptions in this scan would disappear with <b>one engineering commit</b> and a single back-fill batch. The 642 remaining exceptions are across four less-severe rules — worth a quarter's attention, not a crisis response.</div>
+    </div>
+  </div>
+  <div class="pagenum">04 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 5 — PRECEDENT WALL
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page cream">
+  <div class="runner">
+    <div>AuditLens · <b>Precedent</b></div>
+    <div>05 / 10</div>
+  </div>
+  <div class="precedent" style="margin-top:14mm">
+    <span class="precedent-rule-flag">Part III · What comparable failures have cost</span>
+    <h2>Between <em>$65M</em> and <em>$3.4B</em>. That is the peer range for AML gaps over the past four years.</h2>
+    <p class="precedent-lede">The table below lists publicly reported BSA/AML civil money penalties assessed against U.S. depository institutions and a major virtual-asset service provider between 2021 and 2024. None of these started as "we didn't wire the rule in." Most ended there.</p>
+
+    <table class="fine-table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Institution</th>
+          <th>Regulator</th>
+          <th style="text-align:right">Penalty</th>
+          <th>Primary failure mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fine-year">2024</td>
+          <td class="fine-inst">TD Bank, N.A.</td>
+          <td class="fine-reg">FinCEN · OCC · DOJ</td>
+          <td class="fine-amt"><em>$3.09</em>B</td>
+          <td class="fine-mode">Transaction-monitoring program failures; SAR filing gaps over a multi-year window. Largest BSA penalty on record.</td>
+        </tr>
+        <tr>
+          <td class="fine-year">2023</td>
+          <td class="fine-inst">Binance Holdings Ltd.</td>
+          <td class="fine-reg">FinCEN · DOJ · CFTC</td>
+          <td class="fine-amt"><em>$3.4</em>B</td>
+          <td class="fine-mode">Willful failure to maintain an effective AML program; sanctions violations on a major virtual-asset service provider.</td>
+        </tr>
+        <tr>
+          <td class="fine-year">2022</td>
+          <td class="fine-inst">Danske Bank A/S</td>
+          <td class="fine-reg">DOJ · SEC · Denmark FSA</td>
+          <td class="fine-amt"><em>$2.0</em>B</td>
+          <td class="fine-mode">Estonia-branch AML controls failures; systemic concealment of suspicious activity. Cross-border enforcement.</td>
+        </tr>
+        <tr>
+          <td class="fine-year">2021</td>
+          <td class="fine-inst">Capital One, N.A.</td>
+          <td class="fine-reg">FinCEN</td>
+          <td class="fine-amt"><em>$390</em>M</td>
+          <td class="fine-mode">Willful failure to implement and maintain an AML program; failures to file timely CTRs and SARs.</td>
+        </tr>
+        <tr>
+          <td class="fine-year">2022</td>
+          <td class="fine-inst">USAA Federal Savings</td>
+          <td class="fine-reg">FinCEN + OCC</td>
+          <td class="fine-amt"><em>$200</em>M</td>
+          <td class="fine-mode">Willful BSA violations; transaction-monitoring inadequacies spanning several years. FinCEN $140M + OCC $60M.</td>
+        </tr>
+        <tr>
+          <td class="fine-year">2024</td>
+          <td class="fine-inst">City National Bank</td>
+          <td class="fine-reg">OCC</td>
+          <td class="fine-amt"><em>$65</em>M</td>
+          <td class="fine-mode">Serious deficiencies in risk management, internal controls, and BSA/AML program structure.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="precedent-foot">
+      Sources · <b>FinCEN</b> enforcement actions database (fincen.gov/news/enforcement-actions) · <b>OCC</b> BSA/AML bulletins · <b>Bankers Online</b> BSA/AML penalty tracker · <b>Sanction Scanner</b> 2025 peer analysis.
+    </div>
+  </div>
+
+  <div class="transition-strip">
+    <div class="k">Part Two · The evidence locker begins</div>
+    <h3>The following pages document the <em>where</em>, the <em>how</em>, and the <em>when</em>. In black, as filed.</h3>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 6 — CONCENTRATION MAP (dark)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page dark">
+  <div class="runner">
+    <div>AuditLens · <b>Concentration</b> · Evidence Locker</div>
+    <div>06 / 10</div>
+  </div>
+  <div class="d-frame" style="padding-top:28mm">
+    <div class="d-kicker">Part IV · Where the exposure lives</div>
+    <h2 class="d-h2">Ten counterparty corridors account for <em>78%</em> of the paid-leg exceptions.</h2>
+    <p class="d-sub">Concentration isn't spread evenly across the ledger. If you can only fix ten things this quarter, fix these ten.</p>
+
+    <div class="concentration-grid">
+      <div class="corridor-list">
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B014</b> → B029</div>
+          <div class="corridor-track"><div class="corridor-fill hot" style="width:100%"></div></div>
+          <div class="corridor-val">612</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B008</b> → B014</div>
+          <div class="corridor-track"><div class="corridor-fill hot" style="width:91%"></div></div>
+          <div class="corridor-val">557</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B029</b> → B008</div>
+          <div class="corridor-track"><div class="corridor-fill hot" style="width:84%"></div></div>
+          <div class="corridor-val">514</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B014</b> → B003</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:71%"></div></div>
+          <div class="corridor-val">434</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B003</b> → B029</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:64%"></div></div>
+          <div class="corridor-val">391</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B008</b> → B003</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:58%"></div></div>
+          <div class="corridor-val">356</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B022</b> → B014</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:49%"></div></div>
+          <div class="corridor-val">299</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B014</b> → B022</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:42%"></div></div>
+          <div class="corridor-val">254</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B003</b> → B008</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:37%"></div></div>
+          <div class="corridor-val">228</div>
+        </div>
+        <div class="corridor-row">
+          <div class="corridor-id"><b>B029</b> → B022</div>
+          <div class="corridor-track"><div class="corridor-fill" style="width:31%"></div></div>
+          <div class="corridor-val">189</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="donut-mini">
+          <svg viewBox="0 0 220 220" width="100%" height="100%">
+            <circle cx="110" cy="110" r="88" fill="none" stroke="rgba(245,243,239,0.1)" stroke-width="28"/>
+            <g transform="rotate(-90 110 110)">
+              <circle cx="110" cy="110" r="88" fill="none" stroke="#fca5a5" stroke-width="28"
+                stroke-dasharray="549.12 552.92" stroke-dashoffset="0"/>
+              <circle cx="110" cy="110" r="88" fill="none" stroke="#fcd34d" stroke-width="28"
+                stroke-dasharray="3.80 552.92" stroke-dashoffset="-549.12"/>
+            </g>
+          </svg>
+          <div class="donut-mini-center">
+            <div class="donut-mini-total">11,775</div>
+            <div class="donut-mini-lbl">exceptions</div>
+          </div>
+        </div>
+        <div class="donut-legend-dark">
+          <div class="row"><span class="dot" style="background:#fca5a5"></span><span class="name">High</span><span class="val">11,694</span></div>
+          <div class="row"><span class="dot" style="background:#fcd34d"></span><span class="name">Medium</span><span class="val">81</span></div>
+          <div class="row"><span class="dot" style="background:rgba(245,243,239,0.25)"></span><span class="name">Low</span><span class="val">0</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="concentration-callout">
+      <div>
+        <div class="k">If you only fix ten</div>
+        <div class="big"><em>78%</em> of exposure</div>
+      </div>
+      <div class="text">clears with the top <b>ten counterparty corridors</b>. Three bank codes — <b>B014, B008, B029</b> — are implicated in seven of the ten. A focused review of those three carries disproportionate weight against the scan's overall score.</div>
+    </div>
+  </div>
+  <div class="pagenum">06 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 7 — HEADLINE CASE
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page dark">
+  <div class="runner">
+    <div>AuditLens · <b>Case</b> · Evidence Locker</div>
+    <div>07 / 10</div>
+  </div>
+  <div class="headline" style="padding-top:28mm">
+    <div class="headline-date">Case № LDR-001 · Row 4,743</div>
+    <h2>On <em>01 September 2022</em>, a transaction marked for laundering entered our ledger. It was never reviewed.</h2>
+
+    <div class="headline-body">
+      <div class="headline-narrative">
+        <p>Four years later, it surfaced in this scan. Not as a data-quality issue, not as a false positive — but as exactly what the field engineers meant when they set <em>is_laundering = 1</em>: a transaction the system, at the time, believed was laundering.</p>
+        <p>Policy §5.1 requires all flagged transactions to be reviewed by the compliance team within 48 hours. The scanner found no evidence of review on this record — no status change, no reviewer ID, no timestamp. The 48 hours elapsed in September 2022; what we are looking at now is <em>1,279 days of silence</em> on a record the system asked us to look at.</p>
+        <p>The count on this rule is one. The control it fails is not.</p>
+      </div>
+
+      <div class="exhibit">
+        <span class="lbl">Exhibit A · Row 4,743</span>
+        <div class="row"><span class="k">rowid</span><span class="v">4,743</span></div>
+        <div class="row"><span class="k">timestamp</span><span class="v">2022-09-01 00:21:14</span></div>
+        <div class="row"><span class="k">from_bank</span><span class="v">B014</span></div>
+        <div class="row"><span class="k">to_bank</span><span class="v">B029</span></div>
+        <div class="row"><span class="k">amount_paid</span><span class="v amt">$18,500.00</span></div>
+        <div class="row"><span class="k">currency_paid</span><span class="v">USD</span></div>
+        <div class="row"><span class="k">payment_format</span><span class="v">Cash</span></div>
+        <div class="row"><span class="k">is_laundering</span><span class="v flag">1 · TRUE</span></div>
+        <div class="row"><span class="k">review_status</span><span class="v flag">— null —</span></div>
+        <div class="row"><span class="k">review_ts</span><span class="v flag">— null —</span></div>
+        <div class="row"><span class="k">days_since</span><span class="v flag">1,279</span></div>
+      </div>
+    </div>
+
+    <div class="headline-pullquote">
+      "All flagged transactions must be reviewed by the compliance team within <em>48 hours</em>."
+      <cite>— RAFT Policy · Section 5.1 · Flagged Transaction Review</cite>
+    </div>
+  </div>
+  <div class="pagenum">07 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 8 — EVIDENCE LOCKER (two findings)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page dark">
+  <div class="runner">
+    <div>AuditLens · <b>Evidence</b> · Locker</div>
+    <div>08 / 10</div>
+  </div>
+  <div class="locker-two" style="padding-top:28mm">
+    <div class="d-kicker">Part V · Two findings in depth</div>
+    <h2 class="d-h2">FMT-003 and LDR-001 — filed <em>in full</em>.</h2>
+
+    <article class="spread-compact">
+      <aside class="plate-c">
+        <div class="plate-c-num">I</div>
+        <div class="plate-c-id">FMT-003</div>
+        <div class="plate-c-count">3,711<small>Violations filed</small></div>
+        <div class="plate-c-stamp">High · Fail</div>
+      </aside>
+      <div class="page-c">
+        <h3>Transactions using <em>Cash</em> with Amount&nbsp;Paid exceeding 10,000 shall be flagged.</h3>
+        <div class="page-c-grid">
+          <div class="page-c-block">
+            <span class="lbl">Explanation</span>
+            <p>Every qualifying row in the scan window breaches the threshold. The Amount&nbsp;Paid column is populated correctly; the flagging mechanism is simply absent from the SAR/CTR path. This is a structural gap, not a data-quality one.</p>
+          </div>
+          <div class="page-c-block">
+            <span class="lbl">Policy</span>
+            <p class="policy">§3.2 — Large Transaction Reporting. Applies when payment_format = 'Cash' AND amount_paid &gt; 10,000.</p>
+          </div>
+          <div class="page-c-block">
+            <span class="lbl">Business risk</span>
+            <p>Unfiled CTRs on cash transactions above the threshold are the single most cited AML failure in BSA enforcement actions against depositories.</p>
+          </div>
+          <div class="page-c-block page-c-remediation">
+            <span class="lbl">Remediation · ordered steps</span>
+            <ol>
+              <li>Install a CTR flag hook on amount_paid &gt; 10,000 AND payment_format = 'Cash'.</li>
+              <li>Back-fill the 3,711 historical rows into the SAR/CTR queue.</li>
+              <li>Run a verification scan and certify to the audit committee.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="spread-compact">
+      <aside class="plate-c">
+        <div class="plate-c-num">II</div>
+        <div class="plate-c-id">LDR-001</div>
+        <div class="plate-c-count">1<small>Violation filed</small></div>
+        <div class="plate-c-stamp">High · Fail</div>
+      </aside>
+      <div class="page-c">
+        <h3>Flagged transactions must be reviewed by the compliance team within <em>forty-eight hours</em>.</h3>
+        <div class="page-c-grid">
+          <div class="page-c-block">
+            <span class="lbl">Explanation</span>
+            <p>Row 4,743 carries is_laundering = 1 and has never been reviewed. A single record — but the control itself has failed for 1,279 days. Regulators audit the control, not the record.</p>
+          </div>
+          <div class="page-c-block">
+            <span class="lbl">Policy</span>
+            <p class="policy">§5.1 — Flagged Transaction Review. Applies whenever is_laundering = 1 and review_status is null or stale &gt; 48h.</p>
+          </div>
+          <div class="page-c-block">
+            <span class="lbl">Business risk</span>
+            <p>A lapsed review on a laundering-flagged record invites a control-level finding. Remediating it after discovery does not reset the clock on the breach itself.</p>
+          </div>
+          <div class="page-c-block page-c-remediation">
+            <span class="lbl">Remediation · ordered steps</span>
+            <ol>
+              <li>Review row 4,743 and record the outcome.</li>
+              <li>Instrument the 48-hour SLA with an alert for future breaches.</li>
+              <li>Back-scan historical laundering-flagged records for similar lapses.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="pagenum">08 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 9 — REMEDIATION ROADMAP
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page dark">
+  <div class="runner">
+    <div>AuditLens · <b>Roadmap</b> · 90-day commitment</div>
+    <div>09 / 10</div>
+  </div>
+  <div class="roadmap" style="padding-top:28mm">
+    <div class="d-kicker">Part VI · Ninety-day remediation roadmap</div>
+    <h2 class="d-h2">From <em>58.8%</em> to a first passing scan by <em>20 May 2026</em>.</h2>
+    <p class="d-sub">Three swim lanes, four phases, one rescan cadence. Every phase has a named owner, a measurable exit, and a tie back to the findings in this report.</p>
+
+    <div class="gantt">
+      <div class="gantt-header">
+        <div class="ph-lane">Lane · Owner</div>
+        <div class="ph">Wire-in<span class="d">W1–W2</span></div>
+        <div class="ph">Back-fill<span class="d">W3–W5</span></div>
+        <div class="ph">Monitor<span class="d">W6–W10</span></div>
+        <div class="ph">Certify<span class="d">W11–W13</span></div>
+      </div>
+
+      <div class="gantt-row">
+        <div class="gantt-swim">
+          <div class="nm"><em>Engineering</em> · SAR/CTR pipeline</div>
+          <div class="owner">A. Moss · Staff Eng.</div>
+        </div>
+        <div class="gantt-cell"><div class="gantt-bar"></div><span class="gantt-label">FMT-003 · AMT-001 · AMT-002</span></div>
+        <div class="gantt-cell"><div class="gantt-bar partial"></div><span class="gantt-label" style="color:var(--cream)">Hook replay</span></div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar partial end"></div></div>
+      </div>
+
+      <div class="gantt-row">
+        <div class="gantt-swim">
+          <div class="nm"><em>Compliance Ops</em> · Review backlog</div>
+          <div class="owner">K. Fielding · Head of AML</div>
+        </div>
+        <div class="gantt-cell"><div class="gantt-bar partial start"></div></div>
+        <div class="gantt-cell"><div class="gantt-bar"></div><span class="gantt-label">LDR-001 · EDD queue</span></div>
+        <div class="gantt-cell"><div class="gantt-bar"></div><span class="gantt-label">48-h SLA watch</span></div>
+        <div class="gantt-cell"><div class="gantt-bar"></div><span class="gantt-label">Sign-off</span></div>
+      </div>
+
+      <div class="gantt-row">
+        <div class="gantt-swim">
+          <div class="nm"><em>Data</em> · Lineage &amp; rescan</div>
+          <div class="owner">M. Ito · Principal DE</div>
+        </div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell"><div class="gantt-bar partial"></div><span class="gantt-label" style="color:var(--cream)">Column fixes</span></div>
+        <div class="gantt-cell"><div class="gantt-bar"></div><span class="gantt-label">Weekly rescan</span></div>
+        <div class="gantt-cell"><div class="gantt-bar"></div><span class="gantt-label">Final scan</span></div>
+      </div>
+    </div>
+
+    <div class="roadmap-summary">
+      <div class="stat">
+        <div class="k">Target score</div>
+        <div class="v"><em>≥ 90%</em></div>
+        <div class="sub">Pass threshold · Grade A</div>
+      </div>
+      <div class="stat">
+        <div class="k">Engineering effort</div>
+        <div class="v"><em>~3</em> wks</div>
+        <div class="sub">One staff engineer, one commit surface</div>
+      </div>
+      <div class="stat">
+        <div class="k">Rescan cadence</div>
+        <div class="v"><em>Weekly</em></div>
+        <div class="sub">From week 6 onward</div>
+      </div>
+      <div class="stat">
+        <div class="k">Board-readable date</div>
+        <div class="v"><em>20 May</em></div>
+        <div class="sub">90 days from report issue</div>
+      </div>
+    </div>
+  </div>
+  <div class="pagenum">09 · X</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 10 — SIGN-OFF
+     ═══════════════════════════════════════════════════════════ -->
+<div class="page dark">
+  <div class="runner">
+    <div>AuditLens · <b>Sign-off</b></div>
+    <div>10 / 10</div>
+  </div>
+  <div class="signoff">
+    <div class="signoff-head">
+      <div class="d-kicker">Part VII · Attestation &amp; next steps</div>
+      <div class="signoff-title">Signed, <em>bound, filed</em>.</div>
+      <div class="signoff-lede">This report was assembled by the Data Compliance Agent from a single scan against the transactions warehouse. The findings, exposure estimates, and remediation commitments below are recorded as the institution's Q1 MMXXVI AML audit position.</div>
+    </div>
+
+    <div class="signoff-grid">
+      <div class="signoff-block">
+        <div class="k">Prepared by</div>
+        <div class="signoff-script">K. Fielding</div>
+        <div class="signoff-line">
+          <div class="nm">Kiran Fielding</div>
+          <div class="role">Head of AML Operations · Prepared 2026-02-21</div>
+        </div>
+      </div>
+      <div class="signoff-block">
+        <div class="k">Attested by</div>
+        <div class="signoff-script">P. Okafor</div>
+        <div class="signoff-line">
+          <div class="nm">Prisca Okafor</div>
+          <div class="role">Chief Compliance Officer · Countersigned 2026-02-21</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="signoff-meta">
+      <div>
+        <div class="k">Version</div>
+        <div class="v"><em>v1.0</em></div>
+      </div>
+      <div>
+        <div class="k">Source policy</div>
+        <div class="v">RAFT · <em>§3.2 · §5.1</em></div>
+      </div>
+      <div>
+        <div class="k">Source MD5</div>
+        <div class="v" style="font-family:var(--font-mono); font-size:9pt">3f41 · a7c2 · 8e05</div>
+      </div>
+      <div>
+        <div class="k">Next scan recommended</div>
+        <div class="v"><em>2026-05-20</em></div>
+      </div>
+    </div>
+
+    <div class="signoff-footer">
+      <span>AuditLens · Data Compliance Agent</span>
+      <span><b>scan_20260221_145644_f714b270</b></span>
+      <span>Confidential · Executive Review</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
