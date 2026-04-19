@@ -6,6 +6,8 @@
 
 ## 2.1 Block Diagram
 
+![Fig. 2.1 — High-level block diagram of the Data Compliance Agent](figures/fig_2_1_block_diagram.png)
+
 **Figure 2.1** is the highest-level view of the system. It depicts three horizontal layers, top to bottom: the **Presentation Layer**, the **Orchestration Layer**, and the **Data &amp; Inference Layer**.
 
 The **Presentation Layer** consists of two surfaces. The first is the *AuditLens* Next.js front-end (`agent-chat-ui/`) that runs in the user's browser at `http://localhost:3000` during development. It exposes three pages — a landing page (`/`) describing the audit pipeline, a scanner page (`/scan`) on which the compliance officer drops a policy PDF and points the system at a target database, and a per-thread dashboard (`/dashboard/[threadId]`) that visualises the live timeline, the human-in-the-loop modal, the score gauge, and a searchable violations table. A separate static-file route at `/api/reports/[...path]` proxies the generated PDF and HTML reports back to the browser. The second surface is the command-line interface — the four entry-point scripts `main.py`, `run_scan.py`, `run_hi_small.py`, and `run_intercept.py` — which is the path used by an operator running the system from a terminal or a CI job.
@@ -27,6 +29,8 @@ This three-layer block diagram is deliberately drawn so that a reader can see, a
 ---
 
 ## 2.2 Entity-Relationship Diagram
+
+![Fig. 2.2 — ERD for the violations and explanations stores](figures/fig_2_2_erd.png)
 
 **Figure 2.2** captures the persistent data model of the violations and rule-explanations stores. Although the system reads from many sources, the data it *writes* — and therefore the data that an external auditor will consume — lives in only two normalised tables, both housed in the SQLite file `violations.db`. The DDL is reproduced verbatim from `src/agents/tools/database/violations_store.py:55-75`.
 
@@ -89,6 +93,8 @@ The DFDs are presented at two levels of detail: a Level-0 *context diagram* (Fig
 
 ### 2.3.1 Level-0 Context
 
+![Fig. 2.3 — Level-0 Data Flow Diagram (context)](figures/fig_2_3_dfd_level0_context.png)
+
 The Level-0 diagram treats the entire **Data Compliance Agent** as a single circular process, sitting between three external entities: the **Compliance Officer** (the human user), the **Target Database** (the system being audited), and the **Groq LLM endpoint** (the inference provider). Five data flows cross the system boundary.
 
 - *Policy PDF* and *DB connection string* flow inward from the Compliance Officer to the system.
@@ -115,6 +121,8 @@ Inside the scanner process, Figure 2.4 expands the single circle into the nine n
 
 ### 2.3.3 Level-1 Decomposition — Interceptor Pipeline
 
+![Fig. 2.5 — Level-1 Data Flow Diagram (interceptor pipeline)](figures/fig_2_5_dfd_level1_interceptor.png)
+
 The interceptor's DFD (Figure 2.5) is shorter but more cyclic. The seven happy-path processes are: 10.0 Cache Check, 11.0 Context Builder, 12.0 Intent Classifier, 13.0 Policy Mapper, 14.0 Verdict Reasoner, 15.0 Auditor, 16.0 Executor. Three terminal processes — 17.0 Return Cached, 18.0 Return Clarification, 19.0 Escalate Human — replace process 16.0 when the previous step demands it. The cycle is the auditor's loop back to the verdict reasoner: when the audit fails and the retry budget is not exhausted, control returns to process 14.0 with the audit's diagnostic feedback merged into the prompt. The data stores accessed are the **Decision Cache** (a 3-layer in-memory store), the **Qdrant Policy Collection**, the **Audit Log SQLite store** (`data/interceptor_audit.db`, 52 KB after the smoke runs), and the same Target Database accessed by the executor.
 
 The Level-1 diagrams are explicitly *isomorphic* to the implementation: each numbered process corresponds to a single Python module under `src/agents/nodes/` or `src/agents/interceptor_nodes/`. This isomorphism is what lets the Testing chapter (Chapter 4) write one unit-test file per process and claim end-to-end DFD coverage.
@@ -122,6 +130,8 @@ The Level-1 diagrams are explicitly *isomorphic* to the implementation: each num
 ---
 
 ## 2.4 Use Case Diagram
+
+![Fig. 2.6 — Use case diagram](figures/fig_2_6_use_case.png)
 
 **Figure 2.6** captures four primary actors and ten use cases arranged around a single system boundary. The actors are:
 
@@ -185,6 +195,8 @@ The graph then issues a series of strictly-ordered messages:
 The diagram uses self-arrows on the Scanner Graph lifeline to show the internal node-to-node transitions and uses dashed return arrows to indicate the streaming `updates` events that the UI receives between every node boundary.
 
 ### 2.6.2 Interceptor — Sequence with Retry Loop (Figure 2.9)
+
+![Fig. 2.9 — Sequence diagram: interceptor with retry loop](figures/fig_2_9_sequence_interceptor.png)
 
 The interceptor's sequence diagram is shorter but contains a *combined fragment* of type `loop [retry_budget]` enclosing the verdict-reasoner and auditor lifelines. This fragment is the visual representation of the retry policy declared at `src/agents/interceptor_graph.py:72-76`:
 

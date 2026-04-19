@@ -6,6 +6,8 @@
 
 ## 4.1 Testing Strategy
 
+![Fig. 4.1 — Test pyramid adopted in the project](figures/fig_4_1_test_pyramid.png)
+
 The project adopts the standard *test pyramid* of Mike Cohn (Figure 4.1): a wide base of fast, deterministic unit tests; a narrower middle layer of integration tests that exercise the LangGraph state machine without going to the network; and a small apex of end-to-end smoke tests that perform a real LLM call against the Groq API and a real database scan against the bundled HI-Small AML dataset. The pyramid is calibrated so that a developer can run the unit-test suite in a few seconds, the integration suite in under a minute, and the full smoke run in roughly four minutes.
 
 The framework throughout is `pytest` (≥ 9.0.2 from `pyproject.toml:25`). Two custom markers are defined in `tests/unit/conftest.py:14-20`:
@@ -196,6 +198,8 @@ Although the project does not yet ship a formal benchmark harness, three perform
 Keyset pagination is asymptotically faster than `OFFSET` because the database can use the primary-key index to seek directly to the cursor position, while `OFFSET N LIMIT B` requires the database to materialise and discard the first *N* rows on every call. Concretely, a scan that traverses *N* total rows in batches of size *B* using `OFFSET` performs work proportional to ½ *N²*/*B*, while keyset performs work proportional to *N* (B-tree seek cost being O(log *N*) per page). For the HI-Small dataset (200 k rows, batch 1 000) this is a difference of roughly 10⁴×.
 
 A small experiment was performed during development. Scanning the full HI-Small `transactions` table for the AML "currency presence" rule with the keyset path completed in 14.3 s (mostly network round-trips to SQLite); rewriting the same scan to use `OFFSET` pagination took 312.5 s on the same machine. The chart in Figure 4.3 plots wall-clock time versus number of rows visited for both algorithms; the keyset curve is essentially flat while the `OFFSET` curve grows quadratically.
+
+![Fig. 4.3 — Keyset vs. OFFSET pagination latency curve](figures/fig_4_3_keyset_vs_offset.png)
 
 ### 4.5.2 Cache Hit Rates
 
