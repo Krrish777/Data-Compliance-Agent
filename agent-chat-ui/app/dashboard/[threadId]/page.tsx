@@ -87,8 +87,13 @@ export default function DashboardPage({
     explanation: e.explanation,
   }));
 
-  const reportPdf = state.report_paths?.pdf;
-  const reportHtml = state.report_paths?.html;
+  // Backend emits absolute or mixed-separator paths (e.g. "data\compliance_report_xxx.pdf"
+  // on Windows). The /api/reports route only trusts files inside data/, so send just the
+  // basename and let the route resolve it there.
+  const baseName = (p: string | undefined): string | undefined =>
+    p ? p.replace(/\\/g, "/").split("/").pop() || undefined : undefined;
+  const reportPdf = baseName(state.report_paths?.pdf);
+  const reportHtml = baseName(state.report_paths?.html);
 
   return (
     <div>
@@ -104,6 +109,8 @@ export default function DashboardPage({
           {reportPdf && (
             <a
               href={`/api/reports/${encodeURIComponent(reportPdf)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border border-ink px-4 py-2 rounded-sm text-sm hover:bg-ink hover:text-cream"
             >
               <FileDown className="w-4 h-4" /> PDF
@@ -112,10 +119,17 @@ export default function DashboardPage({
           {reportHtml && (
             <a
               href={`/api/reports/${encodeURIComponent(reportHtml)}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 border border-ink px-4 py-2 rounded-sm text-sm hover:bg-ink hover:text-cream"
             >
               <FileDown className="w-4 h-4" /> HTML
             </a>
+          )}
+          {!reportPdf && !reportHtml && (
+            <span className="text-xs text-ink-muted italic border border-dashed border-border-dark px-3 py-2 rounded-sm">
+              Report artifact not found. Check server logs.
+            </span>
           )}
         </div>
       </div>
